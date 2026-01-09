@@ -1,7 +1,7 @@
 function App() {
 	return (
 		<>
-			<div>Hello World</div>
+			<div>{import.meta.env.VITE_BASE_URL}</div>
 		</>
 	);
 }

@@ -14,8 +14,12 @@
 		"noUncheckedSideEffectImports": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
-		"skipLibCheck": true,
+		"paths": {
+			"@/*": ["./src/*"],
+			"@server/*": ["../server/src/*"]
+		},
 
+		"skipLibCheck": true,
 		/* Linting */
 		"strict": true,
 		"target": "ES2022",

@@ -1,7 +1,20 @@
 import { Elysia } from 'elysia';
 
-const app = new Elysia().get('/', () => 'Hello Elysia').listen(3000);
+const PORT = Number(Bun.env.PORT);
+const HOSTNAME = Bun.env.HOSTNAME;
+
+const app = new Elysia()
+	.get('/', () => ({
+		message: 'Hello Elysia',
+		status: 'running',
+	}))
+	.listen({
+		port: PORT,
+		hostname: HOSTNAME,
+	});
 
 console.log(
-	`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
+	`🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}`
 );
+
+export type App = typeof app;
