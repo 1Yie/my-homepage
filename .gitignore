@@ -1,0 +1,70 @@
+# --- System & Editors ---
+.DS_Store
+._*
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.local
+*.pem
+*.swp
+*.bak
+*.tmp
+
+# --- Dependencies ---
+node_modules/
+/bun.lockb
+yarn.lock
+package-lock.json
+pnpm-lock.yaml
+/.pnp
+.pnp.js
+
+# --- Environment Variables ---
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+.env.test
+
+# --- Build & Tooling Outputs ---
+dist/
+build/
+out/
+.next/
+.output/
+.turbo/
+.vercel
+.cache/
+.swc/
+.parcel-cache
+*.tsbuildinfo
+
+# --- Logs ---
+logs
+*.log
+**/*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+bun-error.log*
+
+# --- Caches & Temp ---
+.eslintcache
+.stylelintcache
+.prettiercache
+node_modules/.vite
+.husky/_/
+
+# --- Database ---
+*.db
+*.db-journal
+
+# --- Archives ---
+**/*.zip
+**/*.tar.gz
+**/*.tgz
+
+# --- Misc ---
+**/*.trace
+**/*.bun
