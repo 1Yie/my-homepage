@@ -1,9 +1,9 @@
+import { RouterProvider } from 'react-router-dom';
+
+import { router } from '@/router';
+
 function App() {
-	return (
-		<>
-			<div>{import.meta.env.VITE_BASE_URL}</div>
-		</>
-	);
+	return <RouterProvider router={router} />;
 }
 
 export default App;
