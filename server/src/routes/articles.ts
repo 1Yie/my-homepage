@@ -64,16 +64,21 @@ export const articlesRoutes = new Elysia()
 		'/articles',
 		async ({ query, request }) => {
 			if (query.public === 'true') {
-				const articles = await getPublishedArticles();
+				const articles = await getPublishedArticles(query.q);
 				return { success: true, data: articles };
 			} else {
 				const session = await auth.api.getSession({ headers: request.headers });
 				if (!session) throw new Error('Unauthorized');
-				const articles = await getArticlesByAuthor(session.user.id);
+				const articles = await getArticlesByAuthor(session.user.id, query.q);
 				return { success: true, data: articles };
 			}
 		},
 		{
-			query: t.Optional(t.Object({ public: t.Optional(t.String()) })),
+			query: t.Optional(
+				t.Object({
+					public: t.Optional(t.String()),
+					q: t.Optional(t.String()),
+				})
+			),
 		}
 	);

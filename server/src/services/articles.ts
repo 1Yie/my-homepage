@@ -1,13 +1,14 @@
 import type { createArticleSchema, updateArticleSchema } from '../lib/schema';
 
-import { prisma } from '../lib/db';
+import { Prisma } from '../../prisma/generated/prisma/client';
+import { db } from '../lib/db';
 
 export async function createArticle(
 	data: typeof createArticleSchema.static,
 	authorId: string
 ) {
 	const { tagIds, ...articleData } = data;
-	return prisma.article.create({
+	return db.article.create({
 		data: {
 			...articleData,
 			authorId,
@@ -29,7 +30,7 @@ export async function updateArticle(
 	authorId: string
 ) {
 	const { tagIds, ...updateData } = data;
-	return prisma.article.update({
+	return db.article.update({
 		where: {
 			id,
 			authorId, // ensure only author can update
@@ -49,7 +50,7 @@ export async function updateArticle(
 }
 
 export async function deleteArticle(id: number, authorId: string) {
-	return prisma.article.delete({
+	return db.article.delete({
 		where: {
 			id,
 			authorId,
@@ -58,7 +59,7 @@ export async function deleteArticle(id: number, authorId: string) {
 }
 
 export async function getArticle(id: number) {
-	return prisma.article.findUnique({
+	return db.article.findUnique({
 		where: { id },
 		include: {
 			tags: true,
@@ -73,18 +74,32 @@ export async function getArticle(id: number) {
 	});
 }
 
-export async function getArticlesByAuthor(authorId: string) {
-	return prisma.article.findMany({
-		where: { authorId },
+export async function getArticlesByAuthor(authorId: string, search?: string) {
+	const where: Prisma.ArticleWhereInput = { authorId };
+	if (search) {
+		where.OR = [
+			{ content: { contains: search } },
+			{ slug: { contains: search } },
+		];
+	}
+	return db.article.findMany({
+		where,
 		include: {
 			tags: true,
 		},
 	});
 }
 
-export async function getPublishedArticles() {
-	return prisma.article.findMany({
-		where: { isDraft: false },
+export async function getPublishedArticles(search?: string) {
+	const where: Prisma.ArticleWhereInput = { isDraft: false };
+	if (search) {
+		where.OR = [
+			{ content: { contains: search } },
+			{ slug: { contains: search } },
+		];
+	}
+	return db.article.findMany({
+		where,
 		include: {
 			tags: true,
 			author: {

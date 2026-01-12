@@ -6,7 +6,7 @@ const adapter = new PrismaLibSql({
 	url: process.env.DATABASE_URL || 'file:./sqlite.db',
 });
 
-export const prisma = new PrismaClient({
+export const db = new PrismaClient({
 	adapter,
 	log: [
 		{ level: 'query', emit: 'stdout' },
