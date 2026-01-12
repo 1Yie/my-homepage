@@ -1,40 +1,29 @@
+import { useState } from 'react';
+
+import BlogPanel from '@/components/blog-panel';
 import PageTitle from '@/components/page-title';
 import { useGetArticles } from '@/hooks/article/use-get-articles';
 
 export function BlogPage() {
-	const { articles, loading, error } = useGetArticles({ public: true });
-
-	if (loading) {
-		return (
-			<>
-				<PageTitle subtitle="Blog" title="博客" />
-				<section className="section-base">
-					<div className="flex items-center justify-center py-8">
-						<p>Loading articles...</p>
-					</div>
-				</section>
-			</>
-		);
-	}
-
-	if (error) {
-		return (
-			<>
-				<PageTitle subtitle="Blog" title="博客" />
-				<section className="section-base">
-					<div className="flex items-center justify-center py-8">
-						<p className="text-red-500">Error: {error}</p>
-					</div>
-				</section>
-			</>
-		);
-	}
+	const [search, setSearch] = useState('');
+	const { articles, loading, error } = useGetArticles({
+		public: true,
+	});
 
 	return (
 		<>
 			<PageTitle subtitle="Blog" title="博客" />
+			<BlogPanel onSearchChange={setSearch} searchValue={search} />
 			<section className="section-base">
-				{articles.length === 0 ? (
+				{loading ? (
+					<div className="flex items-center justify-center py-8">
+						<p>Loading articles...</p>
+					</div>
+				) : error ? (
+					<div className="flex items-center justify-center py-8">
+						<p className="text-red-500">Error: {error}</p>
+					</div>
+				) : articles.length === 0 ? (
 					<div className="flex items-center justify-center py-8">
 						<p className="text-muted-foreground">暂无文章</p>
 					</div>

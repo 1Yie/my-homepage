@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { client } from '@/api/client';
 
-interface Article {
+export interface Article {
 	id: number;
 	slug: string;
 	content: string;
@@ -23,6 +23,7 @@ interface Article {
 
 interface UseGetArticlesOptions {
 	public?: boolean;
+	search?: string;
 }
 
 export function useGetArticles(options: UseGetArticlesOptions = {}) {
@@ -34,7 +35,9 @@ export function useGetArticles(options: UseGetArticlesOptions = {}) {
 		const fetchArticles = async () => {
 			try {
 				setLoading(true);
-				const query = options.public ? { public: 'true' } : {};
+				const query: Record<string, string> = {};
+				if (options.public) query.public = 'true';
+				if (options.search) query.q = options.search;
 				const response = await client.articles.get({
 					query,
 				});
@@ -51,7 +54,7 @@ export function useGetArticles(options: UseGetArticlesOptions = {}) {
 		};
 
 		fetchArticles();
-	}, [options.public]);
+	}, [options.public, options.search]);
 
 	return { articles, loading, error };
 }

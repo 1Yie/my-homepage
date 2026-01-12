@@ -1,0 +1,55 @@
+import { Tags, Rss, Archive } from 'lucide-react';
+import { Link } from 'react-router-dom';
+
+import BlogSearch from '@/components/blog-search';
+
+interface BlogPanelProps {
+	onSearchChange: (value: string) => void;
+	searchValue: string;
+}
+
+export default function BlogPanel({
+	onSearchChange,
+	searchValue,
+}: BlogPanelProps) {
+	return (
+		<div className="border-b">
+			<section
+				className="section-base bg-diagonal-stripes-sm flex flex-col gap-3 px-4
+					py-3 sm:flex-row sm:justify-between sm:gap-0 sm:py-1.5"
+			>
+				<div className="flex items-center justify-between sm:justify-start">
+					<div className="flex items-center gap-4">
+						<Link
+							className="hover:text-foreground/60 flex items-center gap-1
+								text-base transition-colors"
+							to="/tags"
+						>
+							<Tags size={19} />
+							标签
+						</Link>
+						<Link
+							className="hover:text-foreground/60 flex items-center gap-1
+								text-base transition-colors"
+							to="/feed.xml"
+						>
+							<Rss size={17} />
+							订阅
+						</Link>
+						<Link
+							className="hover:text-foreground/60 flex items-center gap-1
+								text-base transition-colors"
+							to="/archive"
+						>
+							<Archive size={17} />
+							归档
+						</Link>
+					</div>
+				</div>
+				<div className="w-full sm:w-auto sm:max-w-xs">
+					<BlogSearch onChange={onSearchChange} value={searchValue} />
+				</div>
+			</section>
+		</div>
+	);
+}

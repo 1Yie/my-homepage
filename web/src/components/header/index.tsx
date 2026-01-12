@@ -1,9 +1,24 @@
-import { Moon, Sun, TextAlignJustify } from 'lucide-react';
+import {
+	Moon,
+	Sun,
+	TextAlignJustify,
+	User,
+	LogOut,
+	Github,
+} from 'lucide-react';
 import { Fragment, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { authClient } from '@/api/client';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from '@/components/ui/menu';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import {
 	Tooltip,
@@ -113,25 +128,56 @@ export function Header() {
 							</TooltipContent>
 						</Tooltip>
 						{session ? (
-							<div className="ml-4 flex items-center space-x-2">
-								<span className="text-sm text-muted-foreground">
-									{session.user.name || session.user.email}
-								</span>
-								<Button
-									onClick={() => authClient.signOut()}
-									size="sm"
-									variant="outline"
-								>
-									登出
-								</Button>
-							</div>
+							<DropdownMenu>
+								<DropdownMenuTrigger
+									render={
+										<Button
+											className="ml-4 flex items-center gap-2 px-2"
+											variant="ghost"
+										>
+											<Avatar className="h-6 w-6">
+												{session.user.image && (
+													<AvatarImage
+														alt={
+															session.user.name || session.user.email || 'User'
+														}
+														src={session.user.image}
+													/>
+												)}
+												<AvatarFallback className="text-xs">
+													{(session.user.name || session.user.email || 'U')
+														.charAt(0)
+														.toUpperCase()}
+												</AvatarFallback>
+											</Avatar>
+											<span className="text-sm text-muted-foreground">
+												{session.user.name || session.user.email}
+											</span>
+										</Button>
+									}
+								/>
+								<DropdownMenuContent align="center" className="w-auto">
+									<DropdownMenuItem onClick={() => navigate('/dashboard')}>
+										<User className="mr-2 h-4 w-4" />
+										<span className="text-accent-foreground">仪表盘</span>
+									</DropdownMenuItem>
+									<DropdownMenuSeparator />
+									<DropdownMenuItem
+										onClick={() => authClient.signOut()}
+										variant="destructive"
+									>
+										<LogOut className="mr-2 h-4 w-4" />
+										<span className="destructive-foreground">登出</span>
+									</DropdownMenuItem>
+								</DropdownMenuContent>
+							</DropdownMenu>
 						) : (
 							<Button
 								className="ml-4"
 								onClick={() => navigate('/auth/login')}
 								size="sm"
 							>
-								登录
+								<Github className="text-accent" />
 							</Button>
 						)}
 					</nav>
