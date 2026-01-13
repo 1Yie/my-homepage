@@ -4,6 +4,7 @@ import { type Context, Elysia } from 'elysia';
 import { auth } from './lib/auth';
 import { articlesRoutes } from './routes/articles';
 import { dashboardRoutes } from './routes/dashboard';
+import { friendsRoutes } from './routes/friends';
 import { projectsRoutes } from './routes/projects';
 import { slidesRoutes } from './routes/slides';
 import { tagsRoutes } from './routes/tags';
@@ -30,11 +31,13 @@ const app = new Elysia()
 			allowedHeaders: ['Content-Type', 'Authorization', 'Set-Cookie', 'Cookie'],
 		})
 	)
+
 	.all('/api/auth/*', betterAuthView)
 	.use(tagsRoutes)
 	.use(articlesRoutes)
 	.use(projectsRoutes)
 	.use(slidesRoutes)
+	.use(friendsRoutes)
 	.use(dashboardRoutes)
 	.get('/', () => ({
 		message: 'Hello Elysia',

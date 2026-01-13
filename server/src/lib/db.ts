@@ -9,9 +9,9 @@ const adapter = new PrismaLibSql({
 export const db = new PrismaClient({
 	adapter,
 	log: [
-		{ level: 'query', emit: 'stdout' },
+		// { level: 'query', emit: 'stdout' },
 		{ level: 'error', emit: 'stdout' },
-		{ level: 'info', emit: 'stdout' },
+		// { level: 'info', emit: 'stdout' },
 		{ level: 'warn', emit: 'stdout' },
 	],
 });

@@ -56,3 +56,13 @@ export type Project = Prisma.ProjectModel;
  *
  */
 export type Slide = Prisma.SlideModel;
+/**
+ * Model Friend
+ *
+ */
+export type Friend = Prisma.FriendModel;
+/**
+ * Model SocialLink
+ *
+ */
+export type SocialLink = Prisma.SocialLinkModel;

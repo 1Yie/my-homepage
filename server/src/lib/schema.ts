@@ -84,3 +84,29 @@ export const updateSlideSchema = t.Object({
 	newTab: t.Optional(t.Boolean()),
 	order: t.Optional(t.Number()),
 });
+
+// Friend schemas
+export const socialLinkSchema = t.Object({
+	name: t.String(),
+	link: t.String(),
+	iconLight: t.String(),
+	iconDark: t.String(),
+});
+
+export const createFriendSchema = t.Object({
+	name: t.String(),
+	image: t.String(),
+	description: t.String(),
+	pinned: t.Optional(t.Boolean()),
+	order: t.Optional(t.Number()),
+	socialLinks: t.Array(socialLinkSchema),
+});
+
+export const updateFriendSchema = t.Object({
+	name: t.Optional(t.String()),
+	image: t.Optional(t.String()),
+	description: t.Optional(t.String()),
+	pinned: t.Optional(t.Boolean()),
+	order: t.Optional(t.Number()),
+	socialLinks: t.Optional(t.Array(socialLinkSchema)),
+});

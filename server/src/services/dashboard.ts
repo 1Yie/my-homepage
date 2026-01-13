@@ -9,6 +9,7 @@ export interface DashboardStats {
 		totalProjects: number;
 		totalSlides: number;
 		totalTags: number;
+		totalFriends: number;
 		totalUsers: number;
 	};
 
@@ -58,6 +59,18 @@ export interface DashboardStats {
 		updatedAt: Date;
 	}>;
 
+	// 最近友链（最新 5 个）
+	recentFriends: Array<{
+		id: number;
+		name: string;
+		image: string;
+		description: string;
+		pinned: boolean;
+		order: number;
+		createdAt: Date;
+		updatedAt: Date;
+	}>;
+
 	// 文章按月份统计（最近 12 个月）
 	articlesByMonth: Array<{
 		month: string; // YYYY-MM 格式
@@ -97,6 +110,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 		totalProjects,
 		totalSlides,
 		totalTags,
+		totalFriends,
 		totalUsers,
 	] = await Promise.all([
 		db.article.count(),
@@ -105,6 +119,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 		db.project.count(),
 		db.slide.count(),
 		db.tag.count(),
+		db.friend.count(),
 		db.user.count(),
 	]);
 
@@ -141,7 +156,23 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 		orderBy: { createdAt: 'desc' },
 	});
 
-	// 5. 获取所有文章用于统计
+	// 5. 获取最近 5 个友链
+	const recentFriends = await db.friend.findMany({
+		take: 5,
+		orderBy: { createdAt: 'desc' },
+		select: {
+			id: true,
+			name: true,
+			image: true,
+			description: true,
+			pinned: true,
+			order: true,
+			createdAt: true,
+			updatedAt: true,
+		},
+	});
+
+	// 6. 获取所有文章用于统计
 	const allArticles = await db.article.findMany({
 		select: {
 			createdAt: true,
@@ -149,7 +180,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 		},
 	});
 
-	// 6. 计算按月份统计（最近 12 个月）
+	// 7. 计算按月份统计（最近 12 个月）
 	const now = new Date();
 	const monthsMap = new Map<
 		string,
@@ -188,7 +219,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 		})
 	);
 
-	// 7. 获取热门标签
+	// 8. 获取热门标签
 	const tagsWithCount = await db.tag.findMany({
 		include: {
 			_count: {
@@ -211,13 +242,13 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 		articleCount: tag._count.articles,
 	}));
 
-	// 8. 文章状态分布
+	// 9. 文章状态分布
 	const articleStatusDistribution = {
 		published: publishedArticles,
 		draft: draftArticles,
 	};
 
-	// 9. 最近 7 天的活动趋势
+	// 10. 最近 7 天的活动趋势
 	const sevenDaysAgo = new Date();
 	sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
 	sevenDaysAgo.setHours(0, 0, 0, 0);
@@ -308,6 +339,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 			totalProjects,
 			totalSlides,
 			totalTags,
+			totalFriends,
 			totalUsers,
 		},
 		recentArticles: recentArticles.map((article) => ({
@@ -333,6 +365,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 			updatedAt: project.updatedAt,
 		})),
 		recentSlides,
+		recentFriends,
 		articlesByMonth,
 		topTags,
 		articleStatusDistribution,

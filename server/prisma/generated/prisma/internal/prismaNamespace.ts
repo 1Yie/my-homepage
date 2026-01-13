@@ -420,6 +420,8 @@ export const ModelName = {
 	Tag: 'Tag',
 	Project: 'Project',
 	Slide: 'Slide',
+	Friend: 'Friend',
+	SocialLink: 'SocialLink',
 } as const;
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
@@ -449,7 +451,9 @@ export type TypeMap<
 			| 'article'
 			| 'tag'
 			| 'project'
-			| 'slide';
+			| 'slide'
+			| 'friend'
+			| 'socialLink';
 		txIsolationLevel: TransactionIsolationLevel;
 	};
 	model: {
@@ -1061,6 +1065,158 @@ export type TypeMap<
 				};
 			};
 		};
+		Friend: {
+			payload: Prisma.$FriendPayload<ExtArgs>;
+			fields: Prisma.FriendFieldRefs;
+			operations: {
+				findUnique: {
+					args: Prisma.FriendFindUniqueArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$FriendPayload> | null;
+				};
+				findUniqueOrThrow: {
+					args: Prisma.FriendFindUniqueOrThrowArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$FriendPayload>;
+				};
+				findFirst: {
+					args: Prisma.FriendFindFirstArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$FriendPayload> | null;
+				};
+				findFirstOrThrow: {
+					args: Prisma.FriendFindFirstOrThrowArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$FriendPayload>;
+				};
+				findMany: {
+					args: Prisma.FriendFindManyArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$FriendPayload>[];
+				};
+				create: {
+					args: Prisma.FriendCreateArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$FriendPayload>;
+				};
+				createMany: {
+					args: Prisma.FriendCreateManyArgs<ExtArgs>;
+					result: BatchPayload;
+				};
+				createManyAndReturn: {
+					args: Prisma.FriendCreateManyAndReturnArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$FriendPayload>[];
+				};
+				delete: {
+					args: Prisma.FriendDeleteArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$FriendPayload>;
+				};
+				update: {
+					args: Prisma.FriendUpdateArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$FriendPayload>;
+				};
+				deleteMany: {
+					args: Prisma.FriendDeleteManyArgs<ExtArgs>;
+					result: BatchPayload;
+				};
+				updateMany: {
+					args: Prisma.FriendUpdateManyArgs<ExtArgs>;
+					result: BatchPayload;
+				};
+				updateManyAndReturn: {
+					args: Prisma.FriendUpdateManyAndReturnArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$FriendPayload>[];
+				};
+				upsert: {
+					args: Prisma.FriendUpsertArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$FriendPayload>;
+				};
+				aggregate: {
+					args: Prisma.FriendAggregateArgs<ExtArgs>;
+					result: runtime.Types.Utils.Optional<Prisma.AggregateFriend>;
+				};
+				groupBy: {
+					args: Prisma.FriendGroupByArgs<ExtArgs>;
+					result: runtime.Types.Utils.Optional<Prisma.FriendGroupByOutputType>[];
+				};
+				count: {
+					args: Prisma.FriendCountArgs<ExtArgs>;
+					result:
+						| runtime.Types.Utils.Optional<Prisma.FriendCountAggregateOutputType>
+						| number;
+				};
+			};
+		};
+		SocialLink: {
+			payload: Prisma.$SocialLinkPayload<ExtArgs>;
+			fields: Prisma.SocialLinkFieldRefs;
+			operations: {
+				findUnique: {
+					args: Prisma.SocialLinkFindUniqueArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$SocialLinkPayload> | null;
+				};
+				findUniqueOrThrow: {
+					args: Prisma.SocialLinkFindUniqueOrThrowArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$SocialLinkPayload>;
+				};
+				findFirst: {
+					args: Prisma.SocialLinkFindFirstArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$SocialLinkPayload> | null;
+				};
+				findFirstOrThrow: {
+					args: Prisma.SocialLinkFindFirstOrThrowArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$SocialLinkPayload>;
+				};
+				findMany: {
+					args: Prisma.SocialLinkFindManyArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$SocialLinkPayload>[];
+				};
+				create: {
+					args: Prisma.SocialLinkCreateArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$SocialLinkPayload>;
+				};
+				createMany: {
+					args: Prisma.SocialLinkCreateManyArgs<ExtArgs>;
+					result: BatchPayload;
+				};
+				createManyAndReturn: {
+					args: Prisma.SocialLinkCreateManyAndReturnArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$SocialLinkPayload>[];
+				};
+				delete: {
+					args: Prisma.SocialLinkDeleteArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$SocialLinkPayload>;
+				};
+				update: {
+					args: Prisma.SocialLinkUpdateArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$SocialLinkPayload>;
+				};
+				deleteMany: {
+					args: Prisma.SocialLinkDeleteManyArgs<ExtArgs>;
+					result: BatchPayload;
+				};
+				updateMany: {
+					args: Prisma.SocialLinkUpdateManyArgs<ExtArgs>;
+					result: BatchPayload;
+				};
+				updateManyAndReturn: {
+					args: Prisma.SocialLinkUpdateManyAndReturnArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$SocialLinkPayload>[];
+				};
+				upsert: {
+					args: Prisma.SocialLinkUpsertArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$SocialLinkPayload>;
+				};
+				aggregate: {
+					args: Prisma.SocialLinkAggregateArgs<ExtArgs>;
+					result: runtime.Types.Utils.Optional<Prisma.AggregateSocialLink>;
+				};
+				groupBy: {
+					args: Prisma.SocialLinkGroupByArgs<ExtArgs>;
+					result: runtime.Types.Utils.Optional<Prisma.SocialLinkGroupByOutputType>[];
+				};
+				count: {
+					args: Prisma.SocialLinkCountArgs<ExtArgs>;
+					result:
+						| runtime.Types.Utils.Optional<Prisma.SocialLinkCountAggregateOutputType>
+						| number;
+				};
+			};
+		};
 	};
 } & {
 	other: {
@@ -1210,6 +1366,34 @@ export const SlideScalarFieldEnum = {
 
 export type SlideScalarFieldEnum =
 	(typeof SlideScalarFieldEnum)[keyof typeof SlideScalarFieldEnum];
+
+export const FriendScalarFieldEnum = {
+	id: 'id',
+	name: 'name',
+	image: 'image',
+	description: 'description',
+	pinned: 'pinned',
+	order: 'order',
+	createdAt: 'createdAt',
+	updatedAt: 'updatedAt',
+} as const;
+
+export type FriendScalarFieldEnum =
+	(typeof FriendScalarFieldEnum)[keyof typeof FriendScalarFieldEnum];
+
+export const SocialLinkScalarFieldEnum = {
+	id: 'id',
+	name: 'name',
+	link: 'link',
+	iconLight: 'iconLight',
+	iconDark: 'iconDark',
+	friendId: 'friendId',
+	createdAt: 'createdAt',
+	updatedAt: 'updatedAt',
+} as const;
+
+export type SocialLinkScalarFieldEnum =
+	(typeof SocialLinkScalarFieldEnum)[keyof typeof SocialLinkScalarFieldEnum];
 
 export const SortOrder = {
 	asc: 'asc',
@@ -1380,6 +1564,8 @@ export type GlobalOmitConfig = {
 	tag?: Prisma.TagOmit;
 	project?: Prisma.ProjectOmit;
 	slide?: Prisma.SlideOmit;
+	friend?: Prisma.FriendOmit;
+	socialLink?: Prisma.SocialLinkOmit;
 };
 
 /* Types for Logging */

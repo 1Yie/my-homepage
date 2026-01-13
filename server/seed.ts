@@ -84,6 +84,107 @@ async function seed() {
 		console.log(`✓ 创建图片: ${slide.title}`);
 	}
 
+	// 添加友链数据
+	const friends = [
+		{
+			name: 'Alice',
+			image: 'https://i.pravatar.cc/150?img=1',
+			description: 'Full-stack developer and open source enthusiast',
+			pinned: true,
+			order: 1,
+			socialLinks: {
+				create: [
+					{
+						name: 'GitHub',
+						link: 'https://github.com/alice',
+						iconLight: 'https://cdn.simpleicons.org/github/000000',
+						iconDark: 'https://cdn.simpleicons.org/github/FFFFFF',
+					},
+					{
+						name: 'Twitter',
+						link: 'https://twitter.com/alice',
+						iconLight: 'https://cdn.simpleicons.org/twitter/1DA1F2',
+						iconDark: 'https://cdn.simpleicons.org/twitter/1DA1F2',
+					},
+				],
+			},
+		},
+		{
+			name: 'Bob',
+			image: 'https://i.pravatar.cc/150?img=2',
+			description: 'Designer and creative coder',
+			pinned: true,
+			order: 2,
+			socialLinks: {
+				create: [
+					{
+						name: 'Dribbble',
+						link: 'https://dribbble.com/bob',
+						iconLight: 'https://cdn.simpleicons.org/dribbble/EA4C89',
+						iconDark: 'https://cdn.simpleicons.org/dribbble/EA4C89',
+					},
+					{
+						name: 'GitHub',
+						link: 'https://github.com/bob',
+						iconLight: 'https://cdn.simpleicons.org/github/000000',
+						iconDark: 'https://cdn.simpleicons.org/github/FFFFFF',
+					},
+				],
+			},
+		},
+		{
+			name: 'Charlie',
+			image: 'https://i.pravatar.cc/150?img=3',
+			description: 'Tech blogger',
+			pinned: false,
+			order: 3,
+			socialLinks: {
+				create: [
+					{
+						name: 'Website',
+						link: 'https://charlie.dev',
+						iconLight: 'https://cdn.simpleicons.org/googlechrome/4285F4',
+						iconDark: 'https://cdn.simpleicons.org/googlechrome/4285F4',
+					},
+					{
+						name: 'Twitter',
+						link: 'https://twitter.com/charlie',
+						iconLight: 'https://cdn.simpleicons.org/twitter/1DA1F2',
+						iconDark: 'https://cdn.simpleicons.org/twitter/1DA1F2',
+					},
+				],
+			},
+		},
+		{
+			name: 'David',
+			image: 'https://i.pravatar.cc/150?img=4',
+			description: 'Data scientist',
+			pinned: false,
+			order: 4,
+			socialLinks: {
+				create: [
+					{
+						name: 'LinkedIn',
+						link: 'https://linkedin.com/in/david',
+						iconLight: 'https://cdn.simpleicons.org/linkedin/0A66C2',
+						iconDark: 'https://cdn.simpleicons.org/linkedin/0A66C2',
+					},
+					{
+						name: 'GitHub',
+						link: 'https://github.com/david',
+						iconLight: 'https://cdn.simpleicons.org/github/000000',
+						iconDark: 'https://cdn.simpleicons.org/github/FFFFFF',
+					},
+				],
+			},
+		},
+	];
+
+	for (const friend of friends) {
+		await db.friend.create({ data: friend });
+		console.log(`✓ 创建友链: ${friend.name}`);
+	}
+
 	console.log('初始数据添加完成！');
 }
 

@@ -62,6 +62,8 @@ export const ModelName = {
 	Tag: 'Tag',
 	Project: 'Project',
 	Slide: 'Slide',
+	Friend: 'Friend',
+	SocialLink: 'SocialLink',
 } as const;
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
@@ -190,6 +192,34 @@ export const SlideScalarFieldEnum = {
 
 export type SlideScalarFieldEnum =
 	(typeof SlideScalarFieldEnum)[keyof typeof SlideScalarFieldEnum];
+
+export const FriendScalarFieldEnum = {
+	id: 'id',
+	name: 'name',
+	image: 'image',
+	description: 'description',
+	pinned: 'pinned',
+	order: 'order',
+	createdAt: 'createdAt',
+	updatedAt: 'updatedAt',
+} as const;
+
+export type FriendScalarFieldEnum =
+	(typeof FriendScalarFieldEnum)[keyof typeof FriendScalarFieldEnum];
+
+export const SocialLinkScalarFieldEnum = {
+	id: 'id',
+	name: 'name',
+	link: 'link',
+	iconLight: 'iconLight',
+	iconDark: 'iconDark',
+	friendId: 'friendId',
+	createdAt: 'createdAt',
+	updatedAt: 'updatedAt',
+} as const;
+
+export type SocialLinkScalarFieldEnum =
+	(typeof SocialLinkScalarFieldEnum)[keyof typeof SocialLinkScalarFieldEnum];
 
 export const SortOrder = {
 	asc: 'asc',
