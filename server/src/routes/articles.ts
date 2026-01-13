@@ -103,9 +103,12 @@ export const articlesRoutes = new Elysia()
 	)
 	.get(
 		'/articles/slug/:slug',
-		async ({ params }) => {
+		async ({ params, set }) => {
 			const article = await getPublishedArticleBySlug(params.slug);
-			if (!article) throw new Error('Article not found');
+			if (!article) {
+				set.status = 404;
+				throw new Error('Article not found');
+			}
 			return { success: true, data: article };
 		},
 		{
