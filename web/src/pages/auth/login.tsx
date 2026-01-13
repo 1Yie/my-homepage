@@ -26,27 +26,22 @@ export function LoginPage() {
 	};
 
 	return (
-		<div
-			className="min-h-screen flex items-center justify-center bg-background
-				px-4"
-		>
-			<Card className="w-full max-w-md">
-				<CardHeader className="text-center">
-					<CardTitle className="text-2xl font-bold">登录到 ichiyo</CardTitle>
-					<CardDescription>选择你的登录方式继续</CardDescription>
-				</CardHeader>
-				<CardContent className="space-y-4">
-					<Button
-						className="w-full"
-						onClick={handleGithubLogin}
-						size="lg"
-						variant="outline"
-					>
-						<Github className="mr-2 h-5 w-5" />
-						使用 GitHub 登录
-					</Button>
-				</CardContent>
-			</Card>
-		</div>
+		<Card className="w-full max-w-md">
+			<CardHeader className="text-center">
+				<CardTitle className="text-2xl font-bold">登录到 ichiyo.in</CardTitle>
+				<CardDescription>选择你的登录方式继续</CardDescription>
+			</CardHeader>
+			<CardContent className="space-y-4">
+				<Button
+					className="w-full"
+					onClick={handleGithubLogin}
+					size="lg"
+					variant="outline"
+				>
+					<Github className="mr-2 h-5 w-5" />
+					使用 GitHub 登录
+				</Button>
+			</CardContent>
+		</Card>
 	);
 }

@@ -24,10 +24,22 @@ export const router = createBrowserRouter([
 			},
 			{
 				path: 'blog',
-				lazy: () =>
-					import('@/pages/blog').then((module) => ({
-						Component: module.BlogPage,
-					})),
+				children: [
+					{
+						index: true,
+						lazy: () =>
+							import('@/pages/blog').then((module) => ({
+								Component: module.BlogPage,
+							})),
+					},
+					{
+						path: ':slug',
+						lazy: () =>
+							import('@/pages/blog/detail').then((module) => ({
+								Component: module.BlogDetailPage,
+							})),
+					},
+				],
 			},
 			{
 				path: 'about',
@@ -42,6 +54,25 @@ export const router = createBrowserRouter([
 					import('@/pages/links').then((module) => ({
 						Component: module.LinksPage,
 					})),
+			},
+			{
+				path: 'tags',
+				children: [
+					{
+						index: true,
+						lazy: () =>
+							import('@/pages/tags').then((module) => ({
+								Component: module.TagsPage,
+							})),
+					},
+					{
+						path: ':tagName',
+						lazy: () =>
+							import('@/pages/tags/tag-name').then((module) => ({
+								Component: module.TagArticlesPage,
+							})),
+					},
+				],
 			},
 		],
 	},
@@ -58,6 +89,48 @@ export const router = createBrowserRouter([
 					import('@/pages/auth/login').then((module) => ({
 						Component: module.LoginPage,
 					})),
+			},
+		],
+	},
+	{
+		path: '/dashboard',
+		lazy: () =>
+			import('@/layout/dashboard').then((module) => ({
+				Component: module.DashboardLayout,
+			})),
+		children: [
+			{
+				index: true,
+				lazy: () =>
+					import('@/pages/dashboard').then((module) => ({
+						Component: module.DashboardPage,
+					})),
+			},
+			{
+				path: 'articles',
+				children: [
+					{
+						index: true,
+						lazy: () =>
+							import('@/pages/dashboard/articles').then((module) => ({
+								Component: module.ArticlesPage,
+							})),
+					},
+					{
+						path: 'create',
+						lazy: () =>
+							import('@/pages/dashboard/articles/create').then((module) => ({
+								Component: module.CreateArticlePage,
+							})),
+					},
+					{
+						path: 'edit/:id',
+						lazy: () =>
+							import('@/pages/dashboard/articles/edit').then((module) => ({
+								Component: module.EditArticlePage,
+							})),
+					},
+				],
 			},
 		],
 	},

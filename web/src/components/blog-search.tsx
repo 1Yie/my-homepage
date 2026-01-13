@@ -14,7 +14,14 @@ function fetchSearchResults(query: string): Promise<Article[]> {
 	if (!query.trim()) return Promise.resolve([]);
 	return client.articles
 		.get({ query: { public: 'true', q: query } })
-		.then((r) => r.data?.data || []);
+		.then((r) => {
+			const data = r.data?.data;
+			if (!data) return [];
+			if (Array.isArray(data)) {
+				return data;
+			}
+			return data.articles || [];
+		});
 }
 
 const debouncedFetchSearchResults = debouncePromise(fetchSearchResults, 500);
@@ -44,11 +51,9 @@ function SearchResults({
 							className="text-foreground line-clamp-2 text-sm font-medium
 								sm:text-base"
 						>
-							{post.slug}
+							{post.title}
 						</h3>
-						<p className="text-muted-foreground text-xs">
-							{post.author?.name || 'Unknown'}
-						</p>
+
 						<div className="my-1 flex flex-wrap gap-1">
 							{post.tags.slice(0, 5).map((tag) => (
 								<span

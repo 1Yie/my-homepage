@@ -6,14 +6,16 @@ import BlogSearch from '@/components/blog-search';
 interface BlogPanelProps {
 	onSearchChange: (value: string) => void;
 	searchValue: string;
+	className?: string;
 }
 
 export default function BlogPanel({
 	onSearchChange,
 	searchValue,
+	className,
 }: BlogPanelProps) {
 	return (
-		<div className="border-b">
+		<div className={`border-b ${className || ''}`}>
 			<section
 				className="section-base bg-diagonal-stripes-sm flex flex-col gap-3 px-4
 					py-3 sm:flex-row sm:justify-between sm:gap-0 sm:py-1.5"

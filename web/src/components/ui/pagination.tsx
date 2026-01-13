@@ -86,7 +86,7 @@ function PaginationPrevious({
 			{...props}
 		>
 			<ChevronLeftIcon className="sm:-ms-1" />
-			<span className="max-sm:hidden">Previous</span>
+			<span className="max-sm:hidden">上一页</span>
 		</PaginationLink>
 	);
 }
@@ -102,7 +102,7 @@ function PaginationNext({
 			size="default"
 			{...props}
 		>
-			<span className="max-sm:hidden">Next</span>
+			<span className="max-sm:hidden">下一页</span>
 			<ChevronRightIcon className="sm:-me-1" />
 		</PaginationLink>
 	);
@@ -120,7 +120,7 @@ function PaginationEllipsis({
 			{...props}
 		>
 			<MoreHorizontalIcon className="size-5 sm:size-4" />
-			<span className="sr-only">More pages</span>
+			<span className="sr-only">更多页面</span>
 		</span>
 	);
 }
