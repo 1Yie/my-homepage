@@ -1,11 +1,14 @@
-FROM oven/bun:latest
+FROM oven/bun:latest AS builder
 WORKDIR /app
+
+ENV HUSKY=0
 
 COPY package.json ./
 COPY server/package.json ./server/
 COPY web/package.json ./web/
 
-ENV HUSKY=0
+COPY bun.lockb* ./ 
+
 RUN bun install --ignore-scripts
 
 COPY . .
@@ -13,5 +16,20 @@ COPY . .
 WORKDIR /app/server
 RUN bunx prisma generate
 
+FROM oven/bun:slim AS runner
+
+WORKDIR /app/server
+
+RUN apt-get update && \
+    apt-get install -y openssl && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /app/node_modules /app/node_modules
+COPY --from=builder /app/server ./
+
+ENV NODE_ENV=production
+ENV HUSKY=0
+
 EXPOSE 3000
+
 CMD ["sh", "-c", "bunx prisma db push && bun run src/index.ts"]
