@@ -5,7 +5,6 @@ COPY package.json ./
 COPY server/package.json ./server/
 COPY web/package.json ./web/
 
-# 同样禁用 Husky 和安装后脚本
 ENV HUSKY=0
 RUN bun install --ignore-scripts
 
