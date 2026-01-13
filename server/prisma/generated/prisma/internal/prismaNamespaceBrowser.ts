@@ -60,6 +60,8 @@ export const ModelName = {
 	Verification: 'Verification',
 	Article: 'Article',
 	Tag: 'Tag',
+	Project: 'Project',
+	Slide: 'Slide',
 } as const;
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
@@ -151,10 +153,43 @@ export type ArticleScalarFieldEnum =
 export const TagScalarFieldEnum = {
 	id: 'id',
 	name: 'name',
+	createdAt: 'createdAt',
+	updatedAt: 'updatedAt',
 } as const;
 
 export type TagScalarFieldEnum =
 	(typeof TagScalarFieldEnum)[keyof typeof TagScalarFieldEnum];
+
+export const ProjectScalarFieldEnum = {
+	id: 'id',
+	name: 'name',
+	description: 'description',
+	tags: 'tags',
+	imageUrl: 'imageUrl',
+	githubUrl: 'githubUrl',
+	liveUrl: 'liveUrl',
+	order: 'order',
+	createdAt: 'createdAt',
+	updatedAt: 'updatedAt',
+} as const;
+
+export type ProjectScalarFieldEnum =
+	(typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum];
+
+export const SlideScalarFieldEnum = {
+	id: 'id',
+	title: 'title',
+	src: 'src',
+	button: 'button',
+	link: 'link',
+	newTab: 'newTab',
+	order: 'order',
+	createdAt: 'createdAt',
+	updatedAt: 'updatedAt',
+} as const;
+
+export type SlideScalarFieldEnum =
+	(typeof SlideScalarFieldEnum)[keyof typeof SlideScalarFieldEnum];
 
 export const SortOrder = {
 	asc: 'asc',

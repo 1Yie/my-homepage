@@ -18,6 +18,7 @@ import {
 	getTags,
 	createTag,
 	getPublishedArticlesByTag,
+	generateRSS,
 } from '../services/articles';
 
 export const articlesRoutes = new Elysia()
@@ -146,4 +147,12 @@ export const articlesRoutes = new Elysia()
 				})
 			),
 		}
-	);
+	)
+	.get('/rss', async ({ request, set }) => {
+		const url = new URL(request.url);
+		const baseUrl = `${url.protocol}//${url.host}`;
+		const rss = await generateRSS(baseUrl);
+		set.headers['Content-Type'] = 'text/xml; charset=utf-8';
+		set.headers['Cache-Control'] = 'public, max-age=3600';
+		return rss;
+	});

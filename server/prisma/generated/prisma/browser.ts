@@ -46,3 +46,13 @@ export type Article = Prisma.ArticleModel;
  *
  */
 export type Tag = Prisma.TagModel;
+/**
+ * Model Project
+ *
+ */
+export type Project = Prisma.ProjectModel;
+/**
+ * Model Slide
+ *
+ */
+export type Slide = Prisma.SlideModel;

@@ -1,13 +1,16 @@
 import { cors } from '@elysiajs/cors';
-import { Elysia, Context } from 'elysia';
+import { type Context, Elysia } from 'elysia';
 
 import { auth } from './lib/auth';
 import { articlesRoutes } from './routes/articles';
+import { dashboardRoutes } from './routes/dashboard';
+import { projectsRoutes } from './routes/projects';
+import { slidesRoutes } from './routes/slides';
+import { tagsRoutes } from './routes/tags';
 
 const betterAuthView = async (context: Context) => {
 	const BETTER_AUTH_ACCEPT_METHODS = ['POST', 'GET'];
 	if (BETTER_AUTH_ACCEPT_METHODS.includes(context.request.method)) {
-		// 必须等待 handler 执行完成
 		const response = await auth.handler(context.request);
 		return response;
 	} else {
@@ -15,8 +18,8 @@ const betterAuthView = async (context: Context) => {
 	}
 };
 
-const PORT = Number(Bun.env.PORT) || 3000;
-const HOSTNAME = Bun.env.HOSTNAME || 'localhost';
+const PORT = Number(process.env.PORT) || 3000;
+const HOSTNAME = process.env.HOSTNAME || 'localhost';
 
 const app = new Elysia()
 	.use(
@@ -28,7 +31,11 @@ const app = new Elysia()
 		})
 	)
 	.all('/api/auth/*', betterAuthView)
+	.use(tagsRoutes)
 	.use(articlesRoutes)
+	.use(projectsRoutes)
+	.use(slidesRoutes)
+	.use(dashboardRoutes)
 	.get('/', () => ({
 		message: 'Hello Elysia',
 		status: 'running',

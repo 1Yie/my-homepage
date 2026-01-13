@@ -88,9 +88,40 @@ model Article {
 }
 
 model Tag {
-  id       Int       @id @default(autoincrement())
-  name     String    @unique
-  articles Article[]
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  articles  Article[]
 
   @@map("tag")
+}
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  tags        String // 存储为 JSON 字符串
+  imageUrl    String?
+  githubUrl   String?
+  liveUrl     String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+
+  @@map("project")
+}
+
+model Slide {
+  id        Int      @id @default(autoincrement())
+  title     String
+  src       String
+  button    String?
+  link      String?
+  newTab    Boolean  @default(false)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("slide")
 }

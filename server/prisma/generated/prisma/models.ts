@@ -13,4 +13,6 @@ export type * from './models/Account.js';
 export type * from './models/Verification.js';
 export type * from './models/Article.js';
 export type * from './models/Tag.js';
+export type * from './models/Project.js';
+export type * from './models/Slide.js';
 export type * from './commonInputTypes.js';
