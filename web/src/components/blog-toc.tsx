@@ -105,12 +105,12 @@ export default function BlogTOC() {
 				<div
 					className="hidden space-y-4 border-r border-transparent pl-4 lg:block"
 				>
-					<Skeleton className="h-4 w-[120px]" />
+					<Skeleton className="h-4 w-30" />
 					<div className="space-y-2.5">
-						<Skeleton className="h-3 w-[150px]" />
-						<Skeleton className="ml-3 h-3 w-[130px]" />
-						<Skeleton className="ml-3 h-3 w-[140px]" />
-						<Skeleton className="h-3 w-[110px]" />
+						<Skeleton className="h-3 w-37.5" />
+						<Skeleton className="ml-3 h-3 w-32.5" />
+						<Skeleton className="ml-3 h-3 w-35" />
+						<Skeleton className="h-3 w-27.5" />
 					</div>
 				</div>
 			</>

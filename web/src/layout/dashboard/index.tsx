@@ -1,10 +1,10 @@
 import {
-	BarChart3,
 	FileText,
+	FolderKanban,
 	Home,
+	Images,
 	LayoutDashboard,
-	Settings,
-	Users,
+	Tag,
 } from 'lucide-react';
 import { useEffect } from 'react';
 import { Navigate, Outlet, useLocation, Link } from 'react-router-dom';
@@ -44,19 +44,19 @@ const sidebarNavItems = [
 		icon: FileText,
 	},
 	{
-		title: '用户管理',
-		url: '/dashboard/users',
-		icon: Users,
+		title: '项目管理',
+		url: '/dashboard/projects',
+		icon: FolderKanban,
 	},
 	{
-		title: '统计',
-		url: '/dashboard/analytics',
-		icon: BarChart3,
+		title: '相册管理',
+		url: '/dashboard/slides',
+		icon: Images,
 	},
 	{
-		title: '设置',
-		url: '/dashboard/settings',
-		icon: Settings,
+		title: '标签管理',
+		url: '/dashboard/tags',
+		icon: Tag,
 	},
 ];
 
@@ -80,10 +80,23 @@ const generateBreadcrumbs = (pathname: string) => {
 
 			// Handle create/edit pages
 			if (pathSegments.length > 2) {
+				const section = pathSegments[1];
 				if (pathSegments[2] === 'create') {
-					breadcrumbs.push({ label: '创建文章' });
+					const labels: Record<string, string> = {
+						articles: '创建文章',
+						projects: '创建项目',
+						slides: '添加图片',
+						tags: '创建标签',
+					};
+					breadcrumbs.push({ label: labels[section] || '创建' });
 				} else if (pathSegments[2] === 'edit') {
-					breadcrumbs.push({ label: '编辑文章' });
+					const labels: Record<string, string> = {
+						articles: '编辑文章',
+						projects: '编辑项目',
+						slides: '编辑图片',
+						tags: '编辑标签',
+					};
+					breadcrumbs.push({ label: labels[section] || '编辑' });
 				}
 			}
 		}

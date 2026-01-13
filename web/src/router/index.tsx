@@ -49,6 +49,13 @@ export const router = createBrowserRouter([
 					})),
 			},
 			{
+				path: 'archive',
+				lazy: () =>
+					import('@/pages/archive').then((module) => ({
+						Component: module.ArchivePage,
+					})),
+			},
+			{
 				path: 'links',
 				lazy: () =>
 					import('@/pages/links').then((module) => ({
@@ -128,6 +135,84 @@ export const router = createBrowserRouter([
 						lazy: () =>
 							import('@/pages/dashboard/articles/edit').then((module) => ({
 								Component: module.EditArticlePage,
+							})),
+					},
+				],
+			},
+			{
+				path: 'projects',
+				children: [
+					{
+						index: true,
+						lazy: () =>
+							import('@/pages/dashboard/projects').then((module) => ({
+								Component: module.ProjectsPage,
+							})),
+					},
+					{
+						path: 'create',
+						lazy: () =>
+							import('@/pages/dashboard/projects/create').then((module) => ({
+								Component: module.CreateProjectPage,
+							})),
+					},
+					{
+						path: 'edit/:id',
+						lazy: () =>
+							import('@/pages/dashboard/projects/edit').then((module) => ({
+								Component: module.EditProjectPage,
+							})),
+					},
+				],
+			},
+			{
+				path: 'slides',
+				children: [
+					{
+						index: true,
+						lazy: () =>
+							import('@/pages/dashboard/slides').then((module) => ({
+								Component: module.SlidesPage,
+							})),
+					},
+					{
+						path: 'create',
+						lazy: () =>
+							import('@/pages/dashboard/slides/create').then((module) => ({
+								Component: module.CreateSlidePage,
+							})),
+					},
+					{
+						path: 'edit/:id',
+						lazy: () =>
+							import('@/pages/dashboard/slides/edit').then((module) => ({
+								Component: module.EditSlidePage,
+							})),
+					},
+				],
+			},
+			{
+				path: 'tags',
+				children: [
+					{
+						index: true,
+						lazy: () =>
+							import('@/pages/dashboard/tags').then((module) => ({
+								Component: module.TagsPage,
+							})),
+					},
+					{
+						path: 'create',
+						lazy: () =>
+							import('@/pages/dashboard/tags/create').then((module) => ({
+								Component: module.CreateTagPage,
+							})),
+					},
+					{
+						path: 'edit/:id',
+						lazy: () =>
+							import('@/pages/dashboard/tags/edit').then((module) => ({
+								Component: module.EditTagPage,
 							})),
 					},
 				],

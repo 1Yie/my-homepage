@@ -38,12 +38,25 @@ export function TagArticlesPage() {
 
 			{loading ? (
 				<section className="section-base">
-					<div className="space-y-6">
+					<div className="divide-y">
 						{Array.from({ length: 3 }).map((_, i) => (
-							<div className="space-y-3" key={i}>
-								<div className="h-6 bg-muted rounded animate-pulse" />
-								<div className="h-4 bg-muted rounded animate-pulse w-3/4" />
-								<div className="h-4 bg-muted rounded animate-pulse w-1/2" />
+							<div className="p-6" key={i}>
+								<div className="flex gap-8">
+									{i === 0 && (
+										<div className="shrink-0">
+											<div className="h-36 w-48 bg-muted rounded animate-pulse" />
+										</div>
+									)}
+									<div
+										className={`flex-1 min-w-0 space-y-3
+											${i === 0 ? '' : 'ml-0'}`}
+									>
+										<div className="h-8 bg-muted rounded animate-pulse w-3/4" />
+										<div className="h-5 bg-muted rounded animate-pulse w-1/2" />
+										<div className="h-4 bg-muted rounded animate-pulse w-1/4" />
+										<div className="h-4 bg-muted rounded animate-pulse" />
+									</div>
+								</div>
 							</div>
 						))}
 					</div>

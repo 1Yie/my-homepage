@@ -32,9 +32,28 @@ export function BlogPage() {
 
 			<section className="section-base">
 				{loading ? (
-					<div className="flex items-center justify-center py-8">
-						<p>Loading articles...</p>
-					</div>
+					<ul className="divide-y">
+						{Array.from({ length: 5 }).map((_, i) => (
+							<li className="p-6" key={i}>
+								<div className="flex gap-8">
+									{i === 0 && (
+										<div className="shrink-0">
+											<div className="h-36 w-48 bg-muted rounded animate-pulse" />
+										</div>
+									)}
+									<div
+										className={`flex-1 min-w-0 space-y-3
+											${i === 0 ? '' : 'ml-0'}`}
+									>
+										<div className="h-8 bg-muted rounded animate-pulse w-3/4" />
+										<div className="h-5 bg-muted rounded animate-pulse w-1/2" />
+										<div className="h-4 bg-muted rounded animate-pulse w-1/4" />
+										<div className="h-4 bg-muted rounded animate-pulse" />
+									</div>
+								</div>
+							</li>
+						))}
+					</ul>
 				) : error ? (
 					<div className="flex items-center justify-center py-8">
 						<p className="text-red-500">Error: {error}</p>

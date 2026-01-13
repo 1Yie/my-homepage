@@ -1,16 +1,10 @@
-import { CalendarDays, Edit } from 'lucide-react';
+import { CalendarDays, Clock, Edit } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 import type { Article } from '@/hooks/article/use-get-articles';
 
 interface ArticleCardProps {
 	article: Article;
-}
-
-function estimateReadingTime(content: string): number {
-	const wordsPerMinute = 200;
-	const words = content.split(/\s+/).length;
-	return Math.ceil(words / wordsPerMinute);
 }
 
 function extractPreview(content: string, maxLength: number = 150): string {
@@ -91,8 +85,16 @@ export function ArticleCard({ article }: ArticleCardProps) {
 								);
 							})()}
 						</div>
-						<p className="text-sm text-muted-foreground mt-1">
-							{estimateReadingTime(article.content)} 分钟阅读
+						<p
+							className="text-sm text-muted-foreground mt-1 flex items-center
+								gap-1"
+						>
+							<Clock className="w-4 h-4" />
+							{(() => {
+								const time = article.readingTime;
+								if (!time || time < 1) return '< 1分钟阅读';
+								return `${time}分钟阅读`;
+							})()}
 						</p>
 						{article.tags.length > 0 && (
 							<div className="flex flex-wrap gap-1 mt-2">

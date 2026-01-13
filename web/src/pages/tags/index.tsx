@@ -26,7 +26,7 @@ export function TagsPage() {
 							lg:grid-cols-4"
 					>
 						{Array.from({ length: 12 }).map((_, i) => (
-							<Skeleton className="h-12 w-full" key={i} />
+							<Skeleton className="h-12 w-full rounded-none" key={i} />
 						))}
 					</div>
 				) : (

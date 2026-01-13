@@ -5,6 +5,9 @@ import { client } from '@/api/client';
 export interface Tag {
 	id: number;
 	name: string;
+	createdAt?: string;
+	updatedAt?: string;
+	articleCount?: number;
 }
 
 export function useGetTags() {

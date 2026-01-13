@@ -30,14 +30,16 @@ export default function BlogPanel({
 							<Tags size={19} />
 							标签
 						</Link>
-						<Link
+						<a
 							className="hover:text-foreground/60 flex items-center gap-1
 								text-base transition-colors"
-							to="/feed.xml"
+							href={`${import.meta.env.VITE_BASE_URL}/rss`}
+							rel="noopener noreferrer"
+							target="_blank"
 						>
 							<Rss size={17} />
 							订阅
-						</Link>
+						</a>
 						<Link
 							className="hover:text-foreground/60 flex items-center gap-1
 								text-base transition-colors"
