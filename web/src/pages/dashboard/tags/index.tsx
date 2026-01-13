@@ -17,6 +17,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Spinner } from '@/components/ui/spinner';
 import {
 	Table,
 	TableBody,
@@ -25,6 +26,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
+import { useTitle } from '@/hooks/use-page-title';
 
 interface TagListItem {
 	id: number;
@@ -41,6 +43,8 @@ export function TagsPage() {
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 	const [tagToDelete, setTagToDelete] = useState<TagListItem | null>(null);
 	const [deleteError, setDeleteError] = useState<string | null>(null);
+
+	useTitle('标签管理');
 
 	const fetchTags = useCallback(async () => {
 		try {
@@ -118,7 +122,7 @@ export function TagsPage() {
 					<div className="flex items-center gap-4">
 						<div className="relative">
 							<Search
-								className="absolute z-50 left-2 top-2.5 h-4 w-4
+								className="absolute z-50 left-2 top-2 h-4 w-4
 									text-muted-foreground"
 							/>
 							<Input
@@ -144,7 +148,9 @@ export function TagsPage() {
 					<CardContent>
 						{loading ? (
 							<div className="flex items-center justify-center py-8">
-								<p className="text-muted-foreground">加载中...</p>
+								<div className="text-center">
+									<Spinner className="mx-auto" size={32} />
+								</div>
 							</div>
 						) : tags.length === 0 ? (
 							<div

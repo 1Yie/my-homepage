@@ -2,8 +2,10 @@ import { Link } from 'react-router-dom';
 
 import FadeContent from '@/components/ui/fade-content';
 import SplitText from '@/components/ui/split-text';
+import { useTitle } from '@/hooks/use-page-title';
 
 export function NotFoundPage() {
+	useTitle('[ERROR] 404_', { hasSuffix: false });
 	return (
 		<div className="border-b">
 			<section

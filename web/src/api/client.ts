@@ -10,7 +10,7 @@ export const client = treaty<App>(import.meta.env.VITE_BASE_URL, {
 });
 
 export const authClient = createAuthClient({
-	baseURL: 'http://localhost:3000',
+	baseURL: import.meta.env.VITE_BASE_URL,
 	fetchOptions: {
 		credentials: 'include',
 	},

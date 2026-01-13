@@ -4,7 +4,8 @@ import { useParams } from 'react-router-dom';
 import { client } from '@/api/client';
 import { ArticleForm } from '@/components/article-form';
 import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
-
+import { Spinner } from '@/components/ui/spinner';
+import { useTitle } from '@/hooks/use-page-title';
 interface ApiResponse<T> {
 	success: boolean;
 	data: T;
@@ -63,6 +64,7 @@ export function EditArticlePage() {
 		tagIds: number[];
 		headerImage: string;
 	} | null>(null);
+	useTitle(`编辑文章 ${initialFormData?.title}`);
 
 	useEffect(() => {
 		const fetchArticle = async () => {
@@ -102,7 +104,9 @@ export function EditArticlePage() {
 		return (
 			<div className="flex flex-1 flex-col gap-4 p-4">
 				<div className="flex items-center justify-center py-8">
-					<p className="text-muted-foreground">加载中...</p>
+					<div className="text-center">
+						<Spinner className="mx-auto" size={32} />
+					</div>
 				</div>
 			</div>
 		);

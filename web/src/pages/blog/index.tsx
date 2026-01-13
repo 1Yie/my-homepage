@@ -5,12 +5,13 @@ import { ArticlePagination } from '@/components/article-pagination';
 import BlogPanel from '@/components/blog-panel';
 import PageTitle from '@/components/page-title';
 import { useGetArticles } from '@/hooks/article/use-get-articles';
+import { useTitle } from '@/hooks/use-page-title';
 
 export function BlogPage() {
 	const [search, setSearch] = useState('');
 	const [currentPage, setCurrentPage] = useState(1);
 	const limit = 5;
-
+	useTitle('博客');
 	const { articles, totalPages, loading, error } = useGetArticles({
 		public: true,
 		preview: true,

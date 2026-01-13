@@ -1,7 +1,9 @@
 import { ArticleForm } from '@/components/article-form';
 import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
+import { useTitle } from '@/hooks/use-page-title';
 
 export function CreateArticlePage() {
+	useTitle('新建文章');
 	return (
 		<div className="flex flex-1 flex-col gap-4 p-4">
 			<DashboardHeaderTitle

@@ -25,6 +25,7 @@ interface ArticleFormData {
 	content: string;
 	isDraft: boolean;
 	tagIds: number[];
+	tagNames: string[]; // Store new tag names that don't exist yet
 	headerImage: string;
 }
 
@@ -48,45 +49,43 @@ export function ArticleForm({
 	const handleAddTag = async () => {
 		if (!newTagName.trim()) return;
 
-		try {
-			// Check if tag already exists
-			const existingTag = availableTags.find(
-				(tag) => tag.name.toLowerCase() === newTagName.trim().toLowerCase()
-			);
+		// Check if tag already exists
+		const existingTag = availableTags.find(
+			(tag) => tag.name.toLowerCase() === newTagName.trim().toLowerCase()
+		);
 
-			if (existingTag) {
-				// If tag exists, just add it to selected tags
-				if (!formData.tagIds.includes(existingTag.id)) {
-					setFormData({
-						...formData,
-						tagIds: [...formData.tagIds, existingTag.id],
-					});
-				}
-			} else {
-				// Create new tag
-				const response = await client.tags.post({
-					name: newTagName.trim(),
+		if (existingTag) {
+			// If tag exists, just add it to selected tags
+			if (!formData.tagIds.includes(existingTag.id)) {
+				setFormData({
+					...formData,
+					tagIds: [...formData.tagIds, existingTag.id],
 				});
-				if (response.data) {
-					setFormData({
-						...formData,
-						tagIds: [...formData.tagIds, response.data.data.id],
-					});
-					// Invalidate tags query to refresh the list
-					queryClient.invalidateQueries({ queryKey: ['tags'] });
-				}
 			}
-
-			setNewTagName('');
-		} catch (error) {
-			console.error('Failed to add tag:', error);
+		} else {
+			// Add to new tag names (will be created when saving the article)
+			if (!formData.tagNames.includes(newTagName.trim())) {
+				setFormData({
+					...formData,
+					tagNames: [...formData.tagNames, newTagName.trim()],
+				});
+			}
 		}
+
+		setNewTagName('');
 	};
 
 	const handleRemoveTag = (tagId: number) => {
 		setFormData({
 			...formData,
 			tagIds: formData.tagIds.filter((id) => id !== tagId),
+		});
+	};
+
+	const handleRemoveNewTag = (tagName: string) => {
+		setFormData({
+			...formData,
+			tagNames: formData.tagNames.filter((name) => name !== tagName),
 		});
 	};
 
@@ -97,6 +96,7 @@ export function ArticleForm({
 		content: initialData?.content || '',
 		isDraft: initialData?.isDraft ?? true,
 		tagIds: initialData?.tagIds || [],
+		tagNames: [], // New tags to be created
 		headerImage: initialData?.headerImage || '',
 	});
 
@@ -106,13 +106,27 @@ export function ArticleForm({
 		try {
 			setLoading(true);
 
+			// First, create any new tags
+			const newTagIds: number[] = [];
+			for (const tagName of formData.tagNames) {
+				const response = await client.tags.post({
+					name: tagName,
+				});
+				if (response.data) {
+					newTagIds.push(response.data.data.id);
+				}
+			}
+
+			// Combine existing tag IDs with newly created tag IDs
+			const allTagIds = [...formData.tagIds, ...newTagIds];
+
 			if (mode === 'create') {
 				await client.articles.post({
 					title: formData.title,
 					slug: formData.slug,
 					content: formData.content,
 					isDraft: formData.isDraft,
-					tagIds: formData.tagIds,
+					tagIds: allTagIds,
 					headerImage: formData.headerImage,
 				});
 			} else if (mode === 'edit' && articleId) {
@@ -121,10 +135,13 @@ export function ArticleForm({
 					slug: formData.slug,
 					content: formData.content,
 					isDraft: formData.isDraft,
-					tagIds: formData.tagIds,
+					tagIds: allTagIds,
 					headerImage: formData.headerImage,
 				});
 			}
+
+			// Invalidate tags query to refresh the list
+			queryClient.invalidateQueries({ queryKey: ['tags'] });
 
 			navigate('/dashboard/articles');
 		} catch (error) {
@@ -220,8 +237,9 @@ export function ArticleForm({
 							</div>
 
 							{/* Selected tags display */}
-							{formData.tagIds.length > 0 ? (
+							{formData.tagIds.length > 0 || formData.tagNames.length > 0 ? (
 								<div className="flex flex-wrap gap-2">
+									{/* Existing tags */}
 									{formData.tagIds.map((tagId) => {
 										const tag = availableTags.find((t) => t.id === tagId);
 										return tag ? (
@@ -229,7 +247,7 @@ export function ArticleForm({
 												className="inline-flex items-center gap-1 px-2 py-1
 													bg-secondary text-secondary-foreground rounded-md
 													text-sm"
-												key={tag.id}
+												key={`existing-${tag.id}`}
 											>
 												{tag.name}
 												<button
@@ -243,6 +261,27 @@ export function ArticleForm({
 											</div>
 										) : null;
 									})}
+									{/* New tags (not yet created) */}
+									{formData.tagNames.map((tagName) => (
+										<div
+											className="inline-flex items-center gap-1 px-2 py-1
+												bg-blue-100 text-blue-800 rounded-md text-sm border
+												border-blue-300 dark:bg-blue-900 dark:text-blue-100
+												dark:border-blue-700"
+											key={`new-${tagName}`}
+										>
+											{tagName}
+
+											<button
+												className="ml-1 text-blue-800/70 hover:text-blue-800
+													dark:text-blue-100/70 dark:hover:text-blue-100"
+												onClick={() => handleRemoveNewTag(tagName)}
+												type="button"
+											>
+												×
+											</button>
+										</div>
+									))}
 								</div>
 							) : (
 								<div className="text-sm text-muted-foreground">

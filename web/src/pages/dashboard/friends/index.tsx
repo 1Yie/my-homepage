@@ -1,6 +1,8 @@
-import { Plus, Search } from 'lucide-react';
+import { Pin, Plus, Search, Users } from 'lucide-react';
 import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+
+import type { Friend } from '@/hooks/use-get-friends';
 
 import { client } from '@/api/client';
 import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
@@ -28,78 +30,57 @@ import {
 } from '@/components/ui/table';
 import { useTitle } from '@/hooks/use-page-title';
 
-interface ProjectListItem {
-	id: number;
-	name: string;
-	description: string;
-	tags: string[];
-	imageUrl?: string | null;
-	githubUrl?: string | null;
-	liveUrl?: string | null;
-	order: number;
-	createdAt: string | Date;
-	updatedAt: string | Date;
-}
-
-export function ProjectsPage() {
-	const [projects, setProjects] = useState<ProjectListItem[]>([]);
+export function FriendsPage() {
+	const [friends, setFriends] = useState<Friend[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [searchQuery, setSearchQuery] = useState('');
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-	const [projectToDelete, setProjectToDelete] =
-		useState<ProjectListItem | null>(null);
-
-	useTitle('项目管理');
-
-	const fetchProjects = useCallback(async () => {
+	const [friendToDelete, setFriendToDelete] = useState<Friend | null>(null);
+	useTitle('友链管理');
+	const fetchFriends = useCallback(async () => {
 		try {
 			setLoading(true);
-			const response = await client.projects.get();
-			if (response.data) {
+			const response = await client.friends.get();
+			if (response.data?.data) {
 				const data = response.data.data;
-				if (Array.isArray(data)) {
-					const filtered = searchQuery
-						? (data as unknown[]).filter((p: unknown) => {
-								const project = p as ProjectListItem;
-								return (
-									project.name
-										.toLowerCase()
-										.includes(searchQuery.toLowerCase()) ||
-									project.description
-										.toLowerCase()
-										.includes(searchQuery.toLowerCase())
-								);
-							})
-						: data;
-					setProjects(filtered as ProjectListItem[]);
-				}
+				const filtered = searchQuery
+					? data.filter((friend) => {
+							return (
+								friend.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+								friend.description
+									.toLowerCase()
+									.includes(searchQuery.toLowerCase())
+							);
+						})
+					: data;
+				setFriends(filtered);
 			}
 		} catch (error) {
-			console.error('Failed to fetch projects:', error);
+			console.error('Failed to fetch friends:', error);
 		} finally {
 			setLoading(false);
 		}
 	}, [searchQuery]);
 
 	useEffect(() => {
-		fetchProjects();
-	}, [fetchProjects]);
+		fetchFriends();
+	}, [fetchFriends]);
 
-	const handleDelete = async (project: ProjectListItem) => {
-		setProjectToDelete(project);
+	const handleDelete = async (friend: Friend) => {
+		setFriendToDelete(friend);
 		setDeleteDialogOpen(true);
 	};
 
 	const confirmDelete = async () => {
-		if (!projectToDelete) return;
+		if (!friendToDelete) return;
 
 		try {
-			await client.projects({ id: projectToDelete.id.toString() }).delete();
-			fetchProjects();
+			await client.friends({ id: friendToDelete.id.toString() }).delete();
+			fetchFriends();
 			setDeleteDialogOpen(false);
-			setProjectToDelete(null);
+			setFriendToDelete(null);
 		} catch (error) {
-			console.error('Failed to delete project:', error);
+			console.error('Failed to delete friend:', error);
 		}
 	};
 
@@ -107,8 +88,8 @@ export function ProjectsPage() {
 		<div className="flex flex-1 flex-col gap-4 p-4">
 			<div className="flex flex-1 flex-col gap-4">
 				<DashboardHeaderTitle
-					subtitle="管理您的所有项目展示"
-					title="项目管理"
+					subtitle="管理友情链接，展示您的伙伴"
+					title="友链管理"
 				/>
 
 				<div className="flex items-center justify-between">
@@ -121,7 +102,7 @@ export function ProjectsPage() {
 							<Input
 								className="pl-8 w-64 h-full"
 								onChange={(e) => setSearchQuery(e.target.value)}
-								placeholder="搜索项目..."
+								placeholder="搜索友链..."
 								value={searchQuery}
 							/>
 						</div>
@@ -129,9 +110,9 @@ export function ProjectsPage() {
 
 					<Button
 						render={
-							<Link to="/dashboard/projects/create">
+							<Link to="/dashboard/friends/create">
 								<Plus className="mr-2 h-4 w-4" />
-								创建项目
+								添加友链
 							</Link>
 						}
 					></Button>
@@ -145,17 +126,17 @@ export function ProjectsPage() {
 									<Spinner className="mx-auto" size={32} />
 								</div>
 							</div>
-						) : projects.length === 0 ? (
+						) : friends.length === 0 ? (
 							<div
 								className="flex flex-col items-center justify-center py-8
 									text-center"
 							>
-								<p className="text-muted-foreground mb-4">暂无项目</p>
+								<p className="text-muted-foreground mb-4">暂无友链</p>
 								<Button
 									render={
-										<Link to="/dashboard/projects/create">
+										<Link to="/dashboard/friends/create">
 											<Plus className="mr-2 h-4 w-4" />
-											创建第一个项目
+											添加第一个友链
 										</Link>
 									}
 								></Button>
@@ -165,62 +146,54 @@ export function ProjectsPage() {
 								<Table>
 									<TableHeader>
 										<TableRow>
+											<TableHead className="w-16">头像</TableHead>
 											<TableHead>名称</TableHead>
 											<TableHead>描述</TableHead>
-											<TableHead>标签</TableHead>
+											<TableHead className="w-24">置顶</TableHead>
 											<TableHead className="w-24">排序</TableHead>
-											<TableHead>链接</TableHead>
+											<TableHead className="w-32">社交链接</TableHead>
 											<TableHead className="w-32">操作</TableHead>
 										</TableRow>
 									</TableHeader>
 									<TableBody>
-										{projects.map((project) => (
-											<TableRow key={project.id}>
+										{friends.map((friend) => (
+											<TableRow key={friend.id}>
+												<TableCell>
+													<img
+														alt={friend.name}
+														className="h-10 w-10 rounded-full object-cover"
+														src={friend.image}
+													/>
+												</TableCell>
 												<TableCell className="font-medium">
-													{project.name}
+													<div className="flex items-center gap-2">
+														<Users className="h-4 w-4 text-muted-foreground" />
+														{friend.name}
+													</div>
 												</TableCell>
 												<TableCell className="max-w-xs truncate">
-													{project.description}
+													{friend.description}
 												</TableCell>
 												<TableCell>
-													<div className="flex flex-wrap gap-1">
-														{project.tags.slice(0, 2).map((tag, idx) => (
-															<Badge
-																className="text-xs"
-																key={idx}
-																variant="outline"
-															>
-																{tag}
-															</Badge>
-														))}
-														{project.tags.length > 2 && (
-															<Badge className="text-xs" variant="outline">
-																+{project.tags.length - 2}
-															</Badge>
-														)}
-													</div>
+													{friend.pinned && (
+														<Badge variant="secondary">
+															<Pin className="h-3 w-3 mr-1" />
+															置顶
+														</Badge>
+													)}
 												</TableCell>
-												<TableCell>{project.order}</TableCell>
+												<TableCell>{friend.order}</TableCell>
 												<TableCell>
-													<div className="flex flex-col gap-1 text-xs">
-														{project.githubUrl && (
-															<span className="text-muted-foreground">
-																GitHub
-															</span>
-														)}
-														{project.liveUrl && (
-															<span className="text-muted-foreground">
-																预览
-															</span>
-														)}
-													</div>
+													<Badge variant="outline">
+														{friend.socialLinks.length} 个
+													</Badge>
 												</TableCell>
 												<TableCell>
 													<div className="flex items-center gap-2">
 														<Button
 															render={
 																<Link
-																	to={`/dashboard/projects/edit/${project.id}`}
+																	to={`/dashboard/friends/edit/${friend.id}`}
 																>
 																	编辑
 																</Link>
@@ -229,7 +202,7 @@ export function ProjectsPage() {
 															variant="outline"
 														/>
 														<Button
-															onClick={() => handleDelete(project)}
+															onClick={() => handleDelete(friend)}
 															size="sm"
 															variant="destructive"
 														>
@@ -249,9 +222,10 @@ export function ProjectsPage() {
 				<AlertDialog onOpenChange={setDeleteDialogOpen} open={deleteDialogOpen}>
 					<AlertDialogPopup>
 						<AlertDialogHeader>
-							<AlertDialogTitle>删除项目</AlertDialogTitle>
+							<AlertDialogTitle>删除友链</AlertDialogTitle>
 							<AlertDialogDescription>
-								您确定要删除项目 "{projectToDelete?.name}" 吗？此操作无法撤销。
+								您确定要删除友链 "{friendToDelete?.name}"
+								吗？此操作无法撤销，相关的社交链接也会被删除。
 							</AlertDialogDescription>
 						</AlertDialogHeader>
 						<AlertDialogFooter>

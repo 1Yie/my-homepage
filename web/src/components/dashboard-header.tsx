@@ -32,8 +32,14 @@ interface DashboardHeaderProps {
 export function DashboardHeader({ breadcrumbs = [] }: DashboardHeaderProps) {
 	const { data: session } = authClient.useSession();
 
+	// Last breadcrumb item is usually the current page
+	const isLastItem = (index: number) => index === breadcrumbs.length - 1;
+
 	return (
-		<header className="flex h-12 shrink-0 items-center gap-2 border-b px-4">
+		<header
+			className="sticky rounded-t-xl top-0 z-50 flex h-12 shrink-0 items-center
+				gap-2 border-b bg-background px-4"
+		>
 			<SidebarTrigger className="-ml-1" />
 			<Separator className="mr-2 h-4" orientation="vertical" />
 			{breadcrumbs.length > 0 && (
@@ -47,13 +53,21 @@ export function DashboardHeader({ breadcrumbs = [] }: DashboardHeaderProps) {
 								<BreadcrumbItem>
 									{crumb.href ? (
 										<Link
-											className="hover:text-accent-foreground"
+											className={`hover:text-accent-foreground ${
+												isLastItem(index) ? 'font-medium text-primary' : ''
+											}`}
 											to={crumb.href}
 										>
 											{crumb.label}
 										</Link>
 									) : (
-										<BreadcrumbPage>{crumb.label}</BreadcrumbPage>
+										<BreadcrumbPage
+											className={
+												isLastItem(index) ? 'font-medium text-primary' : ''
+											}
+										>
+											{crumb.label}
+										</BreadcrumbPage>
 									)}
 								</BreadcrumbItem>
 							</React.Fragment>

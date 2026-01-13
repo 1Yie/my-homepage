@@ -4,7 +4,7 @@ import type { Article } from '@/hooks/article/use-get-articles';
 
 import PageTitle from '@/components/page-title';
 import { useGetArticles } from '@/hooks/article/use-get-articles';
-
+import { useTitle } from '@/hooks/use-page-title';
 type GroupedPosts = {
 	year: string;
 	months: {
@@ -153,7 +153,7 @@ export function ArchivePage() {
 		public: true,
 		limit: 1000, // 获取所有文章
 	});
-
+	useTitle('归档');
 	return (
 		<>
 			<PageTitle subtitle="Archive" title="归档" />

@@ -16,6 +16,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Spinner } from '@/components/ui/spinner';
 import {
 	Table,
 	TableBody,
@@ -24,6 +25,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
+import { useTitle } from '@/hooks/use-page-title';
 
 interface SlideListItem {
 	id: number;
@@ -45,6 +47,8 @@ export function SlidesPage() {
 	const [slideToDelete, setSlideToDelete] = useState<SlideListItem | null>(
 		null
 	);
+
+	useTitle('相册管理');
 
 	const fetchSlides = useCallback(async () => {
 		try {
@@ -105,7 +109,7 @@ export function SlidesPage() {
 					<div className="flex items-center gap-4">
 						<div className="relative">
 							<Search
-								className="absolute z-50 left-2 top-2.5 h-4 w-4
+								className="absolute z-50 left-2 top-2 h-4 w-4
 									text-muted-foreground"
 							/>
 							<Input
@@ -131,7 +135,9 @@ export function SlidesPage() {
 					<CardContent>
 						{loading ? (
 							<div className="flex items-center justify-center py-8">
-								<p className="text-muted-foreground">加载中...</p>
+								<div className="text-center">
+									<Spinner className="mx-auto" size={32} />
+								</div>
 							</div>
 						) : slides.length === 0 ? (
 							<div

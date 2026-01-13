@@ -1,6 +1,11 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, type RouteObject } from 'react-router-dom';
 
-export const router = createBrowserRouter([
+export type RouteConfig = RouteObject & {
+	label?: string;
+	children?: RouteConfig[];
+};
+
+export const routeConfig: RouteConfig[] = [
 	{
 		path: '/',
 		lazy: () =>
@@ -101,6 +106,7 @@ export const router = createBrowserRouter([
 	},
 	{
 		path: '/dashboard',
+		label: '后台管理',
 		lazy: () =>
 			import('@/layout/dashboard').then((module) => ({
 				Component: module.DashboardLayout,
@@ -108,6 +114,7 @@ export const router = createBrowserRouter([
 		children: [
 			{
 				index: true,
+				label: '仪表盘',
 				lazy: () =>
 					import('@/pages/dashboard').then((module) => ({
 						Component: module.DashboardPage,
@@ -115,6 +122,7 @@ export const router = createBrowserRouter([
 			},
 			{
 				path: 'articles',
+				label: '文章管理',
 				children: [
 					{
 						index: true,
@@ -125,6 +133,7 @@ export const router = createBrowserRouter([
 					},
 					{
 						path: 'create',
+						label: '创建文章',
 						lazy: () =>
 							import('@/pages/dashboard/articles/create').then((module) => ({
 								Component: module.CreateArticlePage,
@@ -132,6 +141,7 @@ export const router = createBrowserRouter([
 					},
 					{
 						path: 'edit/:id',
+						label: '编辑文章',
 						lazy: () =>
 							import('@/pages/dashboard/articles/edit').then((module) => ({
 								Component: module.EditArticlePage,
@@ -141,6 +151,7 @@ export const router = createBrowserRouter([
 			},
 			{
 				path: 'projects',
+				label: '项目管理',
 				children: [
 					{
 						index: true,
@@ -151,6 +162,7 @@ export const router = createBrowserRouter([
 					},
 					{
 						path: 'create',
+						label: '创建项目',
 						lazy: () =>
 							import('@/pages/dashboard/projects/create').then((module) => ({
 								Component: module.CreateProjectPage,
@@ -158,6 +170,7 @@ export const router = createBrowserRouter([
 					},
 					{
 						path: 'edit/:id',
+						label: '编辑项目',
 						lazy: () =>
 							import('@/pages/dashboard/projects/edit').then((module) => ({
 								Component: module.EditProjectPage,
@@ -167,6 +180,7 @@ export const router = createBrowserRouter([
 			},
 			{
 				path: 'slides',
+				label: '相册管理',
 				children: [
 					{
 						index: true,
@@ -177,6 +191,7 @@ export const router = createBrowserRouter([
 					},
 					{
 						path: 'create',
+						label: '添加图片',
 						lazy: () =>
 							import('@/pages/dashboard/slides/create').then((module) => ({
 								Component: module.CreateSlidePage,
@@ -184,6 +199,7 @@ export const router = createBrowserRouter([
 					},
 					{
 						path: 'edit/:id',
+						label: '编辑图片',
 						lazy: () =>
 							import('@/pages/dashboard/slides/edit').then((module) => ({
 								Component: module.EditSlidePage,
@@ -193,6 +209,7 @@ export const router = createBrowserRouter([
 			},
 			{
 				path: 'tags',
+				label: '标签管理',
 				children: [
 					{
 						index: true,
@@ -203,6 +220,7 @@ export const router = createBrowserRouter([
 					},
 					{
 						path: 'create',
+						label: '创建标签',
 						lazy: () =>
 							import('@/pages/dashboard/tags/create').then((module) => ({
 								Component: module.CreateTagPage,
@@ -210,6 +228,7 @@ export const router = createBrowserRouter([
 					},
 					{
 						path: 'edit/:id',
+						label: '编辑标签',
 						lazy: () =>
 							import('@/pages/dashboard/tags/edit').then((module) => ({
 								Component: module.EditTagPage,
@@ -217,6 +236,37 @@ export const router = createBrowserRouter([
 					},
 				],
 			},
+			{
+				path: 'friends',
+				label: '友链管理',
+				children: [
+					{
+						index: true,
+						lazy: () =>
+							import('@/pages/dashboard/friends').then((module) => ({
+								Component: module.FriendsPage,
+							})),
+					},
+					{
+						path: 'create',
+						label: '添加友链',
+						lazy: () =>
+							import('@/pages/dashboard/friends/create').then((module) => ({
+								Component: module.CreateFriendPage,
+							})),
+					},
+					{
+						path: 'edit/:id',
+						label: '编辑友链',
+						lazy: () =>
+							import('@/pages/dashboard/friends/edit').then((module) => ({
+								Component: module.EditFriendPage,
+							})),
+					},
+				],
+			},
 		],
 	},
-]);
+];
+
+export const router = createBrowserRouter(routeConfig);

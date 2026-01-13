@@ -4,6 +4,8 @@ import { useParams } from 'react-router-dom';
 import { client } from '@/api/client';
 import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
 import { SlideForm } from '@/components/slide-form';
+import { Spinner } from '@/components/ui/spinner';
+import { useTitle } from '@/hooks/use-page-title';
 
 interface ApiResponse<T> {
 	success: boolean;
@@ -33,6 +35,8 @@ export function EditSlidePage() {
 		newTab: boolean;
 		order: number;
 	} | null>(null);
+
+	useTitle(`编辑图片 ${initialFormData?.title || ''}`);
 
 	useEffect(() => {
 		const fetchSlide = async () => {
@@ -67,7 +71,9 @@ export function EditSlidePage() {
 		return (
 			<div className="flex flex-1 flex-col gap-4 p-4">
 				<div className="flex items-center justify-center py-8">
-					<p className="text-muted-foreground">加载中...</p>
+					<div className="text-center">
+						<Spinner className="mx-auto" size={32} />
+					</div>
 				</div>
 			</div>
 		);

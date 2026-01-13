@@ -5,9 +5,10 @@ import {
 	Images,
 	LayoutDashboard,
 	Tag,
+	Users,
 } from 'lucide-react';
 import { useEffect } from 'react';
-import { Navigate, Outlet, useLocation, Link } from 'react-router-dom';
+import { Link, Navigate, Outlet, useLocation } from 'react-router-dom';
 
 import { authClient } from '@/api/client';
 import { DashboardHeader } from '@/components/dashboard-header';
@@ -30,6 +31,7 @@ import {
 	ToastProvider,
 	toastManager,
 } from '@/components/ui/toast';
+import { useBreadcrumbItems } from '@/hooks/use-breadcrumb-items';
 
 // Sidebar navigation items
 const sidebarNavItems = [
@@ -58,63 +60,39 @@ const sidebarNavItems = [
 		url: '/dashboard/tags',
 		icon: Tag,
 	},
+	{
+		title: '友链管理',
+		url: '/dashboard/friends',
+		icon: Users,
+	},
 ];
-
-// Generate breadcrumbs based on current path
-const generateBreadcrumbs = (pathname: string) => {
-	const pathSegments = pathname.split('/').filter(Boolean);
-	const breadcrumbs: Array<{ label: string; href?: string }> = [];
-
-	if (pathSegments.length >= 1) {
-		breadcrumbs.push({ label: '后台管理', href: '/dashboard' });
-	}
-
-	if (pathSegments.length > 1) {
-		const currentItem = sidebarNavItems.find(
-			(item) =>
-				item.url === `/${pathSegments.join('/')}` ||
-				item.url === `/${pathSegments.slice(0, 2).join('/')}`
-		);
-		if (currentItem) {
-			breadcrumbs.push({ label: currentItem.title, href: currentItem.url });
-
-			// Handle create/edit pages
-			if (pathSegments.length > 2) {
-				const section = pathSegments[1];
-				if (pathSegments[2] === 'create') {
-					const labels: Record<string, string> = {
-						articles: '创建文章',
-						projects: '创建项目',
-						slides: '添加图片',
-						tags: '创建标签',
-					};
-					breadcrumbs.push({ label: labels[section] || '创建' });
-				} else if (pathSegments[2] === 'edit') {
-					const labels: Record<string, string> = {
-						articles: '编辑文章',
-						projects: '编辑项目',
-						slides: '编辑图片',
-						tags: '编辑标签',
-					};
-					breadcrumbs.push({ label: labels[section] || '编辑' });
-				}
-			}
-		}
-	}
-
-	// If on dashboard root, remove the href to make it the current page
-	if (pathname === '/dashboard') {
-		breadcrumbs[0] = { label: '后台管理' };
-	}
-
-	return breadcrumbs;
-};
 
 export function DashboardLayout() {
 	const { data: session, isPending } = authClient.useSession();
 	const location = useLocation();
+	const breadcrumbs = useBreadcrumbItems();
 
-	const breadcrumbs = generateBreadcrumbs(location.pathname);
+	// Find the active menu item - only the most specific match should be active
+	const getActiveMenuItem = () => {
+		// First check for exact matches
+		const exactMatch = sidebarNavItems.find(
+			(item) => item.url === location.pathname
+		);
+		if (exactMatch) return exactMatch.url;
+
+		// Then check for prefix matches, but only for non-dashboard items and find the most specific
+		const prefixMatches = sidebarNavItems
+			.filter(
+				(item) =>
+					item.url !== '/dashboard' &&
+					location.pathname.startsWith(item.url + '/')
+			)
+			.sort((a, b) => b.url.length - a.url.length); // Sort by length, longest first
+
+		return prefixMatches[0]?.url;
+	};
+
+	const activeMenuItem = getActiveMenuItem();
 
 	useEffect(() => {
 		window.toast = {
@@ -145,18 +123,10 @@ export function DashboardLayout() {
 		};
 	}, []);
 
-	// Show loading while checking authentication
 	if (isPending) {
-		return (
-			<div className="flex min-h-screen items-center justify-center">
-				<div className="text-center">
-					<p className="text-muted-foreground">正在验证身份...</p>
-				</div>
-			</div>
-		);
+		return;
 	}
 
-	// Redirect to login if not authenticated
 	if (!session) {
 		return <Navigate replace state={{ from: location }} to="/auth/login" />;
 	}
@@ -204,6 +174,7 @@ export function DashboardLayout() {
 										{sidebarNavItems.map((item) => (
 											<SidebarMenuItem key={item.title}>
 												<SidebarMenuButton
+													isActive={activeMenuItem === item.url}
 													render={
 														<Link to={item.url}>
 															<item.icon />
@@ -221,7 +192,7 @@ export function DashboardLayout() {
 						<SidebarRail />
 					</Sidebar>
 
-					<SidebarInset>
+					<SidebarInset className="min-h-screen flex-1 flex flex-col">
 						<DashboardHeader breadcrumbs={breadcrumbs} />
 						<div className="flex flex-1 flex-col gap-4 p-4">
 							<Outlet />

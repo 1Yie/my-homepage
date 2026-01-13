@@ -4,12 +4,13 @@ import BlogTOC from '@/components/blog-toc';
 import { MarkdownRenderer } from '@/components/markdown-renderer';
 import PageTitle from '@/components/page-title';
 import { useGetArticleBySlug } from '@/hooks/article/use-get-article-by-slug';
+import { useTitle } from '@/hooks/use-page-title';
 import { cn } from '@/lib/utils';
 
 export function BlogDetailPage() {
 	const { slug } = useParams<{ slug: string }>();
 	const { article, loading, error } = useGetArticleBySlug(slug);
-
+	useTitle(article?.title as string);
 	if (loading) {
 		return (
 			<>

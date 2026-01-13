@@ -1,7 +1,9 @@
 import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
 import { ProjectForm } from '@/components/project-form';
+import { useTitle } from '@/hooks/use-page-title';
 
 export function CreateProjectPage() {
+	useTitle('新建项目');
 	return (
 		<div className="flex flex-1 flex-col gap-4 p-4">
 			<DashboardHeaderTitle

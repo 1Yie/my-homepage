@@ -3,11 +3,13 @@ import { useState } from 'react';
 import AnimatedContent from '@/components/ui/animated-content';
 import { ContainerTextFlip } from '@/components/ui/container-text-flip';
 import SplitText from '@/components/ui/split-text';
+import { useTitle } from '@/hooks/use-page-title';
 import { cn } from '@/lib/utils';
 
 const words = ['边缘', 'AI 重度依赖', '数字游民', '咖啡迷'];
 
 export function HomePage() {
+	useTitle('ichiyo (@1yie)', { hasSuffix: false });
 	const [fadeTrigger, setFadeTrigger] = useState(false);
 
 	const textFlipClasses = cn(

@@ -10,12 +10,13 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
+import { useTitle } from '@/hooks/use-page-title';
 
 export function LoginPage() {
 	const navigate = useNavigate();
 	const { data: session } = authClient.useSession();
+	useTitle('登录');
 
-	// If already logged in, redirect to home
 	if (session) {
 		navigate('/');
 		return null;
