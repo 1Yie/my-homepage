@@ -5,7 +5,7 @@ import SplitText from '@/components/ui/split-text';
 import { useTitle } from '@/hooks/use-page-title';
 
 export function NotFoundPage() {
-	useTitle('[ERROR] 404_', { hasSuffix: false });
+	useTitle('404 Not Found', { hasSuffix: false });
 	return (
 		<div className="border-b">
 			<section

@@ -106,7 +106,7 @@ export const routeConfig: RouteConfig[] = [
 	},
 	{
 		path: '/dashboard',
-		label: '后台管理',
+		label: '仪表盘',
 		lazy: () =>
 			import('@/layout/dashboard').then((module) => ({
 				Component: module.DashboardLayout,

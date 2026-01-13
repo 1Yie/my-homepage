@@ -40,5 +40,8 @@ export function useGetArticleBySlug(slug: string | undefined) {
 		article: query.data,
 		loading: query.isLoading,
 		error: query.error?.message || null,
+		isNotFound:
+			query.error?.message === 'Article not found' ||
+			query.error?.message === 'Failed to fetch article',
 	};
 }

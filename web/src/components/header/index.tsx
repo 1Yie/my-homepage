@@ -112,9 +112,9 @@ export function Header() {
 										{theme === 'system' ? (
 											<SystemIcon />
 										) : isDark ? (
-											<Sun className="h-5 w-5" />
-										) : (
 											<Moon className="h-5 w-5" />
+										) : (
+											<Sun className="h-5 w-5" />
 										)}
 									</Button>
 								}
@@ -128,7 +128,7 @@ export function Header() {
 							</TooltipContent>
 						</Tooltip>
 						{session ? (
-							<DropdownMenu>
+							<DropdownMenu modal={false}>
 								<DropdownMenuTrigger
 									render={
 										<Button

@@ -22,6 +22,14 @@ export function useTheme() {
 			const dark = effectiveTheme === 'dark';
 			setIsDark(dark);
 			document.documentElement.classList.toggle('dark', dark);
+
+			// Update favicon based on theme
+			const favicon = document.querySelector(
+				'link[rel="icon"]'
+			) as HTMLLinkElement;
+			if (favicon) {
+				favicon.href = dark ? '/logo_dark.svg' : '/logo_light.svg';
+			}
 		};
 
 		updateTheme();

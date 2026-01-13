@@ -1,33 +1,25 @@
 import { useParams } from 'react-router-dom';
 
 import BlogTOC from '@/components/blog-toc';
+import { Comments } from '@/components/comment';
 import { MarkdownRenderer } from '@/components/markdown-renderer';
 import PageTitle from '@/components/page-title';
 import { useGetArticleBySlug } from '@/hooks/article/use-get-article-by-slug';
 import { useTitle } from '@/hooks/use-page-title';
 import { cn } from '@/lib/utils';
+import { NotFoundPage } from '@/pages/error/not-found';
 
 export function BlogDetailPage() {
 	const { slug } = useParams<{ slug: string }>();
-	const { article, loading, error } = useGetArticleBySlug(slug);
+	const { article, loading, error, isNotFound } = useGetArticleBySlug(slug);
 	useTitle(article?.title as string);
 	if (loading) {
 		return (
 			<>
-				<div className="border-b">
-					<section
-						className="section-base bg-squares flex min-h-[30vh] flex-col
-							items-start justify-center overflow-visible"
-					>
-						<div className="p-4">
-							<div className="h-12 bg-muted rounded animate-pulse w-3/4 mb-4" />
-							<div className="h-6 bg-muted rounded animate-pulse w-1/2" />
-						</div>
-					</section>
-				</div>
+				<PageTitle loading={true} type="blog" />
 				<div className="h-full w-full">
 					<section className="section-base">
-						<div className="mx-auto max-w-5xl py-8">
+						<div className="mx-auto max-w-5xl py-8 px-4">
 							<div className="grid grid-cols-1 gap-8 lg:grid-cols-[250px_1fr]">
 								<aside className="order-2 lg:order-1">
 									<div className="space-y-2">
@@ -61,6 +53,9 @@ export function BlogDetailPage() {
 	}
 
 	if (error) {
+		if (isNotFound) {
+			return <NotFoundPage />;
+		}
 		return (
 			<div className="container mx-auto px-4 py-8">
 				<div className="max-w-4xl mx-auto">
@@ -73,15 +68,7 @@ export function BlogDetailPage() {
 	}
 
 	if (!article) {
-		return (
-			<div className="container mx-auto px-4 py-8">
-				<div className="max-w-4xl mx-auto">
-					<div className="flex items-center justify-center py-8">
-						<p className="text-muted-foreground">Article not found</p>
-					</div>
-				</div>
-			</div>
-		);
+		return <NotFoundPage />;
 	}
 
 	const hasHeaders = /(?:^|\n)#{1,6}\s/.test(article.content);
@@ -116,6 +103,14 @@ export function BlogDetailPage() {
 								</div>
 							</div>
 						</div>
+					</div>
+				</section>
+			</div>
+
+			<div className="border-t">
+				<section className="section-base artalk">
+					<div className="mx-auto max-w-5xl py-8 px-4 md:px-0">
+						<Comments />
 					</div>
 				</section>
 			</div>

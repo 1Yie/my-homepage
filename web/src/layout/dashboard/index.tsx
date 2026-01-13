@@ -1,3 +1,4 @@
+import { LogOut } from 'lucide-react';
 import {
 	FileText,
 	FolderKanban,
@@ -12,14 +13,22 @@ import { Link, Navigate, Outlet, useLocation } from 'react-router-dom';
 
 import { authClient } from '@/api/client';
 import { DashboardHeader } from '@/components/dashboard-header';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from '@/components/ui/menu';
 import {
 	Sidebar,
 	SidebarContent,
+	SidebarInset,
 	SidebarGroup,
 	SidebarGroupContent,
 	SidebarGroupLabel,
 	SidebarHeader,
-	SidebarInset,
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
@@ -32,6 +41,7 @@ import {
 	toastManager,
 } from '@/components/ui/toast';
 import { useBreadcrumbItems } from '@/hooks/use-breadcrumb-items';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 // Sidebar navigation items
 const sidebarNavItems = [
@@ -71,6 +81,7 @@ export function DashboardLayout() {
 	const { data: session, isPending } = authClient.useSession();
 	const location = useLocation();
 	const breadcrumbs = useBreadcrumbItems();
+	const isMobile = useIsMobile();
 
 	// Find the active menu item - only the most specific match should be active
 	const getActiveMenuItem = () => {
@@ -188,6 +199,59 @@ export function DashboardLayout() {
 								</SidebarGroupContent>
 							</SidebarGroup>
 						</SidebarContent>
+
+						{/* User Info Footer */}
+						<div className="mt-auto p-2">
+							<DropdownMenu modal={false}>
+								<DropdownMenuTrigger
+									render={
+										<Button
+											className="w-full flex items-center gap-2 px-2 h-auto
+												py-6"
+											variant="ghost"
+										>
+											<Avatar className="h-8 w-8">
+												{session.user.image && (
+													<AvatarImage
+														alt={
+															session.user.name || session.user.email || 'User'
+														}
+														src={session.user.image}
+													/>
+												)}
+												<AvatarFallback className="text-xs">
+													{(session.user.name || session.user.email || 'U')
+														.charAt(0)
+														.toUpperCase()}
+												</AvatarFallback>
+											</Avatar>
+											<div className="flex-1 text-left">
+												<div className="text-sm font-medium truncate">
+													{session.user.name || session.user.email}
+												</div>
+												<div className="text-xs text-muted-foreground truncate">
+													{session.user.email}
+												</div>
+											</div>
+										</Button>
+									}
+								></DropdownMenuTrigger>
+								<DropdownMenuContent
+									align="end"
+									className="w-20 rounded-lg"
+									side={isMobile ? 'bottom' : 'right'}
+									sideOffset={4}
+								>
+									<DropdownMenuItem
+										onClick={() => authClient.signOut()}
+										variant="destructive"
+									>
+										<LogOut className="mr-2 h-4 w-4" />
+										登出
+									</DropdownMenuItem>
+								</DropdownMenuContent>
+							</DropdownMenu>
+						</div>
 
 						<SidebarRail />
 					</Sidebar>

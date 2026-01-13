@@ -10,6 +10,7 @@
 @import url('https://fontsapi.zeoseven.com/872/main/result.css');
 
 @source '../node_modules/streamdown/dist/*.js';
+@import 'artalk/dist/Artalk.css';
 
 /* Syntax highlighting */
 @import 'highlight.js/styles/github.css';
@@ -249,6 +250,28 @@ scrollbar-thumb {
 }
 
 @layer utilities {
+	.artalk {
+		border-radius: 0 !important;
+
+		.atk-main-editor {
+			border-radius: 0 !important;
+		}
+
+		.atk-send-btn {
+			background-color: var(--color-foreground) !important;
+			color: var(--color-background) !important;
+			border-radius: 0 !important;
+		}
+
+		.atk-list {
+			--at-color-main: var(--primary) !important;
+
+			.atk-copyright {
+				padding-right: 0 !important;
+			}
+		}
+	}
+
 	.bg-squares {
 		background-size: 14px 14px;
 		background-image:
