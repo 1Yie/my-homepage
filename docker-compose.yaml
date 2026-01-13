@@ -1,0 +1,24 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: server.Dockerfile
+    container_name: ichiyo-server
+    volumes:
+      - ./data:/app/server/data
+    environment:
+      - DATABASE_URL=file:/app/server/data/sqlite.db
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+    restart: always
+
+  web:
+    build:
+      context: .
+      dockerfile: web.Dockerfile
+    container_name: ichiyo-web
+    ports:
+      - '3000:80'
+    depends_on:
+      - server
+    restart: always

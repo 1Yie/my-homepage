@@ -68,3 +68,4 @@ node_modules/.vite
 # --- Misc ---
 **/*.trace
 **/*.bun
+data/*
