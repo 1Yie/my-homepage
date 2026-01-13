@@ -2,7 +2,11 @@ import { Elysia, t } from 'elysia';
 
 import { auth } from '../lib/auth';
 import { authMiddleware } from '../lib/auth-middleware';
-import { createArticleSchema, updateArticleSchema } from '../lib/schema';
+import {
+	createArticleSchema,
+	updateArticleSchema,
+	tagSchema,
+} from '../lib/schema';
 import {
 	createArticle,
 	updateArticle,
@@ -10,6 +14,10 @@ import {
 	getArticle,
 	getArticlesByAuthor,
 	getPublishedArticles,
+	getPublishedArticleBySlug,
+	getTags,
+	createTag,
+	getPublishedArticlesByTag,
 } from '../services/articles';
 
 export const articlesRoutes = new Elysia()
@@ -64,7 +72,14 @@ export const articlesRoutes = new Elysia()
 		'/articles',
 		async ({ query, request }) => {
 			if (query.public === 'true') {
-				const articles = await getPublishedArticles(query.q);
+				const page = parseInt(query.page || '1');
+				const limit = parseInt(query.limit || '10');
+				const articles = await getPublishedArticles(
+					query.q,
+					query.preview === 'true',
+					page,
+					limit
+				);
 				return { success: true, data: articles };
 			} else {
 				const session = await auth.api.getSession({ headers: request.headers });
@@ -78,6 +93,56 @@ export const articlesRoutes = new Elysia()
 				t.Object({
 					public: t.Optional(t.String()),
 					q: t.Optional(t.String()),
+					preview: t.Optional(t.String()),
+					page: t.Optional(t.String()),
+					limit: t.Optional(t.String()),
+				})
+			),
+		}
+	)
+	.get(
+		'/articles/slug/:slug',
+		async ({ params }) => {
+			const article = await getPublishedArticleBySlug(params.slug);
+			if (!article) throw new Error('Article not found');
+			return { success: true, data: article };
+		},
+		{
+			params: t.Object({ slug: t.String() }),
+		}
+	)
+	.get('/tags', async () => {
+		const tags = await getTags();
+		return { success: true, data: tags };
+	})
+	.post(
+		'/tags',
+		async ({ body }) => {
+			const tag = await createTag(body);
+			return { success: true, data: tag };
+		},
+		{
+			body: tagSchema,
+		}
+	)
+	.get(
+		'/articles/tag/:tagName',
+		async ({ params, query }) => {
+			const page = parseInt(query.page || '1');
+			const limit = parseInt(query.limit || '10');
+			const articles = await getPublishedArticlesByTag(
+				decodeURIComponent(params.tagName),
+				page,
+				limit
+			);
+			return { success: true, data: articles };
+		},
+		{
+			params: t.Object({ tagName: t.String() }),
+			query: t.Optional(
+				t.Object({
+					page: t.Optional(t.String()),
+					limit: t.Optional(t.String()),
 				})
 			),
 		}

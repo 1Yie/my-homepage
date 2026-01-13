@@ -33,7 +33,7 @@ export async function updateArticle(
 	return db.article.update({
 		where: {
 			id,
-			authorId, // ensure only author can update
+			authorId,
 		},
 		data: {
 			...updateData,
@@ -90,16 +90,74 @@ export async function getArticlesByAuthor(authorId: string, search?: string) {
 	});
 }
 
-export async function getPublishedArticles(search?: string) {
+export async function getPublishedArticles(
+	search?: string,
+	preview = false,
+	page = 1,
+	limit = 10
+) {
 	const where: Prisma.ArticleWhereInput = { isDraft: false };
 	if (search) {
 		where.OR = [
 			{ content: { contains: search } },
+			{ title: { contains: search } },
 			{ slug: { contains: search } },
 		];
 	}
-	return db.article.findMany({
-		where,
+
+	const skip = (page - 1) * limit;
+
+	const [articles, total] = await Promise.all([
+		db.article.findMany({
+			where,
+			skip,
+			take: limit,
+			orderBy: { updatedAt: 'desc' },
+			include: {
+				tags: true,
+				author: {
+					select: {
+						id: true,
+						name: true,
+					},
+				},
+			},
+		}),
+		db.article.count({ where }),
+	]);
+
+	// If preview is true, truncate content to first 500 characters
+	if (preview) {
+		return {
+			articles: articles.map((article) => ({
+				...article,
+				content:
+					article.content.length > 500
+						? article.content.substring(0, 500) + '...'
+						: article.content,
+			})),
+			total,
+			page,
+			limit,
+			totalPages: Math.ceil(total / limit),
+		};
+	}
+
+	return {
+		articles,
+		total,
+		page,
+		limit,
+		totalPages: Math.ceil(total / limit),
+	};
+}
+
+export async function getPublishedArticleBySlug(slug: string) {
+	return db.article.findUnique({
+		where: {
+			slug,
+			isDraft: false,
+		},
 		include: {
 			tags: true,
 			author: {
@@ -109,5 +167,73 @@ export async function getPublishedArticles(search?: string) {
 				},
 			},
 		},
+	});
+}
+
+export async function getPublishedArticlesByTag(
+	tagName: string,
+	page = 1,
+	limit = 10
+) {
+	const skip = (page - 1) * limit;
+
+	const [articles, total] = await Promise.all([
+		db.article.findMany({
+			where: {
+				isDraft: false,
+				tags: {
+					some: {
+						name: tagName,
+					},
+				},
+			},
+			skip,
+			take: limit,
+			orderBy: { updatedAt: 'desc' },
+			include: {
+				tags: true,
+				author: {
+					select: {
+						id: true,
+						name: true,
+					},
+				},
+			},
+		}),
+		db.article.count({
+			where: {
+				isDraft: false,
+				tags: {
+					some: {
+						name: tagName,
+					},
+				},
+			},
+		}),
+	]);
+
+	return {
+		articles,
+		total,
+		page,
+		limit,
+		totalPages: Math.ceil(total / limit),
+	};
+}
+
+export async function getTags() {
+	return db.tag.findMany({
+		where: {
+			articles: {
+				some: {}, // Only return tags that have at least one article
+			},
+		},
+		orderBy: { name: 'asc' },
+	});
+}
+
+export async function createTag(data: { name: string }) {
+	return db.tag.create({
+		data,
 	});
 }

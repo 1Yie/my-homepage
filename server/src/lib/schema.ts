@@ -1,6 +1,7 @@
 import { t } from 'elysia';
 
 export const createArticleSchema = t.Object({
+	title: t.String(),
 	slug: t.String(),
 	content: t.String(),
 	headerImage: t.Optional(t.String()),
@@ -9,6 +10,7 @@ export const createArticleSchema = t.Object({
 });
 
 export const updateArticleSchema = t.Object({
+	title: t.Optional(t.String()),
 	slug: t.Optional(t.String()),
 	content: t.Optional(t.String()),
 	headerImage: t.Optional(t.String()),
@@ -18,6 +20,7 @@ export const updateArticleSchema = t.Object({
 
 export const articleResponseSchema = t.Object({
 	id: t.Number(),
+	title: t.String(),
 	slug: t.String(),
 	content: t.String(),
 	headerImage: t.Optional(t.String()),

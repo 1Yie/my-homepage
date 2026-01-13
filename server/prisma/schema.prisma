@@ -73,6 +73,7 @@ model Verification {
 
 model Article {
   id          Int      @id @default(autoincrement())
+  title       String
   slug        String   @unique
   content     String
   headerImage String?

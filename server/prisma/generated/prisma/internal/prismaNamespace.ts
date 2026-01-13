@@ -1001,6 +1001,7 @@ export type VerificationScalarFieldEnum =
 
 export const ArticleScalarFieldEnum = {
 	id: 'id',
+	title: 'title',
 	slug: 'slug',
 	content: 'content',
 	headerImage: 'headerImage',
