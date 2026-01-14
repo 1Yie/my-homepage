@@ -31,7 +31,7 @@ import { useTitle } from '@/hooks/use-page-title';
 interface TagListItem {
 	id: number;
 	name: string;
-	articleCount: number;
+	number: number;
 	createdAt: string | Date;
 	updatedAt: string | Date;
 }
@@ -173,7 +173,7 @@ export function TagsPage() {
 									<TableHeader>
 										<TableRow>
 											<TableHead>标签名称</TableHead>
-											<TableHead className="w-32">文章数量</TableHead>
+											<TableHead className="w-32">标签数量</TableHead>
 											<TableHead className="w-40">创建时间</TableHead>
 											<TableHead className="w-32">操作</TableHead>
 										</TableRow>
@@ -188,7 +188,7 @@ export function TagsPage() {
 													</div>
 												</TableCell>
 												<TableCell>
-													<Badge variant="secondary">{tag.articleCount}</Badge>
+													<Badge variant="secondary">{tag.number}</Badge>
 												</TableCell>
 												<TableCell className="text-muted-foreground text-sm">
 													{formatDate(tag.createdAt)}
@@ -205,7 +205,7 @@ export function TagsPage() {
 															variant="outline"
 														/>
 														<Button
-															disabled={tag.articleCount > 0}
+															disabled={tag.number > 0}
 															onClick={() => handleDelete(tag)}
 															size="sm"
 															variant="destructive"
@@ -230,10 +230,10 @@ export function TagsPage() {
 							<AlertDialogDescription>
 								{deleteError ? (
 									<div className="text-destructive">{deleteError}</div>
-								) : tagToDelete?.articleCount ? (
+								) : tagToDelete?.number ? (
 									<div>
 										无法删除标签 "{tagToDelete.name}"，因为有{' '}
-										{tagToDelete.articleCount} 篇文章正在使用该标签。
+										{tagToDelete.number} 篇文章正在使用该标签。
 										<br />
 										请先取消这些文章与该标签的关联，然后再删除。
 									</div>
@@ -247,10 +247,10 @@ export function TagsPage() {
 						<AlertDialogFooter>
 							<AlertDialogClose>
 								<Button variant="outline">
-									{deleteError || tagToDelete?.articleCount ? '关闭' : '取消'}
+									{deleteError || tagToDelete?.number ? '关闭' : '取消'}
 								</Button>
 							</AlertDialogClose>
-							{!deleteError && !tagToDelete?.articleCount && (
+							{!deleteError && !tagToDelete?.number && (
 								<Button onClick={confirmDelete} variant="destructive">
 									删除
 								</Button>
