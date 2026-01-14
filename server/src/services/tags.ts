@@ -8,7 +8,7 @@ export interface Tag {
 }
 
 export interface TagWithCount extends Tag {
-	articleCount: number;
+	number: number;
 }
 
 export interface CreateTagInput {
@@ -48,7 +48,7 @@ export async function getTagsWithCount(): Promise<TagWithCount[]> {
 		name: tag.name,
 		createdAt: tag.createdAt,
 		updatedAt: tag.updatedAt,
-		articleCount: tag._count.articles,
+		number: tag._count.articles,
 	}));
 }
 
@@ -72,7 +72,7 @@ export async function getTagById(id: number): Promise<TagWithCount | null> {
 		name: tag.name,
 		createdAt: tag.createdAt,
 		updatedAt: tag.updatedAt,
-		articleCount: tag._count.articles,
+		number: tag._count.articles,
 	};
 }
 
@@ -134,9 +134,9 @@ export async function deleteTag(id: number): Promise<void> {
 	}
 
 	// 检查是否有文章使用该标签
-	if (tag.articleCount > 0) {
+	if (tag.number > 0) {
 		throw new Error(
-			`Cannot delete tag "${tag.name}" because it is used by ${tag.articleCount} article(s)`
+			`Cannot delete tag "${tag.name}" because it is used by ${tag.number} article(s)`
 		);
 	}
 
