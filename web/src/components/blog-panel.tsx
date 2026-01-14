@@ -33,8 +33,7 @@ export default function BlogPanel({
 						<a
 							className="hover:text-foreground/60 flex items-center gap-1
 								text-base transition-colors"
-							href={`${import.meta.env.VITE_BASE_URL}/rss`}
-							rel="noopener noreferrer"
+							href="/rss"
 							target="_blank"
 						>
 							<Rss size={17} />
