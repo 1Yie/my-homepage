@@ -34,7 +34,7 @@ export function EditProjectPage() {
 					data: {
 						name: string;
 						description: string;
-						tags: string;
+						tags: string[];
 						imageUrl: string | null;
 						githubUrl: string | null;
 						liveUrl: string | null;
@@ -46,7 +46,7 @@ export function EditProjectPage() {
 					setInitialFormData({
 						name: projectData.name,
 						description: projectData.description,
-						tags: JSON.parse(projectData.tags),
+						tags: projectData.tags,
 						imageUrl: projectData.imageUrl || '',
 						githubUrl: projectData.githubUrl || '',
 						liveUrl: projectData.liveUrl || '',
