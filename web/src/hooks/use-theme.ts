@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 type Theme = 'light' | 'dark' | 'system';
 
@@ -11,34 +11,35 @@ export function useTheme() {
 		return 'system';
 	});
 
-	const [isDark, setIsDark] = useState(false);
+	const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+	const updateTheme = useCallback(() => {
+		const effectiveTheme =
+			theme === 'system' ? (mediaQuery.matches ? 'dark' : 'light') : theme;
+		const dark = effectiveTheme === 'dark';
+		document.documentElement.classList.toggle('dark', dark);
+
+		// Update favicon based on theme
+		const favicon = document.querySelector(
+			'link[rel="icon"]'
+		) as HTMLLinkElement;
+		if (favicon) {
+			favicon.href = dark ? '/logo_dark.svg' : '/logo_light.svg';
+		}
+	}, [mediaQuery.matches, theme]);
 
 	useEffect(() => {
-		const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-		const updateTheme = () => {
-			const effectiveTheme =
-				theme === 'system' ? (mediaQuery.matches ? 'dark' : 'light') : theme;
-			const dark = effectiveTheme === 'dark';
-			setIsDark(dark);
-			document.documentElement.classList.toggle('dark', dark);
-
-			// Update favicon based on theme
-			const favicon = document.querySelector(
-				'link[rel="icon"]'
-			) as HTMLLinkElement;
-			if (favicon) {
-				favicon.href = dark ? '/logo_dark.svg' : '/logo_light.svg';
-			}
-		};
-
 		updateTheme();
 
 		if (theme === 'system') {
 			mediaQuery.addEventListener('change', updateTheme);
 			return () => mediaQuery.removeEventListener('change', updateTheme);
 		}
-	}, [theme]);
+	}, [mediaQuery, theme, updateTheme]);
+
+	const effectiveTheme =
+		theme === 'system' ? (mediaQuery.matches ? 'dark' : 'light') : theme;
+	const currentIsDark = effectiveTheme === 'dark';
 
 	const setThemeValue = (newTheme: Theme) => {
 		setTheme(newTheme);
@@ -51,5 +52,5 @@ export function useTheme() {
 		setThemeValue(nextTheme);
 	};
 
-	return { theme, isDark, setTheme: setThemeValue, toggleTheme };
+	return { theme, isDark: currentIsDark, setTheme: setThemeValue, toggleTheme };
 }

@@ -49,13 +49,11 @@ export function ArticleForm({
 	const handleAddTag = async () => {
 		if (!newTagName.trim()) return;
 
-		// Check if tag already exists
 		const existingTag = availableTags.find(
 			(tag) => tag.name.toLowerCase() === newTagName.trim().toLowerCase()
 		);
 
 		if (existingTag) {
-			// If tag exists, just add it to selected tags
 			if (!formData.tagIds.includes(existingTag.id)) {
 				setFormData({
 					...formData,
@@ -63,7 +61,6 @@ export function ArticleForm({
 				});
 			}
 		} else {
-			// Add to new tag names (will be created when saving the article)
 			if (!formData.tagNames.includes(newTagName.trim())) {
 				setFormData({
 					...formData,
@@ -89,14 +86,13 @@ export function ArticleForm({
 		});
 	};
 
-	// Form states
 	const [formData, setFormData] = useState<ArticleFormData>({
 		title: initialData?.title || '',
 		slug: initialData?.slug || '',
 		content: initialData?.content || '',
 		isDraft: initialData?.isDraft ?? true,
 		tagIds: initialData?.tagIds || [],
-		tagNames: [], // New tags to be created
+		tagNames: [],
 		headerImage: initialData?.headerImage || '',
 	});
 
@@ -106,7 +102,6 @@ export function ArticleForm({
 		try {
 			setLoading(true);
 
-			// First, create any new tags
 			const newTagIds: number[] = [];
 			for (const tagName of formData.tagNames) {
 				const response = await client.api.v1.tags.post({
@@ -117,7 +112,6 @@ export function ArticleForm({
 				}
 			}
 
-			// Combine existing tag IDs with newly created tag IDs
 			const allTagIds = [...formData.tagIds, ...newTagIds];
 
 			if (mode === 'create') {
@@ -140,7 +134,6 @@ export function ArticleForm({
 				});
 			}
 
-			// Invalidate tags query to refresh the list
 			queryClient.invalidateQueries({ queryKey: ['tags'] });
 
 			navigate('/dashboard/articles');
@@ -219,21 +212,79 @@ export function ArticleForm({
 					<div className="grid gap-2">
 						<Label>标签</Label>
 						<div className="space-y-3">
-							{/* Add new tag input */}
-							<div className="flex gap-2">
+							<div className="relative">
 								<Input
 									onChange={(e) => setNewTagName(e.target.value)}
-									placeholder="输入标签名称"
+									onKeyDown={(e) => {
+										if (e.key === 'Enter') {
+											e.preventDefault();
+											const matchingTags = availableTags.filter(
+												(tag) =>
+													tag.name
+														.toLowerCase()
+														.includes(newTagName.toLowerCase()) &&
+													!formData.tagIds.includes(tag.id)
+											);
+											if (matchingTags.length > 0) {
+												setFormData({
+													...formData,
+													tagIds: [...formData.tagIds, matchingTags[0].id],
+												});
+												setNewTagName('');
+											} else if (newTagName.trim()) {
+												handleAddTag();
+											}
+										}
+									}}
+									placeholder="输入或选择标签"
 									value={newTagName}
 								/>
-								<Button
-									disabled={!newTagName.trim()}
-									onClick={handleAddTag}
-									size="sm"
-									type="button"
-								>
-									添加
-								</Button>
+								{newTagName && (
+									<div
+										className="absolute top-full left-0 right-0 bg-background
+											border rounded-md shadow-md z-10 max-h-40 overflow-y-auto"
+									>
+										{availableTags
+											.filter(
+												(tag) =>
+													tag.name
+														.toLowerCase()
+														.includes(newTagName.toLowerCase()) &&
+													!formData.tagIds.includes(tag.id)
+											)
+											.map((tag) => (
+												<button
+													className="w-full text-left px-3 py-2 hover:bg-muted"
+													key={tag.id}
+													onClick={() => {
+														setFormData({
+															...formData,
+															tagIds: [...formData.tagIds, tag.id],
+														});
+														setNewTagName('');
+													}}
+													type="button"
+												>
+													{tag.name}
+												</button>
+											))}
+										{!availableTags.some((tag) =>
+											tag.name.toLowerCase().includes(newTagName.toLowerCase())
+										) &&
+											newTagName.trim() && (
+												<button
+													className="w-full text-left px-3 py-2 hover:bg-muted
+														text-muted-foreground"
+													onClick={() => {
+														handleAddTag();
+													}}
+													type="button"
+												>
+													创建 "{newTagName}"，回车以确认
+												</button>
+											)}
+									</div>
+								)}
 							</div>
 
 							{/* Selected tags display */}

@@ -255,23 +255,53 @@ export function Header() {
 										</Button>
 										<div className="h-px bg-border/60 my-1" />
 										{session ? (
-											<div className="flex flex-col gap-2">
-												<div
-													className="text-sm text-muted-foreground text-center"
-												>
-													{session.user.name || session.user.email}
+											<div className="flex items-center justify-between">
+												<div className="flex items-center gap-2">
+													<Avatar className="h-6 w-6">
+														{session.user.image && (
+															<AvatarImage
+																alt={
+																	session.user.name ||
+																	session.user.email ||
+																	'User'
+																}
+																src={session.user.image}
+															/>
+														)}
+														<AvatarFallback className="text-xs">
+															{(session.user.name || session.user.email || 'U')
+																.charAt(0)
+																.toUpperCase()}
+														</AvatarFallback>
+													</Avatar>
+													<span className="text-sm text-muted-foreground">
+														{session.user.name || session.user.email}
+													</span>
 												</div>
-												<Button
-													className="w-full"
-													onClick={() => {
-														authClient.signOut();
-														setMobileMenuOpen(false);
-													}}
-													size="sm"
-													variant="outline"
-												>
-													登出
-												</Button>
+												<div className="flex gap-2">
+													<Button
+														onClick={() => {
+															navigate('/dashboard');
+															setMobileMenuOpen(false);
+														}}
+														size="sm"
+														variant="outline"
+													>
+														<User className="mr-2 h-4 w-4" />
+														仪表盘
+													</Button>
+													<Button
+														onClick={() => {
+															authClient.signOut();
+															setMobileMenuOpen(false);
+														}}
+														size="sm"
+														variant="destructive-outline"
+													>
+														<LogOut className="mr-2 h-4 w-4" />
+														<span className="destructive-foreground">登出</span>
+													</Button>
+												</div>
 											</div>
 										) : (
 											<Button

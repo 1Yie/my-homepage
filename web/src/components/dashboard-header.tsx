@@ -19,7 +19,6 @@ interface DashboardHeaderProps {
 }
 
 export function DashboardHeader({ breadcrumbs = [] }: DashboardHeaderProps) {
-	// Last breadcrumb item is usually the current page
 	const isLastItem = (index: number) => index === breadcrumbs.length - 1;
 
 	return (
@@ -34,9 +33,7 @@ export function DashboardHeader({ breadcrumbs = [] }: DashboardHeaderProps) {
 					<BreadcrumbList>
 						{breadcrumbs.map((crumb, index) => (
 							<React.Fragment key={crumb.label}>
-								{index > 0 && (
-									<BreadcrumbSeparator className="hidden md:block" />
-								)}
+								{index > 0 && <BreadcrumbSeparator className="block" />}
 								<BreadcrumbItem>
 									{crumb.href ? (
 										<Link
