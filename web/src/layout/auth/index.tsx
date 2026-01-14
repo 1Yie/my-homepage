@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 
+import { ProgressBar } from '@/components/progress-bar';
 import {
 	AnchoredToastProvider,
 	ToastProvider,
@@ -84,8 +85,8 @@ export const AuthLayout = () => {
 							/>
 						</svg>
 					</div>
-
-					<div className="relative z-10 w-full max-w-md px-4">
+					<ProgressBar />
+					<div className="relative z-10 w-full max-w-xs">
 						<Outlet />
 					</div>
 				</div>

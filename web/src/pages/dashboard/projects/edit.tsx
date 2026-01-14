@@ -27,7 +27,7 @@ export function EditProjectPage() {
 
 			try {
 				setFetchLoading(true);
-				const response = await client.projects({ id }).get();
+				const response = await client.api.v1.projects({ id }).get();
 				const apiResponse = response.data as unknown;
 				const typedResponse = apiResponse as {
 					success: boolean;

@@ -33,14 +33,14 @@ export function TagForm({ mode, tagId, initialData }: TagFormProps) {
 
 		try {
 			if (mode === 'create') {
-				const response = await client.tags.post(formData);
+				const response = await client.api.v1.tags.post(formData);
 				if (response.data && !response.data.success) {
 					setError(response.data.error || 'Failed to create tag');
 					setLoading(false);
 					return;
 				}
 			} else if (tagId) {
-				const response = await client.tags({ id: tagId }).put(formData);
+				const response = await client.api.v1.tags({ id: tagId }).put(formData);
 				if (response.data && !response.data.success) {
 					setError(response.data.error || 'Failed to update tag');
 					setLoading(false);

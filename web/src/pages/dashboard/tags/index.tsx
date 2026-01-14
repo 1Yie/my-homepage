@@ -49,7 +49,7 @@ export function TagsPage() {
 	const fetchTags = useCallback(async () => {
 		try {
 			setLoading(true);
-			const response = await client.tags.get();
+			const response = await client.api.v1.tags.get();
 			if (response.data) {
 				const data = response.data.data;
 				if (Array.isArray(data)) {
@@ -85,7 +85,7 @@ export function TagsPage() {
 		if (!tagToDelete) return;
 
 		try {
-			const response = await client
+			const response = await client.api.v1
 				.tags({ id: tagToDelete.id.toString() })
 				.delete();
 			if (response.data && !response.data.success) {

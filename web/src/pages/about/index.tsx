@@ -215,7 +215,7 @@ export function AboutPage() {
 							className="text-accent-foreground px-4 py-1 text-lg font-medium
 								sm:text-2xl"
 						>
-							项目展示
+							作品集
 						</span>
 					</div>
 				</section>

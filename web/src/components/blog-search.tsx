@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
 
 function fetchSearchResults(query: string): Promise<Article[]> {
 	if (!query.trim()) return Promise.resolve([]);
-	return client.articles
+	return client.api.v1.articles
 		.get({ query: { public: 'true', q: query } })
 		.then((r) => {
 			const data = r.data?.data;

@@ -71,14 +71,14 @@ export function ProjectForm({
 
 		try {
 			if (mode === 'create') {
-				await client.projects.post({
+				await client.api.v1.projects.post({
 					...formData,
 					githubUrl: formData.githubUrl || undefined,
 					liveUrl: formData.liveUrl || undefined,
 					imageUrl: formData.imageUrl || undefined,
 				});
 			} else if (projectId) {
-				await client.projects({ id: projectId }).put({
+				await client.api.v1.projects({ id: projectId }).put({
 					...formData,
 					githubUrl: formData.githubUrl || undefined,
 					liveUrl: formData.liveUrl || undefined,

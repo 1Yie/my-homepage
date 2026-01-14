@@ -62,7 +62,6 @@ export function useBreadcrumbItems() {
 	return useMemo(() => {
 		const items: BreadcrumbItem[] = [];
 
-		// Handle root separately
 		const root = routeConfig.find((r) => r.path === '/' && r.label);
 		if (root) items.push({ label: root.label!, href: '/' });
 
@@ -70,7 +69,13 @@ export function useBreadcrumbItems() {
 
 		const rest = findBreadcrumbs(routeConfig, pathname);
 
-		// Fallback for 404, only show root
+		if (rest.length === 0) {
+			if (pathname.startsWith('/dashboard')) {
+				return [...items, { label: '页面不存在', href: pathname }];
+			}
+			return items;
+		}
+
 		if (rest.length === 0) return items;
 
 		return [...items, ...rest];

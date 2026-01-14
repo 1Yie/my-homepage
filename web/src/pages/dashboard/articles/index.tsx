@@ -57,7 +57,7 @@ export function ArticlesPage() {
 	const fetchArticles = useCallback(async () => {
 		try {
 			setLoading(true);
-			const response = await client.articles.get({
+			const response = await client.api.v1.articles.get({
 				query: searchQuery ? { q: searchQuery } : undefined,
 			});
 			if (response.data) {
@@ -91,7 +91,9 @@ export function ArticlesPage() {
 		if (!articleToDelete) return;
 
 		try {
-			await client.articles({ id: articleToDelete.id.toString() }).delete();
+			await client.api.v1
+				.articles({ id: articleToDelete.id.toString() })
+				.delete();
 			fetchArticles();
 			setDeleteDialogOpen(false);
 			setArticleToDelete(null);
@@ -167,6 +169,7 @@ export function ArticlesPage() {
 											<TableHead className="w-24">状态</TableHead>
 											<TableHead>标签</TableHead>
 											<TableHead>创建时间</TableHead>
+											<TableHead>更新时间</TableHead>
 											<TableHead className="w-32">操作</TableHead>
 										</TableRow>
 									</TableHeader>
@@ -208,6 +211,9 @@ export function ArticlesPage() {
 												</TableCell>
 												<TableCell>
 													{new Date(article.createdAt).toLocaleDateString()}
+												</TableCell>
+												<TableCell>
+													{new Date(article.updatedAt).toLocaleDateString()}
 												</TableCell>
 												<TableCell>
 													<div className="flex items-center gap-2">

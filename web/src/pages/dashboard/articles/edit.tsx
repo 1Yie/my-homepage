@@ -72,7 +72,7 @@ export function EditArticlePage() {
 
 			try {
 				setFetchLoading(true);
-				const response = await client.articles({ id }).get();
+				const response = await client.api.v1.articles({ id }).get();
 				const apiResponse = response.data as ApiResponse<ArticleApiData>;
 				if (apiResponse.success && apiResponse.data) {
 					const articleData = apiResponse.data;

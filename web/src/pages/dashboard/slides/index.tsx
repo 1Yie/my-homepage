@@ -53,7 +53,7 @@ export function SlidesPage() {
 	const fetchSlides = useCallback(async () => {
 		try {
 			setLoading(true);
-			const response = await client.slides.get();
+			const response = await client.api.v1.slides.get();
 			if (response.data) {
 				const data = response.data.data;
 				if (Array.isArray(data)) {
@@ -88,7 +88,7 @@ export function SlidesPage() {
 		if (!slideToDelete) return;
 
 		try {
-			await client.slides({ id: slideToDelete.id.toString() }).delete();
+			await client.api.v1.slides({ id: slideToDelete.id.toString() }).delete();
 			fetchSlides();
 			setDeleteDialogOpen(false);
 			setSlideToDelete(null);

@@ -54,7 +54,7 @@ export function ProjectsPage() {
 	const fetchProjects = useCallback(async () => {
 		try {
 			setLoading(true);
-			const response = await client.projects.get();
+			const response = await client.api.v1.projects.get();
 			if (response.data) {
 				const data = response.data.data;
 				if (Array.isArray(data)) {
@@ -94,7 +94,9 @@ export function ProjectsPage() {
 		if (!projectToDelete) return;
 
 		try {
-			await client.projects({ id: projectToDelete.id.toString() }).delete();
+			await client.api.v1
+				.projects({ id: projectToDelete.id.toString() })
+				.delete();
 			fetchProjects();
 			setDeleteDialogOpen(false);
 			setProjectToDelete(null);

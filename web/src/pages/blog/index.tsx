@@ -8,14 +8,12 @@ import { useGetArticles } from '@/hooks/article/use-get-articles';
 import { useTitle } from '@/hooks/use-page-title';
 
 export function BlogPage() {
-	const [search, setSearch] = useState('');
 	const [currentPage, setCurrentPage] = useState(1);
 	const limit = 5;
 	useTitle('博客');
 	const { articles, totalPages, loading, error } = useGetArticles({
 		public: true,
 		preview: true,
-		search: search || undefined,
 		page: currentPage,
 		limit,
 	});
@@ -29,7 +27,7 @@ export function BlogPage() {
 		<>
 			<PageTitle subtitle="Blog" title="博客" />
 
-			<BlogPanel onSearchChange={setSearch} searchValue={search} />
+			<BlogPanel />
 
 			<section className="section-base">
 				{loading ? (

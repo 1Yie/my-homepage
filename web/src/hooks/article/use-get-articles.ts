@@ -49,7 +49,7 @@ export function useGetArticles(options: UseGetArticlesOptions = {}) {
 			if (options.preview) query.preview = 'true';
 			if (options.page) query.page = options.page.toString();
 			if (options.limit) query.limit = options.limit.toString();
-			const response = await client.articles.get({
+			const response = await client.api.v1.articles.get({
 				query,
 			});
 			if (!response.data) {

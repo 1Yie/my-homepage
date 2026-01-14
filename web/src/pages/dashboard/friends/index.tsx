@@ -40,7 +40,7 @@ export function FriendsPage() {
 	const fetchFriends = useCallback(async () => {
 		try {
 			setLoading(true);
-			const response = await client.friends.get();
+			const response = await client.api.v1.friends.get();
 			if (response.data?.data) {
 				const data = response.data.data;
 				const filtered = searchQuery
@@ -75,7 +75,9 @@ export function FriendsPage() {
 		if (!friendToDelete) return;
 
 		try {
-			await client.friends({ id: friendToDelete.id.toString() }).delete();
+			await client.api.v1
+				.friends({ id: friendToDelete.id.toString() })
+				.delete();
 			fetchFriends();
 			setDeleteDialogOpen(false);
 			setFriendToDelete(null);

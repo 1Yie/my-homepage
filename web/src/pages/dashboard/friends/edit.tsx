@@ -20,7 +20,7 @@ export function EditFriendPage() {
 
 			try {
 				setLoading(true);
-				const response = await client.friends({ id }).get();
+				const response = await client.api.v1.friends({ id }).get();
 				if (response.data?.data) {
 					setFriend(response.data.data);
 				}

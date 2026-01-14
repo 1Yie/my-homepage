@@ -16,7 +16,7 @@ export function useGetSlides() {
 	const query = useQuery<Slide[]>({
 		queryKey: ['slides'],
 		queryFn: async () => {
-			const response = await client.slides.get();
+			const response = await client.api.v1.slides.get();
 			if (!response.data) {
 				throw new Error('Failed to fetch slides');
 			}

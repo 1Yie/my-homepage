@@ -44,7 +44,7 @@ export function EditSlidePage() {
 
 			try {
 				setFetchLoading(true);
-				const response = await client.slides({ id }).get();
+				const response = await client.api.v1.slides({ id }).get();
 				const apiResponse = response.data as ApiResponse<SlideApiData>;
 				if (apiResponse.success && apiResponse.data) {
 					const slideData = apiResponse.data;

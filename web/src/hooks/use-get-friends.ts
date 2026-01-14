@@ -29,7 +29,7 @@ export function useGetFriends() {
 	const query = useQuery({
 		queryKey: ['friends'],
 		queryFn: async () => {
-			const response = await client.friends.get();
+			const response = await client.api.v1.friends.get();
 			if (!response.data) {
 				throw new Error('Failed to fetch friends');
 			}

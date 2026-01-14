@@ -22,7 +22,7 @@ export function EditTagPage() {
 
 			try {
 				setFetchLoading(true);
-				const response = await client.tags({ id }).get();
+				const response = await client.api.v1.tags({ id }).get();
 				const apiResponse = response.data as unknown;
 				const typedResponse = apiResponse as {
 					success: boolean;

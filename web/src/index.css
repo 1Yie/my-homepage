@@ -9,7 +9,6 @@
 /* 寒蝉活仿楷 */
 @import url('https://fontsapi.zeoseven.com/872/main/result.css');
 
-@source '../node_modules/streamdown/dist/*.js';
 @import 'artalk/dist/Artalk.css';
 
 /* Syntax highlighting */
@@ -44,6 +43,17 @@
 		word-break: break-word;
 		text-rendering: optimizeLegibility;
 	}
+}
+
+#nprogress .bar {
+	background: var(--sidebar-accent-foreground) !important;
+	height: 4px !important;
+}
+
+#nprogress .peg {
+	box-shadow:
+		0 0 10px var(--sidebar-accent-foreground),
+		0 0 5px var(--sidebar-accent) !important;
 }
 
 @theme inline {

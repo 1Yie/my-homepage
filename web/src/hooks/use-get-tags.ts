@@ -14,7 +14,7 @@ export function useGetTags() {
 	const query = useQuery({
 		queryKey: ['tags'],
 		queryFn: async () => {
-			const response = await client.tags.get();
+			const response = await client.api.v1.tags.get();
 			if (!response.data) {
 				throw new Error('Failed to fetch tags');
 			}

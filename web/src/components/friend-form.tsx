@@ -81,11 +81,11 @@ export function FriendForm({ mode, friendId, initialData }: FriendFormProps) {
 
 		try {
 			if (mode === 'create') {
-				await client.friends.post({
+				await client.api.v1.friends.post({
 					...formData,
 				});
 			} else if (friendId) {
-				await client.friends({ id: friendId }).put({
+				await client.api.v1.friends({ id: friendId }).put({
 					...formData,
 				});
 			}

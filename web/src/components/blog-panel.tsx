@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import BlogSearch from '@/components/blog-search';
 
 interface BlogPanelProps {
-	onSearchChange: (value: string) => void;
-	searchValue: string;
+	onSearchChange?: (value: string) => void;
+	searchValue?: string;
 	className?: string;
 }
 

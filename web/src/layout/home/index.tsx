@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
+import { ProgressBar } from '@/components/progress-bar';
 import {
 	AnchoredToastProvider,
 	ToastProvider,
@@ -42,6 +43,7 @@ export function AppLayout() {
 	return (
 		<ToastProvider>
 			<AnchoredToastProvider>
+				<ProgressBar />
 				<Header />
 				<Outlet />
 				<Footer />

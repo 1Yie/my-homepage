@@ -42,7 +42,7 @@ export function useGetArticlesByTag(options: UseGetArticlesByTagOptions) {
 			if (options.page) query.page = options.page.toString();
 			if (options.limit) query.limit = options.limit.toString();
 
-			const response = await client.articles['tag']({
+			const response = await client.api.v1.articles['tag']({
 				tagName: options.tagName,
 			}).get({
 				query,

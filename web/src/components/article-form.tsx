@@ -109,7 +109,7 @@ export function ArticleForm({
 			// First, create any new tags
 			const newTagIds: number[] = [];
 			for (const tagName of formData.tagNames) {
-				const response = await client.tags.post({
+				const response = await client.api.v1.tags.post({
 					name: tagName,
 				});
 				if (response.data) {
@@ -121,7 +121,7 @@ export function ArticleForm({
 			const allTagIds = [...formData.tagIds, ...newTagIds];
 
 			if (mode === 'create') {
-				await client.articles.post({
+				await client.api.v1.articles.post({
 					title: formData.title,
 					slug: formData.slug,
 					content: formData.content,
@@ -130,7 +130,7 @@ export function ArticleForm({
 					headerImage: formData.headerImage,
 				});
 			} else if (mode === 'edit' && articleId) {
-				await client.articles({ id: articleId }).put({
+				await client.api.v1.articles({ id: articleId }).put({
 					title: formData.title,
 					slug: formData.slug,
 					content: formData.content,

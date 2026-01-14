@@ -27,21 +27,29 @@ export function useGetArticleBySlug(slug: string | undefined) {
 		queryKey: ['article', slug],
 		queryFn: async () => {
 			if (!slug) throw new Error('Slug is required');
-			const response = await client.articles['slug']({ slug }).get();
+			const response = await client.api.v1.articles['slug']({ slug }).get();
+			if (response.error) {
+				if (Number(response.error.status) === 404) {
+					throw new Error('404');
+				}
+				throw new Error('Failed to fetch article');
+			}
 			if (!response.data) {
 				throw new Error('Failed to fetch article');
 			}
 			return response.data.data;
 		},
 		enabled: !!slug,
+		retry: (failureCount, error) => {
+			if (error.message === '404') return false;
+			return failureCount < 3;
+		},
 	});
 
 	return {
 		article: query.data,
 		loading: query.isLoading,
-		error: query.error?.message || null,
-		isNotFound:
-			query.error?.message === 'Article not found' ||
-			query.error?.message === 'Failed to fetch article',
+		error: query.error?.message === '404' ? null : query.error?.message || null,
+		isNotFound: query.error?.message === '404',
 	};
 }

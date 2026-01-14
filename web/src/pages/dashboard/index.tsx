@@ -121,7 +121,7 @@ export function DashboardPage() {
 		const fetchDashboardData = async () => {
 			try {
 				setLoading(true);
-				const response = await client.dashboard.stats.get();
+				const response = await client.api.v1.dashboard.stats.get();
 				if (response.data && response.data.success) {
 					setDashboardData(response.data.data as unknown as DashboardData);
 				}

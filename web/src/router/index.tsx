@@ -113,6 +113,13 @@ export const routeConfig: RouteConfig[] = [
 			})),
 		children: [
 			{
+				path: '*',
+				lazy: () =>
+					import('@/pages/dashboard/error/not-found').then((module) => ({
+						Component: module.NotFoundPage,
+					})),
+			},
+			{
 				index: true,
 				label: '仪表盘',
 				lazy: () =>

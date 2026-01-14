@@ -17,7 +17,7 @@ export function useGetProjects() {
 	const query = useQuery<Project[]>({
 		queryKey: ['projects'],
 		queryFn: async () => {
-			const response = await client.projects.get();
+			const response = await client.api.v1.projects.get();
 			if (!response.data) {
 				throw new Error('Failed to fetch projects');
 			}

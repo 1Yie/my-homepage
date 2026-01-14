@@ -13,6 +13,7 @@ import { Link, Navigate, Outlet, useLocation } from 'react-router-dom';
 
 import { authClient } from '@/api/client';
 import { DashboardHeader } from '@/components/dashboard-header';
+import { ProgressBar } from '@/components/progress-bar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -256,9 +257,10 @@ export function DashboardLayout() {
 						<SidebarRail />
 					</Sidebar>
 
-					<SidebarInset className="min-h-screen flex-1 flex flex-col">
+					<SidebarInset className="min-w-0 flex-1 flex flex-col">
 						<DashboardHeader breadcrumbs={breadcrumbs} />
-						<div className="flex flex-1 flex-col gap-4 p-4">
+						<ProgressBar />
+						<div className="flex flex-1 flex-col gap-4 p-4 overflow-hidden">
 							<Outlet />
 						</div>
 					</SidebarInset>

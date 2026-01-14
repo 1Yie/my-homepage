@@ -42,13 +42,13 @@ export function SlideForm({ mode, slideId, initialData }: SlideFormProps) {
 
 		try {
 			if (mode === 'create') {
-				await client.slides.post({
+				await client.api.v1.slides.post({
 					...formData,
 					button: formData.button || undefined,
 					link: formData.link || undefined,
 				});
 			} else if (slideId) {
-				await client.slides({ id: slideId }).put({
+				await client.api.v1.slides({ id: slideId }).put({
 					...formData,
 					button: formData.button || undefined,
 					link: formData.link || undefined,
