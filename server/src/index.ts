@@ -34,21 +34,18 @@ const app = new Elysia()
 	)
 	.all('/api/auth/*', betterAuthView)
 	.group('/api', (api) =>
-		api.group('/v1', (v1) =>
-			v1
-				.use(tagsRoutes)
-				.use(articlesRoutes)
-				.use(projectsRoutes)
-				.use(slidesRoutes)
-				.use(friendsRoutes)
-				.use(dashboardRoutes)
-		)
+		api
+			.group('/v1', (v1) =>
+				v1
+					.use(tagsRoutes)
+					.use(articlesRoutes)
+					.use(projectsRoutes)
+					.use(slidesRoutes)
+					.use(friendsRoutes)
+					.use(dashboardRoutes)
+			)
+			.use(rssRoutes)
 	)
-	.use(rssRoutes)
-	.get('/', () => ({
-		message: 'Hello Elysia',
-		status: 'running',
-	}))
 	.listen({
 		port: PORT,
 		hostname: HOSTNAME,
