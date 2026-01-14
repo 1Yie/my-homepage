@@ -14,6 +14,7 @@ RUN bun install --ignore-scripts
 COPY . .
 
 WORKDIR /app/server
+ENV DATABASE_URL="file:./data.db"
 RUN bunx prisma generate
 
 FROM oven/bun:slim AS runner
