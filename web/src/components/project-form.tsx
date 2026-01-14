@@ -99,7 +99,7 @@ export function ProjectForm({
 			<Card>
 				<CardContent className="space-y-6 pt-6">
 					<div className="space-y-2">
-						<Label htmlFor="name">项目名称*</Label>
+						<Label htmlFor="name">项目名称</Label>
 						<Input
 							id="name"
 							onChange={(e) =>
@@ -112,7 +112,7 @@ export function ProjectForm({
 					</div>
 
 					<div className="space-y-2">
-						<Label htmlFor="description">项目描述*</Label>
+						<Label htmlFor="description">项目描述</Label>
 						<Textarea
 							id="description"
 							onChange={(e) =>
@@ -126,7 +126,7 @@ export function ProjectForm({
 					</div>
 
 					<div className="space-y-2">
-						<Label>技术标签*</Label>
+						<Label>技术标签</Label>
 						<div className="flex gap-2">
 							<Input
 								onChange={(e) => setNewTag(e.target.value)}
@@ -150,7 +150,10 @@ export function ProjectForm({
 										{tag}
 										<X
 											className="h-3 w-3 cursor-pointer"
-											onClick={() => handleRemoveTag(tag)}
+											onClick={(e) => {
+												e.stopPropagation();
+												handleRemoveTag(tag);
+											}}
 										/>
 									</Badge>
 								))}

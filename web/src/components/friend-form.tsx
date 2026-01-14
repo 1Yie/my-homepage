@@ -103,7 +103,7 @@ export function FriendForm({ mode, friendId, initialData }: FriendFormProps) {
 			<Card>
 				<CardContent className="space-y-6 pt-6">
 					<div className="space-y-2">
-						<Label htmlFor="name">名称*</Label>
+						<Label htmlFor="name">名称</Label>
 						<Input
 							id="name"
 							onChange={(e) =>
@@ -116,7 +116,7 @@ export function FriendForm({ mode, friendId, initialData }: FriendFormProps) {
 					</div>
 
 					<div className="space-y-2">
-						<Label htmlFor="image">头像 URL*</Label>
+						<Label htmlFor="image">头像 URL</Label>
 						<Input
 							id="image"
 							onChange={(e) =>
@@ -139,7 +139,7 @@ export function FriendForm({ mode, friendId, initialData }: FriendFormProps) {
 					</div>
 
 					<div className="space-y-2">
-						<Label htmlFor="description">描述*</Label>
+						<Label htmlFor="description">描述</Label>
 						<Textarea
 							id="description"
 							onChange={(e) =>

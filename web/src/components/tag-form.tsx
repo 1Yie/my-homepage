@@ -71,7 +71,7 @@ export function TagForm({ mode, tagId, initialData }: TagFormProps) {
 					)}
 
 					<div className="space-y-2">
-						<Label htmlFor="name">标签名称*</Label>
+						<Label htmlFor="name">标签名称</Label>
 						<Input
 							id="name"
 							onChange={(e) =>

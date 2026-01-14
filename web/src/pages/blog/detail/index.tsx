@@ -85,7 +85,7 @@ export function BlogDetailPage() {
 			/>
 			<div className="h-full w-full">
 				<section className="section-base">
-					<div className="mx-auto max-w-5xl py-8 px-4 md:px-0">
+					<div className="mx-auto max-w-5xl py-8 px-4 lg:px-0">
 						<div
 							className={cn(
 								'grid grid-cols-1 gap-4 md:gap-8',
@@ -109,7 +109,7 @@ export function BlogDetailPage() {
 
 			<div className="border-t">
 				<section className="section-base artalk">
-					<div className="mx-auto max-w-5xl py-8 px-4 md:px-0">
+					<div className="mx-auto max-w-5xl py-8 px-4 lg:px-0">
 						<Comments />
 					</div>
 				</section>

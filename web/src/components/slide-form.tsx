@@ -68,7 +68,7 @@ export function SlideForm({ mode, slideId, initialData }: SlideFormProps) {
 			<Card>
 				<CardContent className="space-y-6 pt-6">
 					<div className="space-y-2">
-						<Label htmlFor="title">标题*</Label>
+						<Label htmlFor="title">标题</Label>
 						<Input
 							id="title"
 							onChange={(e) =>
@@ -81,7 +81,7 @@ export function SlideForm({ mode, slideId, initialData }: SlideFormProps) {
 					</div>
 
 					<div className="space-y-2">
-						<Label htmlFor="src">图片 URL*</Label>
+						<Label htmlFor="src">图片 URL</Label>
 						<Input
 							id="src"
 							onChange={(e) =>
