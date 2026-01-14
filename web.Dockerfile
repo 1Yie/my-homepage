@@ -1,6 +1,8 @@
 FROM oven/bun:latest AS builder
 WORKDIR /app
 
+ARG VITE_BASE_URL
+ENV VITE_BASE_URL=$VITE_BASE_URL
 
 COPY package.json ./
 COPY web/package.json ./web/
@@ -8,7 +10,6 @@ COPY server/package.json ./server/
 
 ENV HUSKY=0
 RUN bun install --ignore-scripts
-
 
 COPY . .
 WORKDIR /app/web
