@@ -20,7 +20,7 @@ jobs:
           login-server: ${{ secrets.ACR_LOGIN_SERVER }}
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
-          region: ${{ secrets.ACR_REGION }}
+          region-id: ${{ secrets.ACR_REGION }}
 
       - name: Extract metadata for web
         id: meta-web
