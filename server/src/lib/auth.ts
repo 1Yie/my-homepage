@@ -62,8 +62,4 @@ export const auth = betterAuth({
 
 	baseURL: process.env.BETTER_BASE_URL!,
 	trustedOrigins: [process.env.BETTER_AUTH_URL!],
-
-	onAPIError: {
-		errorURL: '/auth/error',
-	},
 });

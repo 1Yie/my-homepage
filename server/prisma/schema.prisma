@@ -26,9 +26,9 @@ model User {
 }
 
 model Session {
-  id           String   @id
-  expiresAt    DateTime
-  sessionToken String   @unique
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -127,14 +127,14 @@ model Slide {
 }
 
 model Friend {
-  id          Int           @id @default(autoincrement())
+  id          Int          @id @default(autoincrement())
   name        String
   image       String
   description String
-  pinned      Boolean       @default(false)
-  order       Int           @default(0)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @default(now()) @updatedAt
+  pinned      Boolean      @default(false)
+  order       Int          @default(0)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @default(now()) @updatedAt
   socialLinks SocialLink[]
 
   @@map("friend")
