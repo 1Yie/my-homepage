@@ -1,5 +1,6 @@
 import { ExternalLink, Github } from 'lucide-react';
 
+import { Skeleton } from '@/components/ui/skeleton';
 import { useGetProjects, type Project } from '@/hooks/use-get-projects';
 
 function ProjectCard({ project }: { project: Project }) {
@@ -79,11 +80,30 @@ export default function Project() {
 			<div className="border-b">
 				<section className="section-base">
 					<div className="mx-auto max-w-6xl p-6 sm:p-12">
-						<div className="flex items-center justify-center py-16">
-							<div
-								className="h-8 w-8 animate-spin rounded-full border-4
-									border-primary border-t-transparent"
-							/>
+						<div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+							{Array.from({ length: 6 }).map((_, i) => (
+								<div
+									className="group relative flex flex-col overflow-hidden
+										border"
+									key={i}
+								>
+									<Skeleton className="aspect-video w-full" />
+									<div className="flex flex-1 flex-col p-6">
+										<Skeleton className="mb-2 h-6 w-3/4" />
+										<Skeleton className="mb-4 h-4 w-full" />
+										<Skeleton className="mb-2 h-4 w-full" />
+										<div className="mb-4 flex flex-wrap gap-2">
+											{Array.from({ length: 3 }).map((_, j) => (
+												<Skeleton className="h-6 w-12 rounded-full" key={j} />
+											))}
+										</div>
+										<div className="mt-auto flex gap-3">
+											<Skeleton className="h-4 w-16" />
+											<Skeleton className="h-4 w-16" />
+										</div>
+									</div>
+								</div>
+							))}
 						</div>
 					</div>
 				</section>

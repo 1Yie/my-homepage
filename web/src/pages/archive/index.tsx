@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import type { Article } from '@/hooks/article/use-get-articles';
 
 import PageTitle from '@/components/page-title';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useGetArticles } from '@/hooks/article/use-get-articles';
 import { useTitle } from '@/hooks/use-page-title';
 type GroupedPosts = {
@@ -160,11 +161,49 @@ export function ArchivePage() {
 
 			{loading ? (
 				<section className="section-base">
-					<div className="flex items-center justify-center py-16">
-						<div
-							className="h-8 w-8 animate-spin rounded-full border-4
-								border-primary border-t-transparent"
-						/>
+					<div className="mx-auto max-w-5xl p-6 sm:p-12">
+						<div className="space-y-20">
+							{Array.from({ length: 3 }).map((_, yearIndex) => (
+								<div
+									className="relative flex flex-col gap-8 md:flex-row md:gap-16"
+									key={yearIndex}
+								>
+									<div className="md:w-44 md:shrink-0">
+										<Skeleton className="h-16 w-32" />
+									</div>
+
+									<div
+										className="relative flex-1 border-l border-gray-200
+											dark:border-gray-800"
+									>
+										<div className="flex flex-col gap-12 pl-8 md:pl-12">
+											{Array.from({ length: 2 }).map((_, monthIndex) => (
+												<div className="relative" key={monthIndex}>
+													<div
+														className="absolute top-2 -left-9.5 h-3 w-3
+															rounded-full border-2 border-white bg-gray-300
+															md:-left-13.5 dark:border-black dark:bg-gray-600"
+													/>
+
+													<Skeleton className="mb-6 h-6 w-20" />
+
+													<ul className="space-y-3">
+														{Array.from({ length: 3 }).map((_, postIndex) => (
+															<li key={postIndex}>
+																<div className="flex items-baseline gap-6">
+																	<Skeleton className="h-4 w-8" />
+																	<Skeleton className="h-6 flex-1" />
+																</div>
+															</li>
+														))}
+													</ul>
+												</div>
+											))}
+										</div>
+									</div>
+								</div>
+							))}
+						</div>
 					</div>
 				</section>
 			) : error ? (
