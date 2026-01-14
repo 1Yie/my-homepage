@@ -31,14 +31,18 @@ const app = new Elysia()
 			allowedHeaders: ['Content-Type', 'Authorization', 'Set-Cookie', 'Cookie'],
 		})
 	)
-
 	.all('/api/auth/*', betterAuthView)
-	.use(tagsRoutes)
-	.use(articlesRoutes)
-	.use(projectsRoutes)
-	.use(slidesRoutes)
-	.use(friendsRoutes)
-	.use(dashboardRoutes)
+	.group('/api', (api) =>
+		api.group('/v1', (v1) =>
+			v1
+				.use(tagsRoutes)
+				.use(articlesRoutes)
+				.use(projectsRoutes)
+				.use(slidesRoutes)
+				.use(friendsRoutes)
+				.use(dashboardRoutes)
+		)
+	)
 	.get('/', () => ({
 		message: 'Hello Elysia',
 		status: 'running',
