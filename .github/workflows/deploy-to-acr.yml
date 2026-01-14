@@ -20,17 +20,19 @@ jobs:
           login-server: ${{ secrets.ACR_LOGIN_SERVER }}
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
+          region: ${{ secrets.ACR_REGION }}
 
       - name: Extract metadata for web
         id: meta-web
         uses: docker/metadata-action@v5
         with:
-          images: ${{ secrets.ACR_REGISTRY }}/web
+          images: ${{ secrets.ACR_REGISTRY }}
           tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=sha,prefix={{branch}}-
-            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=web
+            type=ref,event=branch,prefix=web-
+            type=ref,event=pr,prefix=web-pr-
+            type=sha,prefix=web-
+            type=raw,value=web-latest,enable={{is_default_branch}}
 
       - name: Build and push web image
         uses: docker/build-push-action@v5
@@ -45,12 +47,13 @@ jobs:
         id: meta-server
         uses: docker/metadata-action@v5
         with:
-          images: ${{ secrets.ACR_REGISTRY }}/server
+          images: ${{ secrets.ACR_REGISTRY }}
           tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=sha,prefix={{branch}}-
-            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=server
+            type=ref,event=branch,prefix=server-
+            type=ref,event=pr,prefix=server-pr-
+            type=sha,prefix=server-
+            type=raw,value=server-latest,enable={{is_default_branch}}
 
       - name: Build and push server image
         uses: docker/build-push-action@v5
