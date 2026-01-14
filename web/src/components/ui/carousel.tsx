@@ -140,16 +140,17 @@ const Slide = ({ slide, index, current, handleSlideClick }: SlideProps) => {
 						transition: 'transform 0.3s ease-out, box-shadow 0.3s ease-out',
 					}}
 				>
-					<a
-						className="absolute inset-0 h-[120%] w-[120%] object-cover
-							opacity-100 transition-opacity duration-600 ease-in-out"
+					<img
+						src={src}
+						alt={title}
+						className="absolute inset-0 h-full w-full object-cover opacity-0
+							transition-opacity duration-600 ease-in-out"
 						style={{
 							opacity: current === index ? 1 : 0.5,
 							transform: current === index ? 'scale(1.05)' : 'none',
 							transition: 'opacity 0.6s ease-in-out, transform 0.3s ease-out',
 						}}
-						href={src}
-						download={imageLoaded}
+						onLoad={imageLoaded}
 					/>
 					<div
 						className={`absolute inset-0 ${
