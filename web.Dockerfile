@@ -2,7 +2,6 @@ FROM oven/bun:1 AS builder
 WORKDIR /app
 ENV HUSKY=0
 
-# 【关键修复】安装 web 构建时可能需要的 git 和编译工具
 RUN apt-get update && \
     apt-get install -y build-essential python3 git && \
     rm -rf /var/lib/apt/lists/*
