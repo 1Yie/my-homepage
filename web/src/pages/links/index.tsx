@@ -282,7 +282,7 @@ export function LinksPage() {
 				</section>
 			</div>
 
-			<div className="border-b">
+			<>
 				<section className="section-base">
 					<Accordion className="w-full">
 						<AccordionItem value="item-1">
@@ -383,7 +383,7 @@ export function LinksPage() {
 						</AccordionItem>
 					</Accordion>
 				</section>
-			</div>
+			</>
 		</>
 	);
 }

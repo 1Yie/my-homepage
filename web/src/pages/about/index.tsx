@@ -236,11 +236,11 @@ export function AboutPage() {
 				</section>
 			</div>
 
-			<div className="border-b">
+			<>
 				<section className="section-base">
 					<SlidesLoader />
 				</section>
-			</div>
+			</>
 		</>
 	);
 }
