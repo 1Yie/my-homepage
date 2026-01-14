@@ -6,6 +6,7 @@ import { articlesRoutes } from './routes/articles';
 import { dashboardRoutes } from './routes/dashboard';
 import { friendsRoutes } from './routes/friends';
 import { projectsRoutes } from './routes/projects';
+import { rssRoutes } from './routes/rss';
 import { slidesRoutes } from './routes/slides';
 import { tagsRoutes } from './routes/tags';
 
@@ -43,6 +44,7 @@ const app = new Elysia()
 				.use(dashboardRoutes)
 		)
 	)
+	.use(rssRoutes)
 	.get('/', () => ({
 		message: 'Hello Elysia',
 		status: 'running',
