@@ -6,19 +6,17 @@ ENV HUSKY=0
 COPY package.json ./
 COPY server/package.json ./server/
 COPY web/package.json ./web/
-
-COPY bun.lockb* ./ 
+COPY bun.lockb* ./
 
 RUN bun install --ignore-scripts
 
 COPY . .
 
 WORKDIR /app/server
-ENV DATABASE_URL="file:./data.db"
 RUN bunx prisma generate
 
-FROM oven/bun:slim AS runner
 
+FROM oven/bun:slim AS runner
 WORKDIR /app/server
 
 RUN apt-get update && \
@@ -30,7 +28,8 @@ COPY --from=builder /app/server ./
 
 ENV NODE_ENV=production
 ENV HUSKY=0
+ENV DATABASE_URL="file:./data/sqlite.db"
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "bunx prisma db push && bun run src/index.ts"]
+CMD ["sh", "-c", "bunx prisma generate && bunx prisma db push && bun run src/index.ts"]

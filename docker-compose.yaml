@@ -1,6 +1,8 @@
 services:
   server:
-    image: crpi-266p90eq4h6brayr.cn-hangzhou.personal.cr.aliyuncs.com/1yie/dockerbase:server-latest
+    build:
+      context: .
+      dockerfile: server.Dockerfile
     container_name: ichiyo-server
     volumes:
       - ./data:/app/server/data
@@ -11,7 +13,9 @@ services:
     restart: always
 
   web:
-    image: crpi-266p90eq4h6brayr.cn-hangzhou.personal.cr.aliyuncs.com/1yie/dockerbase:web-latest
+    build:
+      context: .
+      dockerfile: web.Dockerfile
     container_name: ichiyo-web
     ports:
       - '3000:80'
