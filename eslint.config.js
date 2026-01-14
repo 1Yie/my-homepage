@@ -84,7 +84,7 @@ export default tseslint.config(
 			},
 		},
 		rules: {
-			'unicorn/filename-case': ['warn', { case: 'camelCase' }],
+			'unicorn/filename-case': ['warn', { case: 'kebabCase' }],
 		},
 	},
 
