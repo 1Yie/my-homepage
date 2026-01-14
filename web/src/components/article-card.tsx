@@ -39,12 +39,15 @@ export function ArticleCard({ article }: ArticleCardProps) {
 					to={`/blog/${article.slug}`}
 				/>
 
-				<div className="pointer-events-none relative z-10 flex gap-8 p-6 pb-6">
+				<div
+					className="pointer-events-none relative z-10 flex flex-col md:flex-row
+						gap-8 p-6 pb-6"
+				>
 					{article.headerImage && (
 						<div className="shrink-0">
 							<img
 								alt={article.title}
-								className="h-36 w-full object-cover"
+								className="h-42 md:h-36 w-full object-cover"
 								src={article.headerImage}
 							/>
 						</div>

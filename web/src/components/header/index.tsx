@@ -236,7 +236,6 @@ export function Header() {
 											className="justify-start w-full"
 											onClick={() => {
 												toggleTheme();
-												setMobileMenuOpen(false);
 											}}
 											size="sm"
 											variant="ghost"
@@ -244,15 +243,15 @@ export function Header() {
 											{theme === 'system' ? (
 												<SystemIcon />
 											) : isDark ? (
-												<Sun className="h-5 w-5 mr-2" />
-											) : (
 												<Moon className="h-5 w-5 mr-2" />
+											) : (
+												<Sun className="h-5 w-5 mr-2" />
 											)}
 											{theme === 'system'
 												? '跟随系统'
 												: isDark
-													? '浅色模式'
-													: '深色模式'}
+													? '深色模式'
+													: '浅色模式'}
 										</Button>
 										<div className="h-px bg-border/60 my-1" />
 										{session ? (

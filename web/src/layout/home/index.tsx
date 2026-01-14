@@ -4,6 +4,7 @@ import { Outlet } from 'react-router-dom';
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
 import { ProgressBar } from '@/components/progress-bar';
+import { ScrollToTop } from '@/components/scroll-to-top';
 import {
 	AnchoredToastProvider,
 	ToastProvider,
@@ -43,6 +44,7 @@ export function AppLayout() {
 	return (
 		<ToastProvider>
 			<AnchoredToastProvider>
+				<ScrollToTop />
 				<ProgressBar />
 				<Header />
 				<Outlet />
