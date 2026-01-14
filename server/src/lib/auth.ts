@@ -9,44 +9,26 @@ export const auth = betterAuth({
 		provider: 'sqlite',
 	}),
 
+	databaseHooks: {
+		user: {
+			create: {
+				before: async (user) => {
+					const ADMIN_EMAIL = 'me@ichiyo.in';
+					if (user.email !== ADMIN_EMAIL) {
+						throw new APIError('FORBIDDEN', {
+							message: 'Access denied: You are not the admin.',
+						});
+					}
+					return { data: user };
+				},
+			},
+		},
+	},
+
 	socialProviders: {
 		github: {
 			clientId: process.env.GITHUB_CLIENT_ID!,
 			clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-
-			getUserInfo: async (token: { accessToken: string }) => {
-				const response = await fetch('https://api.github.com/user', {
-					headers: {
-						Authorization: `Bearer ${token.accessToken}`,
-						'User-Agent': 'ichiyo-blog',
-					},
-				});
-
-				if (!response.ok) {
-					throw new Error('Failed to fetch user info from GitHub');
-				}
-
-				const profile = await response.json();
-
-				const ADMIN_EMAIL = 'me@ichiyo.in';
-
-				if (profile.email !== ADMIN_EMAIL) {
-					throw new APIError('FORBIDDEN', {
-						message: 'This email address is not allowed to log in.',
-					});
-				}
-
-				return {
-					user: {
-						id: String(profile.id),
-						name: profile.name || profile.login,
-						email: profile.email,
-						image: profile.avatar_url,
-						emailVerified: true,
-					},
-					data: profile,
-				};
-			},
 		},
 	},
 	account: {
