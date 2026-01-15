@@ -5,12 +5,16 @@ import { ArticlePagination } from '@/components/article-pagination';
 import BlogPanel from '@/components/blog-panel';
 import PageTitle from '@/components/page-title';
 import { useGetArticles } from '@/hooks/article/use-get-articles';
-import { useTitle } from '@/hooks/use-page-title';
+import { useSeo } from '@/hooks/use-page-meta';
 
 export function BlogPage() {
 	const [currentPage, setCurrentPage] = useState(1);
 	const limit = 5;
-	useTitle('博客');
+	useSeo({
+		title: '博客',
+		description: '记录 / 分享 / 唠嗑 / 闲聊 / ichiyo (@1Yie)',
+		keywords: ['ichiyo', '一叶', '博客', 'blog', 'Blog'],
+	});
 	const { articles, totalPages, loading, error } = useGetArticles({
 		public: true,
 		preview: true,

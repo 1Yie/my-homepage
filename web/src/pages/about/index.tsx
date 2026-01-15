@@ -19,7 +19,7 @@ import { Carousel } from '@/components/ui/carousel';
 import { Skeleton } from '@/components/ui/skeleton';
 import TiltedCard from '@/components/ui/tilted-card';
 import { useGetSlides } from '@/hooks/use-get-slides';
-import { useTitle } from '@/hooks/use-page-title';
+import { useSeo } from '@/hooks/use-page-meta';
 
 function SlidesLoader() {
 	const { slides, loading, error } = useGetSlides();
@@ -161,7 +161,11 @@ function SkillStack() {
 }
 
 export function AboutPage() {
-	useTitle('关于');
+	useSeo({
+		title: '关于',
+		description: '关于我 / ichiyo (@1Yie)',
+		keywords: ['ichiyo', '一叶'],
+	});
 	return (
 		<>
 			<PageTitle subtitle="About" title="关于" />

@@ -5,14 +5,29 @@ import { Comments } from '@/components/comment';
 import { MarkdownRenderer } from '@/components/markdown-renderer';
 import PageTitle from '@/components/page-title';
 import { useGetArticleBySlug } from '@/hooks/article/use-get-article-by-slug';
-import { useTitle } from '@/hooks/use-page-title';
+import { useSeo } from '@/hooks/use-page-meta';
 import { cn } from '@/lib/utils';
 import { NotFoundPage } from '@/pages/error/not-found';
 
 export function BlogDetailPage() {
 	const { slug } = useParams<{ slug: string }>();
 	const { article, loading, error, isNotFound } = useGetArticleBySlug(slug);
-	useTitle(article?.title as string);
+	const seoDescription = article?.content
+		? `${article.content.replace(/[#*`\n]/g, '').slice(0, 50)}... / ichiyo (@1Yie)`
+		: '... / ichiyo (@1Yie)';
+
+	useSeo({
+		title: article?.title as string,
+		description: seoDescription,
+		keywords: [
+			'ichiyo',
+			'一叶',
+			'博客',
+			'blog',
+			'Blog',
+			...(article?.tags?.map((t) => t.name) ?? []),
+		],
+	});
 	if (loading) {
 		return (
 			<>

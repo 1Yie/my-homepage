@@ -26,7 +26,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
-import { useTitle } from '@/hooks/use-page-title';
+import { useTitle } from '@/hooks/use-page-meta';
 
 interface TagListItem {
 	id: number;

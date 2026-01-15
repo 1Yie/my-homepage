@@ -1,6 +1,6 @@
 import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
 import { FriendForm } from '@/components/friend-form';
-import { useTitle } from '@/hooks/use-page-title';
+import { useTitle } from '@/hooks/use-page-meta';
 
 export function CreateFriendPage() {
 	useTitle('新建友链');

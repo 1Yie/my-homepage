@@ -28,7 +28,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
-import { useTitle } from '@/hooks/use-page-title';
+import { useTitle } from '@/hooks/use-page-meta';
 
 export function FriendsPage() {
 	const [friends, setFriends] = useState<Friend[]>([]);

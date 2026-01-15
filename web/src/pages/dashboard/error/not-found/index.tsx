@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
 import { Button } from '@/components/ui/button';
-import { useTitle } from '@/hooks/use-page-title';
+import { useTitle } from '@/hooks/use-page-meta';
 
 export function NotFoundPage() {
 	useTitle('404 - 页面未找到');

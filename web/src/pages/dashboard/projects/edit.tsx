@@ -5,7 +5,7 @@ import { client } from '@/api/client';
 import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
 import { ProjectForm } from '@/components/project-form';
 import { Spinner } from '@/components/ui/spinner';
-import { useTitle } from '@/hooks/use-page-title';
+import { useTitle } from '@/hooks/use-page-meta';
 
 export function EditProjectPage() {
 	const { id } = useParams<{ id: string }>();

@@ -3,13 +3,18 @@ import { useState } from 'react';
 import AnimatedContent from '@/components/ui/animated-content';
 import { ContainerTextFlip } from '@/components/ui/container-text-flip';
 import SplitText from '@/components/ui/split-text';
-import { useTitle } from '@/hooks/use-page-title';
+import { useSeo } from '@/hooks/use-page-meta';
 import { cn } from '@/lib/utils';
 
 const words = ['边缘', 'AI 重度依赖', '数字游民', '咖啡迷'];
 
 export function HomePage() {
-	useTitle('ichiyo (@1yie)', { hasSuffix: false });
+	useSeo({
+		title: 'ichiyo (@1Yie)',
+		hasSuffix: false,
+		description: '存活于二十一世纪互联网 の 边缘 / ichiyo (@1Yie)',
+		keywords: ['ichiyo', '一叶'],
+	});
 	const [fadeTrigger, setFadeTrigger] = useState(false);
 
 	const textFlipClasses = cn(

@@ -1,6 +1,6 @@
 import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
 import { SlideForm } from '@/components/slide-form';
-import { useTitle } from '@/hooks/use-page-title';
+import { useTitle } from '@/hooks/use-page-meta';
 
 export function CreateSlidePage() {
 	useTitle('新建图片');

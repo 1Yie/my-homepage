@@ -1,6 +1,6 @@
 import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
 import { TagForm } from '@/components/tag-form';
-import { useTitle } from '@/hooks/use-page-title';
+import { useTitle } from '@/hooks/use-page-meta';
 
 export function CreateTagPage() {
 	useTitle('新建标签');

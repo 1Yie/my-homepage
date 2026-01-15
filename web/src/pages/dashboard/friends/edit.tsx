@@ -7,7 +7,7 @@ import { client } from '@/api/client';
 import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
 import { FriendForm } from '@/components/friend-form';
 import { Spinner } from '@/components/ui/spinner';
-import { useTitle } from '@/hooks/use-page-title';
+import { useTitle } from '@/hooks/use-page-meta';
 
 export function EditFriendPage() {
 	const { id } = useParams<{ id: string }>();

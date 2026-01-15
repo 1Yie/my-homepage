@@ -5,7 +5,7 @@ import type { Article } from '@/hooks/article/use-get-articles';
 import PageTitle from '@/components/page-title';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useGetArticles } from '@/hooks/article/use-get-articles';
-import { useTitle } from '@/hooks/use-page-title';
+import { useSeo } from '@/hooks/use-page-meta';
 type GroupedPosts = {
 	year: string;
 	months: {
@@ -58,7 +58,7 @@ function ArchiveContent({ articles }: { articles: Article[] }) {
 										md:text-right whitespace-nowrap"
 								>
 									<span
-										className="bg-gradient-to-b from-gray-700 to-gray-100
+										className="bg-linear-to-b from-gray-700 to-gray-100
 											bg-clip-text text-transparent dark:from-gray-100
 											dark:to-gray-500"
 									>
@@ -81,9 +81,9 @@ function ArchiveContent({ articles }: { articles: Article[] }) {
 									{group.months.map((item) => (
 										<div className="relative" key={item.month}>
 											<div
-												className="absolute top-2 -left-[38px] h-3 w-3
-													rounded-full border-2 border-white bg-gray-300
-													md:-left-[54px] dark:border-black dark:bg-gray-600"
+												className="absolute top-2 -left-9.5 h-3 w-3 rounded-full
+													border-2 border-white bg-gray-300 md:-left-13.5
+													dark:border-black dark:bg-gray-600"
 											/>
 
 											{/* 月份标题 */}
@@ -152,9 +152,13 @@ function ArchiveContent({ articles }: { articles: Article[] }) {
 export function ArchivePage() {
 	const { articles, loading, error } = useGetArticles({
 		public: true,
-		limit: 1000, // 获取所有文章
+		limit: 0,
 	});
-	useTitle('归档');
+	useSeo({
+		title: '归档',
+		description: '归档 / ichiyo (@1Yie)',
+		keywords: ['ichiyo', '一叶'],
+	});
 	return (
 		<>
 			<PageTitle subtitle="Archive" title="归档" />

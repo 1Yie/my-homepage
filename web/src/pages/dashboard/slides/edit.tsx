@@ -5,7 +5,7 @@ import { client } from '@/api/client';
 import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
 import { SlideForm } from '@/components/slide-form';
 import { Spinner } from '@/components/ui/spinner';
-import { useTitle } from '@/hooks/use-page-title';
+import { useTitle } from '@/hooks/use-page-meta';
 
 interface ApiResponse<T> {
 	success: boolean;

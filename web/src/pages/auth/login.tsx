@@ -10,12 +10,16 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
-import { useTitle } from '@/hooks/use-page-title';
+import { useSeo } from '@/hooks/use-page-meta';
 
 export function LoginPage() {
 	const navigate = useNavigate();
 	const { data: session } = authClient.useSession();
-	useTitle('登录');
+	useSeo({
+		title: '登录',
+		description: '登录 / ichiyo (@1Yie)',
+		keywords: ['ichiyo', '一叶'],
+	});
 
 	if (session) {
 		navigate('/');

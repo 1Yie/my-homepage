@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
-import { useTitle } from '@/hooks/use-page-title';
+import { useTitle } from '@/hooks/use-page-meta';
 
 export function DashboardNotFoundPage() {
 	useTitle('页面未找到', { hasSuffix: false });

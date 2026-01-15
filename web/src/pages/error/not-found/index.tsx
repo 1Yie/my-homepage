@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 import FadeContent from '@/components/ui/fade-content';
 import SplitText from '@/components/ui/split-text';
-import { useTitle } from '@/hooks/use-page-title';
+import { useTitle } from '@/hooks/use-page-meta';
 
 export function NotFoundPage() {
 	useTitle('404 Not Found', { hasSuffix: false });

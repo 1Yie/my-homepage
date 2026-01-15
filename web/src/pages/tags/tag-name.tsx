@@ -6,12 +6,19 @@ import { ArticleCard } from '@/components/article-card';
 import { ArticlePagination } from '@/components/article-pagination';
 import PageTitle from '@/components/page-title';
 import { useGetArticlesByTag } from '@/hooks/article/use-get-articles-by-tag';
+import { useSeo } from '@/hooks/use-page-meta';
 
 export function TagArticlesPage() {
 	const { tagName } = useParams<{ tagName: string }>();
 	const decodedTagName = tagName ? decodeURIComponent(tagName) : '';
 	const [currentPage, setCurrentPage] = useState(1);
 	const limit = 5;
+
+	useSeo({
+		title: `#${tagName}`,
+		description: `关联 #${tagName} 的全部文章 / ichiyo (@1Yie)`,
+		keywords: ['ichiyo', '一叶'],
+	});
 
 	const { articles, totalPages, loading, error } = useGetArticlesByTag({
 		tagName: decodedTagName,

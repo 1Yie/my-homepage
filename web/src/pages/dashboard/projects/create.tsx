@@ -1,6 +1,6 @@
 import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
 import { ProjectForm } from '@/components/project-form';
-import { useTitle } from '@/hooks/use-page-title';
+import { useTitle } from '@/hooks/use-page-meta';
 
 export function CreateProjectPage() {
 	useTitle('新建项目');

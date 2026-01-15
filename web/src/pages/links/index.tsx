@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/accordion';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useGetFriends } from '@/hooks/use-get-friends';
+import { useSeo } from '@/hooks/use-page-meta';
 
 function PlaceholderBlock({
 	className,
@@ -136,6 +137,11 @@ function FriendPlaceholderStatic({
 }
 
 export function LinksPage() {
+	useSeo({
+		title: '友链',
+		description: '我的朋友 / ichiyo (@1Yie)',
+		keywords: ['ichiyo', '一叶'],
+	});
 	const { friends, loading } = useGetFriends();
 
 	const pinnedFriends = friends.filter((f) => f.pinned);
