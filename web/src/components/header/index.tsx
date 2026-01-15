@@ -257,7 +257,7 @@ export function Header() {
 										{session ? (
 											<div className="flex items-center justify-between">
 												<div className="flex items-center gap-2">
-													<Avatar className="h-6 w-6">
+													<Avatar className="h-9 w-9">
 														{session.user.image && (
 															<AvatarImage
 																alt={
@@ -274,7 +274,7 @@ export function Header() {
 																.toUpperCase()}
 														</AvatarFallback>
 													</Avatar>
-													<span className="text-sm text-muted-foreground">
+													<span className="text-base text-muted-foreground">
 														{session.user.name || session.user.email}
 													</span>
 												</div>
@@ -305,14 +305,14 @@ export function Header() {
 											</div>
 										) : (
 											<Button
-												className="w-full"
+												className="w-10"
 												onClick={() => {
 													navigate('/auth/login');
 													setMobileMenuOpen(false);
 												}}
-												size="sm"
+												size="icon"
 											>
-												登录
+												<Github className="text-accent" />
 											</Button>
 										)}
 									</nav>
