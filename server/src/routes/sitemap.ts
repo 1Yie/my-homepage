@@ -6,7 +6,7 @@ import {
 	getTagsWithArticlesForSitemap,
 } from '../services/sitemap';
 
-const SITE_URL = process.env.BETTER_AUTH_URL || 'https://i.in';
+const SITE_URL = process.env.FRONTEND_URL || 'https://i.in';
 
 export const sitemapRoutes = new Elysia({ prefix: '/sitemap' })
 	.get('/', async ({ set }) => {
