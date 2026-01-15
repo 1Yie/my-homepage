@@ -69,3 +69,6 @@ node_modules/.vite
 **/*.trace
 **/*.bun
 data/*
+
+#--- Docker ---
+docker-compose.yml

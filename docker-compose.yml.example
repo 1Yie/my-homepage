@@ -1,0 +1,58 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: server.Dockerfile
+    container_name: ichiyo-server
+    volumes:
+      - ./data:/app/server/data
+    environment:
+      - DATABASE_URL=file:/app/server/data/sqlite.db
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+      - FRONTEND_URL=http://localhost:3000
+      - BETTER_AUTH_URL=http://localhost:3000
+      - BETTER_BASE_URL=http://localhost:3000/api/auth
+      - BETTER_AUTH_SECRET=YOUR_BETTER_AUTH_SECRET
+      - GITHUB_CLIENT_ID=YOUR_GITHUB_CLIENT_ID
+      - GITHUB_CLIENT_SECRET=YOUR_GITHUB_CLIENT_SECRET
+    restart: always
+
+  web:
+    build:
+      context: .
+      dockerfile: web.Dockerfile
+    container_name: ichiyo-web
+    ports:
+      - '3000:80'
+    depends_on:
+      - server
+    restart: always
+
+# services:
+#     image: crpi-xxx.cn-hangzhou.personal.cr.aliyuncs.com/1yie/dockerbase:server-latest
+#     container_name: ichiyo-server
+#     ports:
+#       - '5555:5555'
+#     volumes:
+#       - ./data:/app/server/data
+#     environment:
+#       - DATABASE_URL=file:/app/server/data/sqlite.db
+#       - PORT=3000
+#       - HOSTNAME=0.0.0.0
+#       - FRONTEND_URL=http://localhost:3000
+#       - BETTER_AUTH_URL=http://localhost:3000
+#       - BETTER_BASE_URL=http://localhost:3000/api/auth
+#       - BETTER_AUTH_SECRET=YOUR_BETTER_AUTH_SECRET
+#       - GITHUB_CLIENT_ID=YOUR_GITHUB_CLIENT_ID
+#       - GITHUB_CLIENT_SECRET=YOUR_GITHUB_CLIENT_SECRET
+#     restart: always
+
+#   web:
+#     image: crpi-xxx.cn-hangzhou.personal.cr.aliyuncs.com/1yie/dockerbase:web-latest
+#     container_name: ichiyo-web
+#     ports:
+#       - '127.0.0.1:3333:80'
+#     depends_on:
+#       - server
+#     restart: always
