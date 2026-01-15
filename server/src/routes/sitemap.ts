@@ -6,13 +6,14 @@ import {
 	getTagsWithArticlesForSitemap,
 } from '../services/sitemap';
 
-const SITE_URL = process.env.BETTER_AUTH_URL || 'https://i.in';
-const smStream = new SitemapStream({ hostname: SITE_URL });
+const SITE_URL = process.env.VITE_SITE_URL || 'https://i.in';
 
 export const sitemapRoutes = new Elysia({ prefix: '/sitemap' })
 	.get('/', async ({ set }) => {
 		try {
 			set.headers['Content-Type'] = 'application/xml';
+
+			const smStream = new SitemapStream({ hostname: SITE_URL });
 
 			const staticPages = [
 				{ url: '/', changefreq: 'daily', priority: 1.0 },
@@ -45,15 +46,27 @@ export const sitemapRoutes = new Elysia({ prefix: '/sitemap' })
 				});
 			});
 
+			const sitemapPromise = streamToPromise(smStream);
 			smStream.end();
 
-			const sitemapXml = await streamToPromise(smStream);
+			const sitemapXml = await sitemapPromise;
 			return sitemapXml.toString();
 		} catch (error) {
 			console.error('Failed to generate XML sitemap:', error);
 			set.status = 500;
 			return 'Error generating sitemap';
 		}
+	})
+	.get('/robots.txt', ({ set }) => {
+		set.headers['Content-Type'] = 'text/plain';
+		return [
+			'User-agent: *',
+			'Allow: /',
+			'Disallow: /dashboard/*',
+			'Disallow: /auth/*',
+			'',
+			`Sitemap: ${SITE_URL}/sitemap.xml`,
+		].join('\n');
 	})
 	.get('/articles', async () => {
 		const articles = await getArticlesForSitemap();
