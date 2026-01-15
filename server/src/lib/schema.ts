@@ -1,4 +1,15 @@
-import { t } from 'elysia';
+import { t, type Static } from 'elysia';
+
+export type ArticleResponse = Static<typeof articleResponseSchema>;
+export type TagResponse = Static<typeof tagResponseSchema> & {
+	articles: { updatedAt: string }[];
+};
+
+export interface ApiResponse<T> {
+	success: boolean;
+	data: T;
+	message?: string;
+}
 
 export const createArticleSchema = t.Object({
 	title: t.String(),

@@ -7,6 +7,7 @@ import { dashboardRoutes } from './routes/dashboard';
 import { friendsRoutes } from './routes/friends';
 import { projectsRoutes } from './routes/projects';
 import { rssRoutes } from './routes/rss';
+import { sitemapRoutes } from './routes/sitemap';
 import { slidesRoutes } from './routes/slides';
 import { tagsRoutes } from './routes/tags';
 
@@ -44,6 +45,7 @@ const app = new Elysia()
 					.use(friendsRoutes)
 					.use(dashboardRoutes)
 			)
+			.use(sitemapRoutes)
 			.use(rssRoutes)
 	)
 	.listen({

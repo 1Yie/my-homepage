@@ -1268,8 +1268,8 @@ export type UserScalarFieldEnum =
 
 export const SessionScalarFieldEnum = {
 	id: 'id',
+	token: 'token',
 	expiresAt: 'expiresAt',
-	sessionToken: 'sessionToken',
 	createdAt: 'createdAt',
 	updatedAt: 'updatedAt',
 	ipAddress: 'ipAddress',
