@@ -57,18 +57,7 @@ export const sitemapRoutes = new Elysia({ prefix: '/sitemap' })
 			return 'Error generating sitemap';
 		}
 	})
-	.get('/robots.txt', ({ set }) => {
-		set.headers['Content-Type'] = 'text/plain';
-		return [
-			'User-agent: *',
-			'Allow: /',
-			'Disallow: /dashboard/*',
-			'Disallow: /auth/*',
-			'',
-			`Sitemap: ${SITE_URL}/sitemap.xml`,
-		].join('\n');
-	})
-	.get('/articles', async () => {
+	.get('/	', async () => {
 		const articles = await getArticlesForSitemap();
 		return {
 			success: true,
