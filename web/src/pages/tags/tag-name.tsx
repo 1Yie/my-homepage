@@ -41,7 +41,14 @@ export function TagArticlesPage() {
 
 	return (
 		<>
-			<PageTitle title={`#${decodedTagName}`} />
+			<PageTitle
+				title={
+					<>
+						<span className="text-muted-foreground">#</span>
+						{decodedTagName}
+					</>
+				}
+			/>
 
 			{loading ? (
 				<section className="section-base">

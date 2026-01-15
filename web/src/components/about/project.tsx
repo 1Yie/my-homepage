@@ -7,16 +7,17 @@ function ProjectCard({ project }: { project: Project }) {
 	return (
 		<div
 			className="group relative flex flex-col overflow-hidden border bg-card
-				transition-all duration-300"
+				shadow-md dark:shadow-accent/40"
 		>
 			{/* 项目图片 */}
 			{project.imageUrl && (
-				<div className="aspect-video w-full overflow-hidden bg-muted">
+				<div className="relative aspect-video w-full overflow-hidden bg-muted">
 					<img
 						alt={project.name}
 						className="h-full w-full object-cover"
 						src={project.imageUrl}
 					/>
+					<div className="pointer-events-none absolute inset-0 dark:bg-black/30" />
 				</div>
 			)}
 

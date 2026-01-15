@@ -1,10 +1,11 @@
 import { CalendarDays, Edit } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 import SplitText from '@/components/ui/split-text';
 
 interface PageTitleProps {
-	title?: string;
-	subtitle?: string;
+	title?: React.ReactNode;
+	subtitle?: React.ReactNode;
 	className?: string;
 	type?: 'blog' | 'default';
 	backgroundImage?: string;
@@ -105,7 +106,7 @@ export default function PageTitle({
 					}
 				>
 					{backgroundImage && (
-						<div className="absolute inset-0 bg-black/15"></div>
+						<div className="absolute inset-0 bg-black/25 dark:bg-black/60"></div>
 					)}
 					<div className="p-4 relative">
 						<SplitText
@@ -124,7 +125,7 @@ export default function PageTitle({
 						<div
 							className={`mt-2 flex items-center gap-4 ${
 								backgroundImage
-									? 'text-gray-200 text-base sm:text-xl'
+									? 'text-gray-100 text-base sm:text-xl'
 									: 'text-foreground text-base sm:text-xl'
 								}`}
 						>
@@ -144,9 +145,10 @@ export default function PageTitle({
 						{tags && tags.length > 0 && (
 							<div className="mt-3 flex flex-wrap gap-2">
 								{tags.map((tag) => (
-									<span
-										className={`inline-flex items-center px-3 py-1 rounded-full
-										text-sm font-medium transition-colors backdrop-blur-sm ${
+									<Link
+										className={`inline-flex cursor-pointer items-center px-3
+										py-1 rounded-full text-sm font-medium transition-colors
+										backdrop-blur-sm ${
 											backgroundImage
 												? `bg-white/10 text-white border border-white/20
 													hover:bg-white/20`
@@ -154,9 +156,12 @@ export default function PageTitle({
 													hover:bg-primary/20`
 										}`}
 										key={tag.id}
+										target="_self"
+										to={`/tags/${tag.name}`}
 									>
-										#{tag.name}
-									</span>
+										<span className="text-white/50 dark:text-white/40">#</span>
+										<span>{tag.name}</span>
+									</Link>
 								))}
 							</div>
 						)}

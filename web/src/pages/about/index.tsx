@@ -10,9 +10,9 @@ import {
 	SiTailwindcss,
 	SiTypescript,
 	SiVuedotjs,
-	SiBun,
 } from 'react-icons/si';
 
+import Bun from '@/assets/bun.svg?react';
 import Project from '@/components/about/project';
 import PageTitle from '@/components/page-title';
 import { Carousel } from '@/components/ui/carousel';
@@ -115,7 +115,7 @@ function SkillStack() {
 		},
 		{
 			name: 'Bun',
-			icon: <SiBun className="h-6 w-6 text-amber-200 sm:h-12 sm:w-12" />,
+			icon: <Bun className="h-6 w-6 sm:h-12 sm:w-12 text-primary" />,
 		},
 		{
 			name: 'Java',

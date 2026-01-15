@@ -44,14 +44,21 @@ export function ArticleCard({ article }: ArticleCardProps) {
 						gap-8 p-6 pb-6"
 				>
 					{article.headerImage && (
-						<div className="shrink-0">
-							<img
-								alt={article.title}
-								className="h-42 md:h-36 w-full object-cover"
-								src={article.headerImage}
-							/>
+						<div className="shrink-0 w-full md:w-80 md:self-start">
+							<div
+								className="h-42 md:h-36 w-full overflow-hidden bg-zinc-100
+									dark:bg-zinc-800"
+							>
+								<img
+									alt={article.title}
+									className="h-full w-full object-cover"
+									loading="lazy"
+									src={article.headerImage}
+								/>
+							</div>
 						</div>
 					)}
+
 					<div className="flex-1 min-w-0">
 						<p className="text-2xl font-semibold">{article.title}</p>
 						<div className="text-lg text-muted-foreground flex items-center
@@ -107,6 +114,7 @@ export function ArticleCard({ article }: ArticleCardProps) {
 											text-secondary-foreground text-xs px-2 py-1 rounded-md"
 										key={tag.id}
 									>
+										<span className="text-muted-foreground">#</span>
 										{tag.name}
 									</span>
 								))}
