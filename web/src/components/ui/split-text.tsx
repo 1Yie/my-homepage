@@ -7,7 +7,7 @@ import { useGSAP } from '@gsap/react';
 gsap.registerPlugin(ScrollTrigger, GSAPSplitText, useGSAP);
 
 export interface SplitTextProps {
-	text: string;
+	text: string | React.ReactNode;
 	className?: string;
 	delay?: number;
 	duration?: number;
