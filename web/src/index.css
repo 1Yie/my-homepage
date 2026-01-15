@@ -53,7 +53,7 @@
 #nprogress .peg {
 	box-shadow:
 		0 0 10px var(--sidebar-accent-foreground),
-		0 0 5px var(--sidebar-accent) !important;
+		0 0 5px var(--sidebar-accent-foreground) !important;
 }
 
 @theme inline {
