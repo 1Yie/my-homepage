@@ -8,7 +8,7 @@ import {
 	AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useGetFriends } from '@/hooks/use-get-friends';
+import { useGetFriends } from '@/hooks/friends/use-get-friends';
 import { useSeo } from '@/hooks/use-page-meta';
 
 function PlaceholderBlock({

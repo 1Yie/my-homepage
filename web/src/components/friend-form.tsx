@@ -2,13 +2,14 @@ import { Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { client } from '@/api/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { useCreateFriend } from '@/hooks/friends/use-create-friend';
+import { useUpdateFriend } from '@/hooks/friends/use-update-friend';
 
 interface SocialLink {
 	name: string;
@@ -34,7 +35,11 @@ interface FriendFormProps {
 
 export function FriendForm({ mode, friendId, initialData }: FriendFormProps) {
 	const navigate = useNavigate();
-	const [loading, setLoading] = useState(false);
+
+	const { createFriend, loading: createLoading } = useCreateFriend();
+	const { updateFriend, loading: updateLoading } = useUpdateFriend();
+
+	const loading = createLoading || updateLoading;
 
 	const [formData, setFormData] = useState<FriendFormData>({
 		name: initialData?.name || '',
@@ -77,24 +82,20 @@ export function FriendForm({ mode, friendId, initialData }: FriendFormProps) {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		setLoading(true);
 
-		try {
-			if (mode === 'create') {
-				await client.api.v1.friends.post({
-					...formData,
-				});
-			} else if (friendId) {
-				await client.api.v1.friends({ id: friendId }).put({
-					...formData,
-				});
-			}
-
-			navigate('/dashboard/friends');
-		} catch (error) {
-			console.error('Failed to save friend:', error);
-		} finally {
-			setLoading(false);
+		if (mode === 'create') {
+			createFriend(formData, {
+				onSuccess: () => navigate('/dashboard/friends'),
+				onError: (error) => console.error('Failed to create friend:', error),
+			});
+		} else if (friendId) {
+			updateFriend(
+				{ id: friendId, data: formData },
+				{
+					onSuccess: () => navigate('/dashboard/friends'),
+					onError: (error) => console.error('Failed to update friend:', error),
+				}
+			);
 		}
 	};
 

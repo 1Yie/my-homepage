@@ -1,7 +1,10 @@
 import { ExternalLink, Github } from 'lucide-react';
 
 import { Skeleton } from '@/components/ui/skeleton';
-import { useGetProjects, type Project } from '@/hooks/use-get-projects';
+import {
+	useGetProjects,
+	type Project,
+} from '@/hooks/projects/use-get-projects';
 
 function ProjectCard({ project }: { project: Project }) {
 	return (

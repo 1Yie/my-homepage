@@ -2,13 +2,14 @@ import { X } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { client } from '@/api/client';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { useCreateProject } from '@/hooks/projects/use-create-project';
+import { useUpdateProject } from '@/hooks/projects/use-update-project';
 
 interface ProjectFormData {
 	name: string;
@@ -32,8 +33,12 @@ export function ProjectForm({
 	initialData,
 }: ProjectFormProps) {
 	const navigate = useNavigate();
-	const [loading, setLoading] = useState(false);
 	const [newTag, setNewTag] = useState('');
+
+	const { createProject, loading: createLoading } = useCreateProject();
+	const { updateProject, loading: updateLoading } = useUpdateProject();
+
+	const loading = createLoading || updateLoading;
 
 	const [formData, setFormData] = useState<ProjectFormData>({
 		name: initialData?.name || '',
@@ -67,30 +72,27 @@ export function ProjectForm({
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		setLoading(true);
 
-		try {
-			if (mode === 'create') {
-				await client.api.v1.projects.post({
-					...formData,
-					githubUrl: formData.githubUrl || undefined,
-					liveUrl: formData.liveUrl || undefined,
-					imageUrl: formData.imageUrl || undefined,
-				});
-			} else if (projectId) {
-				await client.api.v1.projects({ id: projectId }).put({
-					...formData,
-					githubUrl: formData.githubUrl || undefined,
-					liveUrl: formData.liveUrl || undefined,
-					imageUrl: formData.imageUrl || undefined,
-				});
-			}
+		const submitData = {
+			...formData,
+			githubUrl: formData.githubUrl || undefined,
+			liveUrl: formData.liveUrl || undefined,
+			imageUrl: formData.imageUrl || undefined,
+		};
 
-			navigate('/dashboard/projects');
-		} catch (error) {
-			console.error('Failed to save project:', error);
-		} finally {
-			setLoading(false);
+		if (mode === 'create') {
+			createProject(submitData, {
+				onSuccess: () => navigate('/dashboard/projects'),
+				onError: (error) => console.error('Failed to create project:', error),
+			});
+		} else if (projectId) {
+			updateProject(
+				{ id: projectId, data: submitData },
+				{
+					onSuccess: () => navigate('/dashboard/projects'),
+					onError: (error) => console.error('Failed to update project:', error),
+				}
+			);
 		}
 	};
 

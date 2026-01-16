@@ -7,10 +7,18 @@ export interface Project {
 	name: string;
 	description: string;
 	tags: string[];
-	githubUrl?: string;
-	liveUrl?: string;
-	imageUrl?: string;
+	imageUrl?: string | null;
+	githubUrl?: string | null;
+	liveUrl?: string | null;
 	order: number;
+	createdAt: string | Date;
+	updatedAt: string | Date;
+}
+
+interface ApiResponse<T> {
+	success: boolean;
+	data: T;
+	error?: string;
 }
 
 export function useGetProjects() {
@@ -18,16 +26,20 @@ export function useGetProjects() {
 		queryKey: ['projects'],
 		queryFn: async () => {
 			const response = await client.api.v1.projects.get();
-			if (!response.data) {
+
+			const apiResponse = response.data as ApiResponse<Project[]>;
+			if (!apiResponse.success) {
 				throw new Error('Failed to fetch projects');
 			}
-			return response.data.data as Project[];
+
+			return apiResponse.data;
 		},
 	});
 
 	return {
-		projects: query.data || [],
+		projects: query.data ?? [],
 		loading: query.isLoading,
-		error: query.error?.message || null,
+		error: query.error?.message ?? null,
+		refetch: query.refetch,
 	};
 }

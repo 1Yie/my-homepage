@@ -1,10 +1,9 @@
 import { Pin, Plus, Search, Users } from 'lucide-react';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
-import type { Friend } from '@/hooks/use-get-friends';
+import type { Friend } from '@/hooks/friends/use-get-friends';
 
-import { client } from '@/api/client';
 import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
 import {
 	AlertDialog,
@@ -28,62 +27,46 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
+import { useDeleteFriend } from '@/hooks/friends/use-delete-friend';
+import { useGetFriends } from '@/hooks/friends/use-get-friends';
 import { useTitle } from '@/hooks/use-page-meta';
 
 export function FriendsPage() {
-	const [friends, setFriends] = useState<Friend[]>([]);
-	const [loading, setLoading] = useState(true);
 	const [searchQuery, setSearchQuery] = useState('');
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 	const [friendToDelete, setFriendToDelete] = useState<Friend | null>(null);
+
+	const { friends, loading } = useGetFriends();
+	const { deleteFriend, loading: deleteLoading } = useDeleteFriend();
+
 	useTitle('友链管理');
-	const fetchFriends = useCallback(async () => {
-		try {
-			setLoading(true);
-			const response = await client.api.v1.friends.get();
-			if (response.data?.data) {
-				const data = response.data.data;
-				const filtered = searchQuery
-					? data.filter((friend) => {
-							return (
-								friend.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-								friend.description
-									.toLowerCase()
-									.includes(searchQuery.toLowerCase())
-							);
-						})
-					: data;
-				setFriends(filtered);
-			}
-		} catch (error) {
-			console.error('Failed to fetch friends:', error);
-		} finally {
-			setLoading(false);
-		}
-	}, [searchQuery]);
 
-	useEffect(() => {
-		fetchFriends();
-	}, [fetchFriends]);
+	const filteredFriends = useMemo(() => {
+		if (!searchQuery) return friends;
+		return friends.filter(
+			(friend) =>
+				friend.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+				friend.description.toLowerCase().includes(searchQuery.toLowerCase())
+		);
+	}, [friends, searchQuery]);
 
-	const handleDelete = async (friend: Friend) => {
+	const handleDelete = (friend: Friend) => {
 		setFriendToDelete(friend);
 		setDeleteDialogOpen(true);
 	};
 
-	const confirmDelete = async () => {
+	const confirmDelete = () => {
 		if (!friendToDelete) return;
 
-		try {
-			await client.api.v1
-				.friends({ id: friendToDelete.id.toString() })
-				.delete();
-			fetchFriends();
-			setDeleteDialogOpen(false);
-			setFriendToDelete(null);
-		} catch (error) {
-			console.error('Failed to delete friend:', error);
-		}
+		deleteFriend(friendToDelete.id.toString(), {
+			onSuccess: () => {
+				setDeleteDialogOpen(false);
+				setFriendToDelete(null);
+			},
+			onError: (error) => {
+				console.error('Failed to delete friend:', error);
+			},
+		});
 	};
 
 	return (
@@ -128,7 +111,7 @@ export function FriendsPage() {
 									<Spinner className="mx-auto" size={32} />
 								</div>
 							</div>
-						) : friends.length === 0 ? (
+						) : filteredFriends.length === 0 ? (
 							<div
 								className="flex flex-col items-center justify-center py-8
 									text-center"
@@ -158,7 +141,7 @@ export function FriendsPage() {
 										</TableRow>
 									</TableHeader>
 									<TableBody>
-										{friends.map((friend) => (
+										{filteredFriends.map((friend) => (
 											<TableRow key={friend.id}>
 												<TableCell>
 													<img
@@ -235,7 +218,7 @@ export function FriendsPage() {
 								<Button variant="outline">取消</Button>
 							</AlertDialogClose>
 							<Button onClick={confirmDelete} variant="destructive">
-								删除
+								{deleteLoading ? '删除中...' : '删除'}
 							</Button>
 						</AlertDialogFooter>
 					</AlertDialogPopup>

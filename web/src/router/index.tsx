@@ -80,7 +80,7 @@ export const routeConfig: RouteConfig[] = [
 					{
 						path: ':tagName',
 						lazy: () =>
-							import('@/pages/tags/tag-name').then((module) => ({
+							import('@/pages/tags/detail').then((module) => ({
 								Component: module.TagArticlesPage,
 							})),
 					},

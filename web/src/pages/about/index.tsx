@@ -18,7 +18,7 @@ import PageTitle from '@/components/page-title';
 import { Carousel } from '@/components/ui/carousel';
 import { Skeleton } from '@/components/ui/skeleton';
 import TiltedCard from '@/components/ui/tilted-card';
-import { useGetSlides } from '@/hooks/use-get-slides';
+import { useGetSlides } from '@/hooks/slides/use-get-slides';
 import { useSeo } from '@/hooks/use-page-meta';
 
 function SlidesLoader() {

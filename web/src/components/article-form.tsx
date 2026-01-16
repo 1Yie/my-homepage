@@ -16,7 +16,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
-import { useGetTags } from '@/hooks/use-get-tags';
+import { useGetTags } from '@/hooks/tags/use-get-tags';
 import { generateSlug } from '@/lib/generate-slug';
 
 interface ArticleFormData {
@@ -42,7 +42,7 @@ export function ArticleForm({
 }: ArticleFormProps) {
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
-	const { tags: availableTags } = useGetTags();
+	const { tags: availableTags } = useGetTags(false);
 	const [loading, setLoading] = useState(false);
 	const [newTagName, setNewTagName] = useState('');
 

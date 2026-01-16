@@ -1,73 +1,18 @@
-import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { client } from '@/api/client';
 import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
 import { SlideForm } from '@/components/slide-form';
 import { Spinner } from '@/components/ui/spinner';
+import { useGetSlide } from '@/hooks/slides/use-get-slide';
 import { useTitle } from '@/hooks/use-page-meta';
-
-interface ApiResponse<T> {
-	success: boolean;
-	data: T;
-}
-
-interface SlideApiData {
-	id: number;
-	title: string;
-	src: string;
-	button: string | null;
-	link: string | null;
-	newTab: boolean;
-	order: number;
-	createdAt: Date;
-	updatedAt: Date;
-}
 
 export function EditSlidePage() {
 	const { id } = useParams<{ id: string }>();
-	const [fetchLoading, setFetchLoading] = useState(true);
-	const [initialFormData, setInitialFormData] = useState<{
-		title: string;
-		src: string;
-		button: string;
-		link: string;
-		newTab: boolean;
-		order: number;
-	} | null>(null);
+	const { slide, loading, error } = useGetSlide(id);
 
-	useTitle(`编辑图片 ${initialFormData?.title || ''}`);
+	useTitle(`编辑图片 ${slide?.title || ''}`);
 
-	useEffect(() => {
-		const fetchSlide = async () => {
-			if (!id) return;
-
-			try {
-				setFetchLoading(true);
-				const response = await client.api.v1.slides({ id }).get();
-				const apiResponse = response.data as ApiResponse<SlideApiData>;
-				if (apiResponse.success && apiResponse.data) {
-					const slideData = apiResponse.data;
-					setInitialFormData({
-						title: slideData.title,
-						src: slideData.src,
-						button: slideData.button || '',
-						link: slideData.link || '',
-						newTab: slideData.newTab,
-						order: slideData.order,
-					});
-				}
-			} catch (error) {
-				console.error('Failed to fetch slide:', error);
-			} finally {
-				setFetchLoading(false);
-			}
-		};
-
-		fetchSlide();
-	}, [id]);
-
-	if (fetchLoading) {
+	if (loading) {
 		return (
 			<div className="flex flex-1 flex-col gap-4 p-4">
 				<div className="flex items-center justify-center py-8">
@@ -79,7 +24,7 @@ export function EditSlidePage() {
 		);
 	}
 
-	if (!initialFormData) {
+	if (error || !slide) {
 		return (
 			<div className="flex flex-1 flex-col gap-4 p-4">
 				<div className="flex items-center justify-center py-8">
@@ -88,6 +33,15 @@ export function EditSlidePage() {
 			</div>
 		);
 	}
+
+	const initialFormData = {
+		title: slide.title,
+		src: slide.src,
+		button: slide.button || '',
+		link: slide.link || '',
+		newTab: slide.newTab,
+		order: slide.order,
+	};
 
 	return (
 		<div className="flex flex-1 flex-col gap-4 p-4">

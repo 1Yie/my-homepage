@@ -2,11 +2,11 @@ import { Link } from 'react-router-dom';
 
 import PageTitle from '@/components/page-title';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useGetTags } from '@/hooks/use-get-tags';
+import { useGetTags } from '@/hooks/tags/use-get-tags';
 import { useSeo } from '@/hooks/use-page-meta';
 
 export function TagsPage() {
-	const { tags, loading, error } = useGetTags();
+	const { tags, loading, error } = useGetTags(true);
 	useSeo({
 		title: '标签',
 		description: '文章标签 / ichiyo (@1Yie)',

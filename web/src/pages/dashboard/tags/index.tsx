@@ -1,8 +1,7 @@
 import { Plus, Search, Tag as TagIcon } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { client } from '@/api/client';
 import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
 import {
 	AlertDialog,
@@ -26,80 +25,48 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
+import { useDeleteTag } from '@/hooks/tags/use-delete-tag';
+import { useGetTags, type Tag } from '@/hooks/tags/use-get-tags';
 import { useTitle } from '@/hooks/use-page-meta';
 
-interface TagListItem {
-	id: number;
-	name: string;
-	number: number;
-	createdAt: string | Date;
-	updatedAt: string | Date;
-}
-
 export function TagsPage() {
-	const [tags, setTags] = useState<TagListItem[]>([]);
-	const [loading, setLoading] = useState(true);
 	const [searchQuery, setSearchQuery] = useState('');
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-	const [tagToDelete, setTagToDelete] = useState<TagListItem | null>(null);
+	const [tagToDelete, setTagToDelete] = useState<Tag | null>(null);
 	const [deleteError, setDeleteError] = useState<string | null>(null);
+
+	const { tags: allTags, loading } = useGetTags(false);
+	const { deleteTag } = useDeleteTag();
 
 	useTitle('标签管理');
 
-	const fetchTags = useCallback(async () => {
-		try {
-			setLoading(true);
-			const response = await client.api.v1.tags.get();
-			if (response.data) {
-				const data = response.data.data;
-				if (Array.isArray(data)) {
-					const filtered = searchQuery
-						? (data as unknown[]).filter((t: unknown) => {
-								const tag = t as TagListItem;
-								return tag.name
-									.toLowerCase()
-									.includes(searchQuery.toLowerCase());
-							})
-						: data;
-					setTags(filtered as TagListItem[]);
-				}
-			}
-		} catch (error) {
-			console.error('Failed to fetch tags:', error);
-		} finally {
-			setLoading(false);
-		}
-	}, [searchQuery]);
+	// Filter tags based on search query
+	const tags = useMemo(() => {
+		if (!searchQuery) return allTags;
+		return allTags.filter((tag) =>
+			tag.name.toLowerCase().includes(searchQuery.toLowerCase())
+		);
+	}, [allTags, searchQuery]);
 
-	useEffect(() => {
-		fetchTags();
-	}, [fetchTags]);
-
-	const handleDelete = async (tag: TagListItem) => {
+	const handleDelete = (tag: Tag) => {
 		setTagToDelete(tag);
 		setDeleteError(null);
 		setDeleteDialogOpen(true);
 	};
 
-	const confirmDelete = async () => {
+	const confirmDelete = () => {
 		if (!tagToDelete) return;
 
-		try {
-			const response = await client.api.v1
-				.tags({ id: tagToDelete.id.toString() })
-				.delete();
-			if (response.data && !response.data.success) {
-				setDeleteError(response.data.error || 'Failed to delete tag');
-				return;
-			}
-			fetchTags();
-			setDeleteDialogOpen(false);
-			setTagToDelete(null);
-			setDeleteError(null);
-		} catch (error) {
-			console.error('Failed to delete tag:', error);
-			setDeleteError('Failed to delete tag');
-		}
+		deleteTag(tagToDelete.id.toString(), {
+			onSuccess: () => {
+				setDeleteDialogOpen(false);
+				setTagToDelete(null);
+				setDeleteError(null);
+			},
+			onError: (error) => {
+				setDeleteError(error.message);
+			},
+		});
 	};
 
 	const formatDate = (date: string | Date) => {

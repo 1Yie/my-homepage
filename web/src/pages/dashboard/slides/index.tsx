@@ -1,8 +1,7 @@
 import { Plus, Search } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { client } from '@/api/client';
 import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
 import {
 	AlertDialog,
@@ -25,76 +24,42 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
+import { useDeleteSlide } from '@/hooks/slides/use-delete-slide';
+import { useGetSlides, type Slide } from '@/hooks/slides/use-get-slides';
 import { useTitle } from '@/hooks/use-page-meta';
 
-interface SlideListItem {
-	id: number;
-	title: string;
-	src: string;
-	button?: string | null;
-	link?: string | null;
-	newTab: boolean;
-	order: number;
-	createdAt: string | Date;
-	updatedAt: string | Date;
-}
-
 export function SlidesPage() {
-	const [slides, setSlides] = useState<SlideListItem[]>([]);
-	const [loading, setLoading] = useState(true);
 	const [searchQuery, setSearchQuery] = useState('');
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-	const [slideToDelete, setSlideToDelete] = useState<SlideListItem | null>(
-		null
-	);
+	const [slideToDelete, setSlideToDelete] = useState<Slide | null>(null);
+
+	const { slides: allSlides, loading } = useGetSlides();
+	const { deleteSlide } = useDeleteSlide();
 
 	useTitle('相册管理');
 
-	const fetchSlides = useCallback(async () => {
-		try {
-			setLoading(true);
-			const response = await client.api.v1.slides.get();
-			if (response.data) {
-				const data = response.data.data;
-				if (Array.isArray(data)) {
-					const filtered = searchQuery
-						? (data as unknown[]).filter((s: unknown) => {
-								const slide = s as SlideListItem;
-								return slide.title
-									.toLowerCase()
-									.includes(searchQuery.toLowerCase());
-							})
-						: data;
-					setSlides(filtered as SlideListItem[]);
-				}
-			}
-		} catch (error) {
-			console.error('Failed to fetch slides:', error);
-		} finally {
-			setLoading(false);
-		}
-	}, [searchQuery]);
+	// Filter slides based on search query
+	const slides = useMemo(() => {
+		if (!searchQuery) return allSlides;
+		return allSlides.filter((slide) =>
+			slide.title.toLowerCase().includes(searchQuery.toLowerCase())
+		);
+	}, [allSlides, searchQuery]);
 
-	useEffect(() => {
-		fetchSlides();
-	}, [fetchSlides]);
-
-	const handleDelete = async (slide: SlideListItem) => {
+	const handleDelete = (slide: Slide) => {
 		setSlideToDelete(slide);
 		setDeleteDialogOpen(true);
 	};
 
-	const confirmDelete = async () => {
+	const confirmDelete = () => {
 		if (!slideToDelete) return;
 
-		try {
-			await client.api.v1.slides({ id: slideToDelete.id.toString() }).delete();
-			fetchSlides();
-			setDeleteDialogOpen(false);
-			setSlideToDelete(null);
-		} catch (error) {
-			console.error('Failed to delete slide:', error);
-		}
+		deleteSlide(slideToDelete.id.toString(), {
+			onSuccess: () => {
+				setDeleteDialogOpen(false);
+				setSlideToDelete(null);
+			},
+		});
 	};
 
 	return (

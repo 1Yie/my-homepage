@@ -1,8 +1,7 @@
 import { Plus, Search } from 'lucide-react';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
-import { client } from '@/api/client';
 import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
 import {
 	AlertDialog,
@@ -26,6 +25,8 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
+import { useDeleteProject } from '@/hooks/projects/use-delete-project';
+import { useGetProjects } from '@/hooks/projects/use-get-projects';
 import { useTitle } from '@/hooks/use-page-meta';
 
 interface ProjectListItem {
@@ -42,67 +43,42 @@ interface ProjectListItem {
 }
 
 export function ProjectsPage() {
-	const [projects, setProjects] = useState<ProjectListItem[]>([]);
-	const [loading, setLoading] = useState(true);
 	const [searchQuery, setSearchQuery] = useState('');
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 	const [projectToDelete, setProjectToDelete] =
 		useState<ProjectListItem | null>(null);
 
+	const { projects, loading } = useGetProjects();
+	const { deleteProject, loading: deleteLoading } = useDeleteProject();
+
 	useTitle('项目管理');
 
-	const fetchProjects = useCallback(async () => {
-		try {
-			setLoading(true);
-			const response = await client.api.v1.projects.get();
-			if (response.data) {
-				const data = response.data.data;
-				if (Array.isArray(data)) {
-					const filtered = searchQuery
-						? (data as unknown[]).filter((p: unknown) => {
-								const project = p as ProjectListItem;
-								return (
-									project.name
-										.toLowerCase()
-										.includes(searchQuery.toLowerCase()) ||
-									project.description
-										.toLowerCase()
-										.includes(searchQuery.toLowerCase())
-								);
-							})
-						: data;
-					setProjects(filtered as ProjectListItem[]);
-				}
-			}
-		} catch (error) {
-			console.error('Failed to fetch projects:', error);
-		} finally {
-			setLoading(false);
-		}
-	}, [searchQuery]);
+	const filteredProjects = useMemo(() => {
+		if (!searchQuery) return projects;
+		return projects.filter(
+			(project) =>
+				project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+				project.description.toLowerCase().includes(searchQuery.toLowerCase())
+		);
+	}, [projects, searchQuery]);
 
-	useEffect(() => {
-		fetchProjects();
-	}, [fetchProjects]);
-
-	const handleDelete = async (project: ProjectListItem) => {
+	const handleDelete = (project: ProjectListItem) => {
 		setProjectToDelete(project);
 		setDeleteDialogOpen(true);
 	};
 
-	const confirmDelete = async () => {
+	const confirmDelete = () => {
 		if (!projectToDelete) return;
 
-		try {
-			await client.api.v1
-				.projects({ id: projectToDelete.id.toString() })
-				.delete();
-			fetchProjects();
-			setDeleteDialogOpen(false);
-			setProjectToDelete(null);
-		} catch (error) {
-			console.error('Failed to delete project:', error);
-		}
+		deleteProject(projectToDelete.id.toString(), {
+			onSuccess: () => {
+				setDeleteDialogOpen(false);
+				setProjectToDelete(null);
+			},
+			onError: (error) => {
+				console.error('Failed to delete project:', error);
+			},
+		});
 	};
 
 	return (
@@ -147,7 +123,7 @@ export function ProjectsPage() {
 									<Spinner className="mx-auto" size={32} />
 								</div>
 							</div>
-						) : projects.length === 0 ? (
+						) : filteredProjects.length === 0 ? (
 							<div
 								className="flex flex-col items-center justify-center py-8
 									text-center"
@@ -176,7 +152,7 @@ export function ProjectsPage() {
 										</TableRow>
 									</TableHeader>
 									<TableBody>
-										{projects.map((project) => (
+										{filteredProjects.map((project) => (
 											<TableRow key={project.id}>
 												<TableCell className="font-medium">
 													{project.name}
@@ -261,7 +237,7 @@ export function ProjectsPage() {
 								<Button variant="outline">取消</Button>
 							</AlertDialogClose>
 							<Button onClick={confirmDelete} variant="destructive">
-								删除
+								{deleteLoading ? '删除中...' : '删除'}
 							</Button>
 						</AlertDialogFooter>
 					</AlertDialogPopup>

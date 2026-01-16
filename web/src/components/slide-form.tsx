@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { client } from '@/api/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useCreateSlide } from '@/hooks/slides/use-create-slide';
+import { useUpdateSlide } from '@/hooks/slides/use-update-slide';
 
 interface SlideFormData {
 	title: string;
@@ -25,7 +26,10 @@ interface SlideFormProps {
 
 export function SlideForm({ mode, slideId, initialData }: SlideFormProps) {
 	const navigate = useNavigate();
-	const [loading, setLoading] = useState(false);
+	const { createSlide, loading: createLoading } = useCreateSlide();
+	const { updateSlide, loading: updateLoading } = useUpdateSlide();
+
+	const loading = createLoading || updateLoading;
 
 	const [formData, setFormData] = useState<SlideFormData>({
 		title: initialData?.title || '',
@@ -38,28 +42,36 @@ export function SlideForm({ mode, slideId, initialData }: SlideFormProps) {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		setLoading(true);
 
-		try {
-			if (mode === 'create') {
-				await client.api.v1.slides.post({
+		if (mode === 'create') {
+			createSlide(
+				{
 					...formData,
 					button: formData.button || undefined,
 					link: formData.link || undefined,
-				});
-			} else if (slideId) {
-				await client.api.v1.slides({ id: slideId }).put({
-					...formData,
-					button: formData.button || undefined,
-					link: formData.link || undefined,
-				});
-			}
-
-			navigate('/dashboard/slides');
-		} catch (error) {
-			console.error('Failed to save slide:', error);
-		} finally {
-			setLoading(false);
+				},
+				{
+					onSuccess: () => {
+						navigate('/dashboard/slides');
+					},
+				}
+			);
+		} else if (slideId) {
+			updateSlide(
+				{
+					id: slideId,
+					input: {
+						...formData,
+						button: formData.button || undefined,
+						link: formData.link || undefined,
+					},
+				},
+				{
+					onSuccess: () => {
+						navigate('/dashboard/slides');
+					},
+				}
+			);
 		}
 	};
 

@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { client } from '@/api/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useCreateTag } from '@/hooks/tags/use-create-tag';
+import { useUpdateTag } from '@/hooks/tags/use-update-tag';
 
 interface TagFormData {
 	name: string;
@@ -19,8 +20,21 @@ interface TagFormProps {
 
 export function TagForm({ mode, tagId, initialData }: TagFormProps) {
 	const navigate = useNavigate();
-	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+
+	const {
+		createTag,
+		loading: createLoading,
+		error: createError,
+	} = useCreateTag();
+	const {
+		updateTag,
+		loading: updateLoading,
+		error: updateError,
+	} = useUpdateTag();
+
+	const loading = createLoading || updateLoading;
+	const apiError = createError || updateError;
 
 	const [formData, setFormData] = useState<TagFormData>({
 		name: initialData?.name || '',
@@ -28,32 +42,21 @@ export function TagForm({ mode, tagId, initialData }: TagFormProps) {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		setLoading(true);
 		setError(null);
 
-		try {
-			if (mode === 'create') {
-				const response = await client.api.v1.tags.post(formData);
-				if (response.data && !response.data.success) {
-					setError(response.data.error || 'Failed to create tag');
-					setLoading(false);
-					return;
+		if (mode === 'create') {
+			createTag(formData, {
+				onSuccess: () => navigate('/dashboard/tags'),
+				onError: (error) => setError(error.message || 'Failed to create tag'),
+			});
+		} else if (tagId) {
+			updateTag(
+				{ id: tagId, data: formData },
+				{
+					onSuccess: () => navigate('/dashboard/tags'),
+					onError: (error) => setError(error.message || 'Failed to update tag'),
 				}
-			} else if (tagId) {
-				const response = await client.api.v1.tags({ id: tagId }).put(formData);
-				if (response.data && !response.data.success) {
-					setError(response.data.error || 'Failed to update tag');
-					setLoading(false);
-					return;
-				}
-			}
-
-			navigate('/dashboard/tags');
-		} catch (error) {
-			console.error('Failed to save tag:', error);
-			setError('操作失败，请重试');
-		} finally {
-			setLoading(false);
+			);
 		}
 	};
 
@@ -61,12 +64,12 @@ export function TagForm({ mode, tagId, initialData }: TagFormProps) {
 		<form onSubmit={handleSubmit}>
 			<Card>
 				<CardContent className="space-y-6 pt-6">
-					{error && (
+					{(error || apiError) && (
 						<div
 							className="p-3 text-sm text-destructive bg-destructive/10
 								rounded-md"
 						>
-							{error}
+							{error || apiError}
 						</div>
 					)}
 

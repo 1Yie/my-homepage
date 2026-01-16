@@ -10,6 +10,8 @@ export interface Slide {
 	link?: string;
 	newTab?: boolean;
 	order: number;
+	createdAt: Date;
+	updatedAt: Date;
 }
 
 export function useGetSlides() {
