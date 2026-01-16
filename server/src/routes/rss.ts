@@ -1,6 +1,6 @@
 import { Elysia } from 'elysia';
 
-import { generateRSS } from '../services/articles';
+import { generateRSS } from '../services/rss';
 
 export const rssRoutes = new Elysia().get('/rss', async ({ request, set }) => {
 	const url = new URL(request.url);
