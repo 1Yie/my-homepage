@@ -28,6 +28,25 @@ export async function getTags(): Promise<Tag[]> {
 	});
 }
 
+export async function getTagsWithArticles(): Promise<TagWithCount[]> {
+	const tags = await db.tag.findMany({
+		include: {
+			_count: { select: { articles: true } },
+		},
+		orderBy: { name: 'asc' },
+	});
+
+	return tags
+		.filter((tag) => tag._count.articles > 0)
+		.map((tag) => ({
+			id: tag.id,
+			name: tag.name,
+			createdAt: tag.createdAt,
+			updatedAt: tag.updatedAt,
+			number: tag._count.articles,
+		}));
+}
+
 // 获取所有标签（带文章数量）
 export async function getTagsWithCount(): Promise<TagWithCount[]> {
 	const tags = await db.tag.findMany({

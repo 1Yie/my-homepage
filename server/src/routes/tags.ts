@@ -1,5 +1,6 @@
 import { Elysia, t } from 'elysia';
 
+import { auth } from '../lib/auth';
 import { authMiddleware } from '../lib/auth-middleware';
 import { tagSchema } from '../lib/schema';
 import {
@@ -9,146 +10,91 @@ import {
 	getTagById,
 	getTagsWithCount,
 	updateTag,
+	getTagsWithArticles,
 } from '../services/tags';
 
-export const tagsRoutes = new Elysia({ prefix: '/tags' })
+export const tagsRoutes = new Elysia()
 	.use(authMiddleware)
-	// GET /tags - 获取所有标签（带文章数量）
-	.get('/', async () => {
-		try {
+
+	.get(
+		'/tags',
+		async ({ query, request }) => {
+			if (query.public === 'true') {
+				const tags = await getTagsWithArticles();
+				return { success: true, data: tags };
+			}
+
+			const session = await auth.api.getSession({
+				headers: request.headers,
+			});
+			if (!session) {
+				throw new Error('Unauthorized');
+			}
+
 			const tags = await getTagsWithCount();
-			return {
-				success: true,
-				data: tags,
-			};
-		} catch (error) {
-			console.error('Failed to get tags:', error);
-			return {
-				success: false,
-				error: 'Failed to fetch tags',
-			};
-		}
-	})
-
-	// GET /tags/:id - 获取单个标签
-	.get('/:id', async ({ params }) => {
-		try {
-			const id = Number(params.id);
-			const tag = await getTagById(id);
-
-			if (!tag) {
-				return {
-					success: false,
-					error: 'Tag not found',
-				};
-			}
-
-			return {
-				success: true,
-				data: tag,
-			};
-		} catch (error) {
-			console.error('Failed to get tag:', error);
-			return {
-				success: false,
-				error: 'Failed to fetch tag',
-			};
-		}
-	})
-
-	// POST /tags - 创建标签（需要认证）
-	.post(
-		'/',
-		async ({ body }) => {
-			try {
-				const tag = await createTag(body);
-				return {
-					success: true,
-					data: tag,
-				};
-			} catch (error) {
-				console.error('Failed to create tag:', error);
-				return {
-					success: false,
-					error:
-						error instanceof Error ? error.message : 'Failed to create tag',
-				};
-			}
+			return { success: true, data: tags };
 		},
 		{
-			body: tagSchema,
-			auth: true,
+			query: t.Optional(
+				t.Object({
+					public: t.Optional(t.String()),
+				})
+			),
 		}
 	)
 
-	// PUT /tags/:id - 更新标签（需要认证）
-	.put(
-		'/:id',
-		async ({ params, body }) => {
-			try {
-				const id = Number(params.id);
-				const tag = await updateTag(id, body);
-				return {
-					success: true,
-					data: tag,
-				};
-			} catch (error) {
-				console.error('Failed to update tag:', error);
-				return {
-					success: false,
-					error:
-						error instanceof Error ? error.message : 'Failed to update tag',
-				};
-			}
-		},
-		{
-			body: tagSchema,
-			auth: true,
-		}
-	)
-
-	// DELETE /tags/:id - 删除标签（需要认证）
-	.delete(
-		'/:id',
+	.get(
+		'/tags/:id',
 		async ({ params }) => {
-			try {
-				const id = Number(params.id);
-				await deleteTag(id);
-				return {
-					success: true,
-					message: 'Tag deleted successfully',
-				};
-			} catch (error) {
-				console.error('Failed to delete tag:', error);
-				return {
-					success: false,
-					error:
-						error instanceof Error ? error.message : 'Failed to delete tag',
-				};
-			}
+			const tag = await getTagById(Number(params.id));
+			if (!tag) throw new Error('Tag not found');
+			return { success: true, data: tag };
+		},
+		{
+			params: t.Object({ id: t.String() }),
+		}
+	)
+
+	.post(
+		'/tags',
+		async ({ body }) => {
+			const tag = await createTag(body);
+			return { success: true, data: tag };
+		},
+		{
+			body: tagSchema,
+			auth: true,
+		}
+	)
+
+	.put(
+		'/tags/:id',
+		async ({ params, body }) => {
+			const tag = await updateTag(Number(params.id), body);
+			return { success: true, data: tag };
+		},
+		{
+			body: tagSchema,
+			auth: true,
+		}
+	)
+
+	.delete(
+		'/tags/:id',
+		async ({ params }) => {
+			await deleteTag(Number(params.id));
+			return { success: true };
 		},
 		{
 			auth: true,
 		}
 	)
 
-	// POST /tags/batch-delete - 批量删除标签（需要认证）
 	.post(
-		'/batch-delete',
+		'/tags/batch-delete',
 		async ({ body }) => {
-			try {
-				const result = await deleteTagsBatch(body.ids);
-				return {
-					success: true,
-					data: result,
-				};
-			} catch (error) {
-				console.error('Failed to batch delete tags:', error);
-				return {
-					success: false,
-					error: 'Failed to delete tags',
-				};
-			}
+			const result = await deleteTagsBatch(body.ids);
+			return { success: true, data: result };
 		},
 		{
 			body: t.Object({

@@ -2,11 +2,7 @@ import { Elysia, t } from 'elysia';
 
 import { auth } from '../lib/auth';
 import { authMiddleware } from '../lib/auth-middleware';
-import {
-	createArticleSchema,
-	updateArticleSchema,
-	tagSchema,
-} from '../lib/schema';
+import { createArticleSchema, updateArticleSchema } from '../lib/schema';
 import {
 	createArticle,
 	updateArticle,
@@ -15,8 +11,6 @@ import {
 	getArticlesByAuthor,
 	getPublishedArticles,
 	getPublishedArticleBySlug,
-	getTags,
-	createTag,
 	getPublishedArticlesByTag,
 } from '../services/articles';
 
@@ -112,20 +106,6 @@ export const articlesRoutes = new Elysia()
 		},
 		{
 			params: t.Object({ slug: t.String() }),
-		}
-	)
-	.get('/tags', async () => {
-		const tags = await getTags();
-		return { success: true, data: tags };
-	})
-	.post(
-		'/tags',
-		async ({ body }) => {
-			const tag = await createTag(body);
-			return { success: true, data: tag };
-		},
-		{
-			body: tagSchema,
 		}
 	)
 	.get(
