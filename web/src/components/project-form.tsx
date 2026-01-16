@@ -131,6 +131,7 @@ export function ProjectForm({
 						<Label>技术标签</Label>
 						<div className="flex gap-2">
 							<Input
+								className="w-xs"
 								onChange={(e) => setNewTag(e.target.value)}
 								onKeyDown={(e) => {
 									if (e.key === 'Enter') {
@@ -150,13 +151,17 @@ export function ProjectForm({
 								{formData.tags.map((tag) => (
 									<Badge className="flex items-center gap-1" key={tag}>
 										{tag}
-										<X
-											className="h-3 w-3 cursor-pointer"
+										<button
+											className="ml-1 rounded-full p-0.5 hover:bg-black/10
+												focus:outline-none focus:ring-1 focus:ring-black/20"
 											onClick={(e) => {
 												e.stopPropagation();
 												handleRemoveTag(tag);
 											}}
-										/>
+											type="button"
+										>
+											<X className="h-3 w-3" />
+										</button>
 									</Badge>
 								))}
 							</div>

@@ -194,6 +194,7 @@ export function ArticleForm({
 					<div className="grid gap-2">
 						<Label htmlFor="status">状态</Label>
 						<Select
+							modal={false}
 							onValueChange={(value) =>
 								setFormData({ ...formData, isDraft: value === '草稿' })
 							}
