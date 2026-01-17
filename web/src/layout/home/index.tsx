@@ -10,6 +10,7 @@ import {
 	ToastProvider,
 	toastManager,
 } from '@/components/ui/toast';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export function AppLayout() {
 	useEffect(() => {
@@ -41,8 +42,10 @@ export function AppLayout() {
 		};
 	}, []);
 
+	const isMobile = useIsMobile();
+
 	return (
-		<ToastProvider>
+		<ToastProvider position={isMobile ? 'top-center' : 'bottom-right'}>
 			<AnchoredToastProvider>
 				<ScrollToTop />
 				<ProgressBar />

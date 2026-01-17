@@ -144,7 +144,7 @@ export function DashboardLayout() {
 	}
 
 	return (
-		<ToastProvider>
+		<ToastProvider position={isMobile ? 'top-center' : 'bottom-right'}>
 			<AnchoredToastProvider>
 				<SidebarProvider>
 					<Sidebar variant="inset">

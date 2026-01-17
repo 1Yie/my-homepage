@@ -7,6 +7,7 @@ import {
 	ToastProvider,
 	toastManager,
 } from '@/components/ui/toast';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export const AuthLayout = () => {
 	useEffect(() => {
@@ -38,8 +39,10 @@ export const AuthLayout = () => {
 		};
 	}, []);
 
+	const isMobile = useIsMobile();
+
 	return (
-		<ToastProvider>
+		<ToastProvider position={isMobile ? 'top-center' : 'bottom-right'}>
 			<AnchoredToastProvider>
 				<div
 					className="relative flex min-h-screen items-center justify-center
