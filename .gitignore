@@ -72,3 +72,6 @@ data/*
 
 #--- Docker ---
 docker-compose.yml
+
+#--- opencode ---
+opencode.json
