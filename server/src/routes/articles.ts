@@ -14,10 +14,10 @@ import {
 	getPublishedArticlesByTag,
 } from '../services/articles';
 
-export const articlesRoutes = new Elysia()
+export const articlesRoutes = new Elysia({ prefix: '/articles' })
 	.use(authMiddleware)
 	.post(
-		'/articles',
+		'/',
 		async ({ body, user }) => {
 			const article = await createArticle(body, user.id);
 			return { success: true, data: article };
@@ -25,45 +25,61 @@ export const articlesRoutes = new Elysia()
 		{
 			body: createArticleSchema,
 			auth: true,
+			detail: {
+				description: '创建新文章（需要用户认证）',
+				tags: ['文章'],
+			},
 		}
 	)
 	.put(
-		'/articles/:id',
+		'/:id',
 		async ({ params, body, user }) => {
 			const article = await updateArticle(Number(params.id), body, user.id);
 			return { success: true, data: article };
 		},
 		{
-			params: t.Object({ id: t.String() }),
+			params: t.Object({ id: t.String({ description: '文章ID' }) }),
 			body: updateArticleSchema,
 			auth: true,
+			detail: {
+				description: '更新指定ID的文章信息（需要用户认证）',
+				tags: ['文章'],
+			},
 		}
 	)
 	.delete(
-		'/articles/:id',
+		'/:id',
 		async ({ params, user }) => {
 			await deleteArticle(Number(params.id), user.id);
 			return { success: true };
 		},
 		{
-			params: t.Object({ id: t.String() }),
+			params: t.Object({ id: t.String({ description: '文章ID' }) }),
 			auth: true,
+			detail: {
+				description: '删除指定ID的文章（需要用户认证）',
+				tags: ['文章'],
+			},
 		}
 	)
 	.get(
-		'/articles/:id',
+		'/:id',
 		async ({ params }) => {
 			const article = await getArticle(Number(params.id));
 			if (!article) throw new Error('Article not found');
 			return { success: true, data: article };
 		},
 		{
-			params: t.Object({ id: t.String() }),
+			params: t.Object({ id: t.String({ description: '文章ID' }) }),
 			auth: true,
+			detail: {
+				description: '根据ID获取单个文章信息（需要用户认证）',
+				tags: ['文章'],
+			},
 		}
 	)
 	.get(
-		'/articles',
+		'/',
 		async ({ query, request }) => {
 			if (query.public === 'true') {
 				const page = parseInt(query.page || '1');
@@ -85,17 +101,29 @@ export const articlesRoutes = new Elysia()
 		{
 			query: t.Optional(
 				t.Object({
-					public: t.Optional(t.String()),
-					q: t.Optional(t.String()),
-					preview: t.Optional(t.String()),
-					page: t.Optional(t.String()),
-					limit: t.Optional(t.String()),
+					public: t.Optional(
+						t.String({
+							description: '是否获取公开文章，值为"true"时获取公开文章',
+						})
+					),
+					q: t.Optional(
+						t.String({ description: '搜索关键词，用于筛选文章标题和内容' })
+					),
+					preview: t.Optional(
+						t.String({ description: '是否预览模式，值为"true"时包含草稿文章' })
+					),
+					page: t.Optional(t.String({ description: '页码，从1开始' })),
+					limit: t.Optional(t.String({ description: '每页条数，默认10条' })),
 				})
 			),
+			detail: {
+				description: '获取文章列表 - 公开或用户特定文章',
+				tags: ['文章'],
+			},
 		}
 	)
 	.get(
-		'/articles/slug/:slug',
+		'/slug/:slug',
 		async ({ params, set }) => {
 			const article = await getPublishedArticleBySlug(params.slug);
 			if (!article) {
@@ -105,11 +133,15 @@ export const articlesRoutes = new Elysia()
 			return { success: true, data: article };
 		},
 		{
-			params: t.Object({ slug: t.String() }),
+			params: t.Object({ slug: t.String({ description: '文章的URL slug' }) }),
+			detail: {
+				description: '根据文章slug获取已发布文章',
+				tags: ['文章'],
+			},
 		}
 	)
 	.get(
-		'/articles/tag/:tagName',
+		'/tag/:tagName',
 		async ({ params, query }) => {
 			const page = parseInt(query.page || '1');
 			const limit = parseInt(query.limit || '10');
@@ -121,12 +153,16 @@ export const articlesRoutes = new Elysia()
 			return { success: true, data: articles };
 		},
 		{
-			params: t.Object({ tagName: t.String() }),
+			params: t.Object({ tagName: t.String({ description: '标签名称' }) }),
 			query: t.Optional(
 				t.Object({
-					page: t.Optional(t.String()),
-					limit: t.Optional(t.String()),
+					page: t.Optional(t.String({ description: '页码，从1开始' })),
+					limit: t.Optional(t.String({ description: '每页条数，默认10条' })),
 				})
 			),
+			detail: {
+				description: '根据标签名称获取已发布的文章',
+				tags: ['文章'],
+			},
 		}
 	);

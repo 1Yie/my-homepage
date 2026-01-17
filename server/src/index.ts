@@ -1,4 +1,5 @@
 import { cors } from '@elysiajs/cors';
+import { swagger } from '@elysiajs/swagger';
 import { type Context, Elysia } from 'elysia';
 
 import { auth } from './lib/auth';
@@ -25,6 +26,18 @@ const PORT = Number(process.env.PORT) || 3000;
 const HOSTNAME = process.env.HOSTNAME || 'localhost';
 
 const app = new Elysia()
+	.use(
+		swagger({
+			documentation: {
+				info: {
+					title: 'Ichiyo.in API',
+					version: '1.0.0',
+					description:
+						'ichiyo.in 博客平台的API文档，提供文章、项目、友链、标签、轮播图片等功能的RESTful API接口。支持用户认证、内容管理和数据检索等功能。',
+				},
+			},
+		})
+	)
 	.use(
 		cors({
 			origin: process.env.FRONTEND_URL || 'http://localhost:5173',

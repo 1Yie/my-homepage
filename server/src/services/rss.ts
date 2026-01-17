@@ -20,7 +20,7 @@ export async function generateRSS(baseUrl: string) {
 
 	const feed = new Feed({
 		title: 'ichiyo.in Blog',
-		description: 'Personal blog and thoughts',
+		description: '记录 / 分享 / 唠嗑 / 闲聊 / ichiyo (@1Yie)',
 		id: baseUrl,
 		link: baseUrl,
 		language: 'zh-cn',
@@ -28,7 +28,7 @@ export async function generateRSS(baseUrl: string) {
 		updated: new Date(),
 		generator: 'ichiyo.in',
 		feedLinks: {
-			rss2: `${baseUrl}/api/rss.xml`,
+			rss2: `${baseUrl}/api/rss`,
 		},
 		author: {
 			name: 'ichiyo',

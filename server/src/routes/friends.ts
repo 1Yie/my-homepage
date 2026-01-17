@@ -1,4 +1,4 @@
-import { Elysia } from 'elysia';
+import { Elysia, t } from 'elysia';
 
 import { authMiddleware } from '../lib/auth-middleware';
 import { createFriendSchema, updateFriendSchema } from '../lib/schema';
@@ -12,50 +12,66 @@ import {
 
 export const friendsRoutes = new Elysia({ prefix: '/friends' })
 	.use(authMiddleware)
-	// GET /friends - 获取所有友链（公开）
-	.get('/', async () => {
-		try {
-			const friends = await getFriends();
-			return {
-				success: true,
-				data: friends,
-			};
-		} catch (error) {
-			console.error('Failed to get friends:', error);
-			return {
-				success: false,
-				error: 'Failed to fetch friends',
-			};
-		}
-	})
-
-	// GET /friends/:id - 获取单个友链（公开）
-	.get('/:id', async ({ params }) => {
-		try {
-			const id = Number(params.id);
-			const friend = await getFriendById(id);
-
-			if (!friend) {
+	.get(
+		'/',
+		async () => {
+			try {
+				const friends = await getFriends();
+				return {
+					success: true,
+					data: friends,
+				};
+			} catch (error) {
+				console.error('Failed to get friends:', error);
 				return {
 					success: false,
-					error: 'Friend not found',
+					error: 'Failed to fetch friends',
 				};
 			}
-
-			return {
-				success: true,
-				data: friend,
-			};
-		} catch (error) {
-			console.error('Failed to get friend:', error);
-			return {
-				success: false,
-				error: 'Failed to fetch friend',
-			};
+		},
+		{
+			detail: {
+				description: '获取所有友链列表',
+				tags: ['友链'],
+			},
 		}
-	})
+	)
 
-	// POST /friends - 创建友链（需要认证）
+	.get(
+		'/:id',
+		async ({ params }) => {
+			try {
+				const id = Number(params.id);
+				const friend = await getFriendById(id);
+
+				if (!friend) {
+					return {
+						success: false,
+						error: 'Friend not found',
+					};
+				}
+
+				return {
+					success: true,
+					data: friend,
+				};
+			} catch (error) {
+				console.error('Failed to get friend:', error);
+				return {
+					success: false,
+					error: 'Failed to fetch friend',
+				};
+			}
+		},
+		{
+			params: t.Object({ id: t.String({ description: '友链ID' }) }),
+			detail: {
+				description: '根据ID获取单个友链信息',
+				tags: ['友链'],
+			},
+		}
+	)
+
 	.post(
 		'/',
 		async ({ body }) => {
@@ -77,10 +93,14 @@ export const friendsRoutes = new Elysia({ prefix: '/friends' })
 		{
 			body: createFriendSchema,
 			auth: true,
+			security: [{ BearerAuth: [] }],
+			detail: {
+				description: '创建新的友链（需要用户认证）',
+				tags: ['友链'],
+			},
 		}
 	)
 
-	// PUT /friends/:id - 更新友链（需要认证）
 	.put(
 		'/:id',
 		async ({ params, body }) => {
@@ -101,12 +121,16 @@ export const friendsRoutes = new Elysia({ prefix: '/friends' })
 			}
 		},
 		{
+			params: t.Object({ id: t.String({ description: '友链ID' }) }),
 			body: updateFriendSchema,
 			auth: true,
+			detail: {
+				description: '更新指定ID的友链信息（需要用户认证）',
+				tags: ['友链'],
+			},
 		}
 	)
 
-	// DELETE /friends/:id - 删除友链（需要认证）
 	.delete(
 		'/:id',
 		async ({ params }) => {
@@ -127,6 +151,11 @@ export const friendsRoutes = new Elysia({ prefix: '/friends' })
 			}
 		},
 		{
+			params: t.Object({ id: t.String({ description: '友链ID' }) }),
 			auth: true,
+			detail: {
+				description: '删除指定ID的友链（需要用户认证）',
+				tags: ['友链'],
+			},
 		}
 	);
