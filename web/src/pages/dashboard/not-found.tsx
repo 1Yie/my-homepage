@@ -10,9 +10,7 @@ export function DashboardNotFoundPage() {
 			<div className="text-center">
 				<h1 className="mb-4 text-4xl font-bold">404</h1>
 				<p className="mb-6 text-muted-foreground">您访问的仪表盘页面不存在</p>
-				<Button asChild>
-					<Link to="/dashboard">返回仪表盘</Link>
-				</Button>
+				<Button render={<Link to="/dashboard">返回仪表盘</Link>}></Button>
 			</div>
 		</div>
 	);
