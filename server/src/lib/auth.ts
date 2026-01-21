@@ -9,6 +9,9 @@ export const auth = betterAuth({
 		provider: 'sqlite',
 	}),
 
+	baseURL: process.env.BETTER_AUTH_URL!,
+	trustedOrigins: [process.env.FRONTEND_URL!],
+
 	databaseHooks: {
 		user: {
 			create: {
@@ -40,8 +43,14 @@ export const auth = betterAuth({
 
 	advanced: {
 		useSecureCookies: process.env.NODE_ENV === 'production',
-	},
+		crossSubDomainCookies: {
+			enabled: true,
+		},
 
-	baseURL: process.env.BETTER_BASE_URL!,
-	trustedOrigins: [process.env.BETTER_AUTH_URL!],
+		defaultCookieAttributes: {
+			sameSite: 'Lax',
+			secure: process.env.NODE_ENV === 'production',
+			httpOnly: true,
+		},
+	},
 });
