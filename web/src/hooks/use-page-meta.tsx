@@ -39,10 +39,13 @@ export function useSeo(options: SeoOptions) {
 	useEffect(() => {
 		const baseTitle = 'ichiyo';
 		let fullTitle = '';
+		const separator = '\u00A0|\u00A0';
 
 		if (title !== undefined) {
 			fullTitle =
-				hasSuffix && title ? `${title} | ${baseTitle}` : title || baseTitle;
+				hasSuffix && title
+					? `${title}${separator}${baseTitle}`
+					: title || baseTitle;
 			if (document.title !== fullTitle) {
 				document.title = fullTitle;
 			}
@@ -76,7 +79,7 @@ export function useSeo(options: SeoOptions) {
  */
 export function useTitle(
 	title: string,
-	options: Omit<SeoOptions, 'title'> = {}
+	options: Pick<SeoOptions, 'hasSuffix' | 'preserve'> = {}
 ) {
 	useSeo({ title, ...options });
 }
