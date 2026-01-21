@@ -1,58 +1,40 @@
-import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { client } from '@/api/client';
 import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
 import { TagForm } from '@/components/tag-form';
 import { Spinner } from '@/components/ui/spinner';
+import { useGetTag } from '@/hooks/tags/use-get-tag';
 import { useTitle } from '@/hooks/use-page-meta';
 
 export function EditTagPage() {
 	const { id } = useParams<{ id: string }>();
-	const [fetchLoading, setFetchLoading] = useState(true);
-	const [initialFormData, setInitialFormData] = useState<{
-		name: string;
-	} | null>(null);
+	const { tag, loading, error } = useGetTag(id);
 
-	useTitle(`编辑标签 ${initialFormData?.name || ''}`);
+	useTitle(`编辑标签 ${tag?.name || ''}`);
 
-	useEffect(() => {
-		const fetchTag = async () => {
-			if (!id) return;
-
-			try {
-				setFetchLoading(true);
-				const response = await client.api.v1.tags({ id }).get();
-				const apiResponse = response.data as unknown;
-				const typedResponse = apiResponse as {
-					success: boolean;
-					data: {
-						name: string;
-					};
-				};
-				if (typedResponse.success && typedResponse.data) {
-					const tagData = typedResponse.data;
-					setInitialFormData({
-						name: tagData.name,
-					});
-				}
-			} catch (error) {
-				console.error('Failed to fetch tag:', error);
-			} finally {
-				setFetchLoading(false);
+	const initialFormData = tag
+		? {
+				name: tag.name,
 			}
-		};
+		: null;
 
-		fetchTag();
-	}, [id]);
-
-	if (fetchLoading) {
+	if (loading) {
 		return (
 			<div className="flex flex-1 flex-col gap-4 p-4">
 				<div className="flex items-center justify-center py-8">
 					<div className="text-center">
 						<Spinner className="mx-auto" size={32} />
 					</div>
+				</div>
+			</div>
+		);
+	}
+
+	if (error) {
+		return (
+			<div className="flex flex-1 flex-col gap-4 p-4">
+				<div className="flex items-center justify-center py-8">
+					<p className="text-red-500">Error: {error}</p>
 				</div>
 			</div>
 		);

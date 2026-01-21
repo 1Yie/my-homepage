@@ -1,8 +1,7 @@
 import { Plus, Search } from 'lucide-react';
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { client } from '@/api/client';
 import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
 import {
 	AlertDialog,
@@ -26,6 +25,8 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
+import { useDeleteArticle } from '@/hooks/article/use-delete-article';
+import { useGetArticles } from '@/hooks/article/use-get-articles';
 import { useTitle } from '@/hooks/use-page-meta';
 
 interface Article {
@@ -48,58 +49,38 @@ interface Article {
 }
 
 export function ArticlesPage() {
-	const [articles, setArticles] = useState<Article[]>([]);
-	const [loading, setLoading] = useState(true);
 	const [searchQuery, setSearchQuery] = useState('');
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 	const [articleToDelete, setArticleToDelete] = useState<Article | null>(null);
+	const [deleteError, setDeleteError] = useState<string | null>(null);
+
+	const { articles, loading } = useGetArticles({
+		search: searchQuery,
+		limit: 100, // Get all articles for dashboard
+	});
+	const { deleteArticle, loading: deleteLoading } = useDeleteArticle();
+
 	useTitle('文章管理');
-	const fetchArticles = useCallback(async () => {
-		try {
-			setLoading(true);
-			const response = await client.api.v1.articles.get({
-				query: searchQuery ? { q: searchQuery } : undefined,
-			});
-			if (response.data) {
-				// Handle both paginated and non-paginated responses
-				const data = response.data.data;
-				if (data && typeof data === 'object' && 'articles' in data) {
-					// Paginated response
-					setArticles(data.articles);
-				} else if (Array.isArray(data)) {
-					// Direct array response
-					setArticles(data);
-				}
-			}
-		} catch (error) {
-			console.error('Failed to fetch articles:', error);
-		} finally {
-			setLoading(false);
-		}
-	}, [searchQuery]);
 
-	useEffect(() => {
-		fetchArticles();
-	}, [fetchArticles]);
-
-	const handleDelete = async (article: Article) => {
+	const handleDelete = (article: Article) => {
 		setArticleToDelete(article);
+		setDeleteError(null);
 		setDeleteDialogOpen(true);
 	};
 
-	const confirmDelete = async () => {
+	const confirmDelete = () => {
 		if (!articleToDelete) return;
 
-		try {
-			await client.api.v1
-				.articles({ id: articleToDelete.id.toString() })
-				.delete();
-			fetchArticles();
-			setDeleteDialogOpen(false);
-			setArticleToDelete(null);
-		} catch (error) {
-			console.error('Failed to delete article:', error);
-		}
+		deleteArticle(articleToDelete.id.toString(), {
+			onSuccess: () => {
+				setDeleteDialogOpen(false);
+				setArticleToDelete(null);
+				setDeleteError(null);
+			},
+			onError: (error) => {
+				setDeleteError(error.message);
+			},
+		});
 	};
 
 	return (
@@ -251,16 +232,27 @@ export function ArticlesPage() {
 						<AlertDialogHeader>
 							<AlertDialogTitle>删除文章</AlertDialogTitle>
 							<AlertDialogDescription>
-								您确定要删除文章 "{articleToDelete?.slug}" 吗？此操作无法撤销。
+								{deleteError ? (
+									<div className="text-destructive">{deleteError}</div>
+								) : (
+									<div>
+										您确定要删除文章 "{articleToDelete?.slug}"
+										吗？此操作无法撤销。
+									</div>
+								)}
 							</AlertDialogDescription>
 						</AlertDialogHeader>
 						<AlertDialogFooter>
 							<AlertDialogClose>
-								<Button variant="outline">取消</Button>
+								<Button variant="outline">
+									{deleteError ? '关闭' : '取消'}
+								</Button>
 							</AlertDialogClose>
-							<Button onClick={confirmDelete} variant="destructive">
-								删除
-							</Button>
+							{!deleteError && (
+								<Button onClick={confirmDelete} variant="destructive">
+									{deleteLoading ? '删除中...' : '删除'}
+								</Button>
+							)}
 						</AlertDialogFooter>
 					</AlertDialogPopup>
 				</AlertDialog>

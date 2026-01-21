@@ -8,10 +8,9 @@ import {
 	TrendingUp,
 	Users,
 } from 'lucide-react';
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { authClient, client } from '@/api/client';
+import { authClient } from '@/api/client';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,118 +21,14 @@ import {
 	CardTitle,
 } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
+import { useDashboardStats } from '@/hooks/use-dashboard-stats';
 import { useTitle } from '@/hooks/use-page-meta';
-
-interface DashboardData {
-	overview: {
-		totalArticles: number;
-		publishedArticles: number;
-		draftArticles: number;
-		totalProjects: number;
-		totalSlides: number;
-		totalTags: number;
-		totalFriends: number;
-		totalUsers: number;
-	};
-	recentArticles: Array<{
-		id: number;
-		title: string;
-		slug: string;
-		isDraft: boolean;
-		createdAt: string;
-		updatedAt: string;
-		author: {
-			id: string;
-			name: string;
-			email: string;
-		};
-		tags: Array<{
-			id: number;
-			name: string;
-		}>;
-	}>;
-	recentProjects: Array<{
-		id: number;
-		name: string;
-		description: string;
-		tags: string[];
-		imageUrl: string | null;
-		githubUrl: string | null;
-		liveUrl: string | null;
-		order: number;
-		createdAt: string;
-		updatedAt: string;
-	}>;
-	recentSlides: Array<{
-		id: number;
-		title: string;
-		src: string;
-		button: string | null;
-		link: string | null;
-		newTab: boolean;
-		order: number;
-		createdAt: string;
-		updatedAt: string;
-	}>;
-	recentFriends: Array<{
-		id: number;
-		name: string;
-		image: string;
-		description: string;
-		pinned: boolean;
-		order: number;
-		createdAt: string;
-		updatedAt: string;
-	}>;
-	articlesByMonth: Array<{
-		month: string;
-		count: number;
-		publishedCount: number;
-		draftCount: number;
-	}>;
-	topTags: Array<{
-		id: number;
-		name: string;
-		articleCount: number;
-	}>;
-	articleStatusDistribution: {
-		published: number;
-		draft: number;
-	};
-	recentActivityTrend: Array<{
-		date: string;
-		articlesCreated: number;
-		projectsCreated: number;
-		slidesCreated: number;
-	}>;
-}
 
 export function DashboardPage() {
 	const { data: session } = authClient.useSession();
-	const [dashboardData, setDashboardData] = useState<DashboardData | null>(
-		null
-	);
-	const [loading, setLoading] = useState(true);
+	const { dashboardData, loading } = useDashboardStats();
 
 	useTitle('仪表盘');
-
-	useEffect(() => {
-		const fetchDashboardData = async () => {
-			try {
-				setLoading(true);
-				const response = await client.api.v1.dashboard.stats.get();
-				if (response.data && response.data.success) {
-					setDashboardData(response.data.data as unknown as DashboardData);
-				}
-			} catch (error) {
-				console.error('Failed to fetch dashboard data:', error);
-			} finally {
-				setLoading(false);
-			}
-		};
-
-		fetchDashboardData();
-	}, []);
 
 	const statCards = [
 		{
@@ -212,7 +107,7 @@ export function DashboardPage() {
 	];
 
 	// 格式化日期
-	const formatDate = (dateString: string) => {
+	const formatDate = (dateString: Date) => {
 		const date = new Date(dateString);
 		return date.toLocaleDateString('zh-CN', {
 			year: 'numeric',

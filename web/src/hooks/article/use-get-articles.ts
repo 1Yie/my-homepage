@@ -40,7 +40,13 @@ interface PaginatedArticlesResponse {
 }
 
 export function useGetArticles(options: UseGetArticlesOptions = {}) {
-	const query = useQuery<PaginatedArticlesResponse>({
+	const query = useQuery<{
+		articles: Article[];
+		total: number;
+		page: number;
+		limit: number;
+		totalPages: number;
+	}>({
 		queryKey: ['articles', options],
 		queryFn: async () => {
 			const query: Record<string, string> = {};
@@ -55,7 +61,25 @@ export function useGetArticles(options: UseGetArticlesOptions = {}) {
 			if (!response.data) {
 				throw new Error('Failed to fetch articles');
 			}
-			return response.data.data as PaginatedArticlesResponse;
+
+			const data = response.data.data;
+
+			// Handle both paginated and direct array responses
+			if (Array.isArray(data)) {
+				// Direct array response (like dashboard)
+				return {
+					articles: data,
+					total: data.length,
+					page: 1,
+					limit: data.length,
+					totalPages: 1,
+				};
+			} else if (data && typeof data === 'object' && 'articles' in data) {
+				// Paginated response
+				return data as PaginatedArticlesResponse;
+			} else {
+				throw new Error('Unexpected response format');
+			}
 		},
 	});
 
