@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Navigate } from 'react-router-dom';
 
+import { authClient } from '@/api/client';
 import { ProgressBar } from '@/components/progress-bar';
 import {
 	AnchoredToastProvider,
@@ -40,6 +41,15 @@ export const AuthLayout = () => {
 	}, []);
 
 	const isMobile = useIsMobile();
+	const { data: session, isPending } = authClient.useSession();
+
+	if (isPending) {
+		return;
+	}
+
+	if (session) {
+		return <Navigate replace to="/" />;
+	}
 
 	return (
 		<ToastProvider position={isMobile ? 'top-center' : 'bottom-right'}>
