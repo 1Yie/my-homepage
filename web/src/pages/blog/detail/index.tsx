@@ -19,6 +19,9 @@ export function BlogDetailPage() {
 	useSeo({
 		title: article?.title as string,
 		description: seoDescription,
+		type: 'article',
+		publishedTime: article?.createdAt.toISOString(),
+		updatedTime: article?.updatedAt.toISOString(),
 		keywords: [
 			'ichiyo',
 			'一叶',
