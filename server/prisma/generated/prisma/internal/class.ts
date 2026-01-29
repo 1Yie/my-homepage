@@ -15,8 +15,8 @@ import type * as Prisma from './prismaNamespace.js';
 
 const config: runtime.GetPrismaClientConfig = {
 	previewFeatures: [],
-	clientVersion: '7.2.0',
-	engineVersion: '0c8ef2ce45c83248ab3df073180d5eda9e8be7a3',
+	clientVersion: '7.3.0',
+	engineVersion: '9d6ad21cbbceab97458517b147a6a09ff43aa735',
 	activeProvider: 'sqlite',
 	inlineSchema:
 		'datasource db {\n  provider = "sqlite"\n}\n\ngenerator client {\n  provider   = "prisma-client"\n  output     = "./generated/prisma"\n  engineType = "client"\n  runtime    = "bun"\n}\n\nmodel User {\n  id            String    @id\n  name          String\n  email         String\n  emailVerified Boolean\n  image         String?\n  createdAt     DateTime  @default(now())\n  updatedAt     DateTime  @default(now()) @updatedAt\n  sessions      Session[]\n  accounts      Account[]\n  articles      Article[]\n\n  @@unique([email])\n  @@map("user")\n}\n\nmodel Session {\n  id        String   @id @default(cuid())\n  token     String   @unique @default(cuid())\n  expiresAt DateTime\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @default(now()) @updatedAt\n\n  ipAddress String?\n  userAgent String?\n  userId    String\n  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@map("session")\n}\n\nmodel Account {\n  id                    String    @id\n  accountId             String\n  providerId            String\n  userId                String\n  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)\n  accessToken           String?\n  refreshToken          String?\n  idToken               String?\n  accessTokenExpiresAt  DateTime?\n  refreshTokenExpiresAt DateTime?\n  scope                 String?\n  password              String?\n  createdAt             DateTime  @default(now())\n  updatedAt             DateTime  @default(now()) @updatedAt\n\n  @@map("account")\n}\n\nmodel Verification {\n  id         String    @id\n  identifier String\n  value      String\n  expiresAt  DateTime\n  createdAt  DateTime? @default(now())\n  updatedAt  DateTime? @default(now()) @updatedAt\n\n  @@map("verification")\n}\n\nmodel Article {\n  id          Int      @id @default(autoincrement())\n  title       String\n  slug        String   @unique\n  content     String\n  headerImage String?\n  isDraft     Boolean  @default(true)\n  createdAt   DateTime @default(now())\n  updatedAt   DateTime @default(now()) @updatedAt\n  authorId    String\n  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)\n  tags        Tag[]\n\n  @@map("article")\n}\n\nmodel Tag {\n  id        Int       @id @default(autoincrement())\n  name      String    @unique\n  createdAt DateTime  @default(now())\n  updatedAt DateTime  @default(now()) @updatedAt\n  articles  Article[]\n\n  @@map("tag")\n}\n\nmodel Project {\n  id          Int      @id @default(autoincrement())\n  name        String\n  description String\n  tags        String // 存储为 JSON 字符串\n  imageUrl    String?\n  githubUrl   String?\n  liveUrl     String?\n  order       Int      @default(0)\n  createdAt   DateTime @default(now())\n  updatedAt   DateTime @default(now()) @updatedAt\n\n  @@map("project")\n}\n\nmodel Slide {\n  id        Int      @id @default(autoincrement())\n  title     String\n  src       String\n  button    String?\n  link      String?\n  newTab    Boolean  @default(false)\n  order     Int      @default(0)\n  createdAt DateTime @default(now())\n  updatedAt DateTime @default(now()) @updatedAt\n\n  @@map("slide")\n}\n\nmodel Friend {\n  id          Int          @id @default(autoincrement())\n  name        String\n  image       String\n  description String\n  pinned      Boolean      @default(false)\n  order       Int          @default(0)\n  createdAt   DateTime     @default(now())\n  updatedAt   DateTime     @default(now()) @updatedAt\n  socialLinks SocialLink[]\n\n  @@map("friend")\n}\n\nmodel SocialLink {\n  id        Int      @id @default(autoincrement())\n  name      String\n  link      String\n  iconLight String\n  iconDark  String\n  friendId  Int\n  friend    Friend   @relation(fields: [friendId], references: [id], onDelete: Cascade)\n  createdAt DateTime @default(now())\n  updatedAt DateTime @default(now()) @updatedAt\n\n  @@map("social_link")\n}\n',
@@ -41,13 +41,15 @@ async function decodeBase64AsWasm(
 
 config.compilerWasm = {
 	getRuntime: async () =>
-		await import('@prisma/client/runtime/query_compiler_bg.sqlite.mjs'),
+		await import('@prisma/client/runtime/query_compiler_fast_bg.sqlite.mjs'),
 
 	getQueryCompilerWasmModule: async () => {
 		const { wasm } =
-			await import('@prisma/client/runtime/query_compiler_bg.sqlite.wasm-base64.mjs');
+			await import('@prisma/client/runtime/query_compiler_fast_bg.sqlite.wasm-base64.mjs');
 		return await decodeBase64AsWasm(wasm);
 	},
+
+	importName: './query_compiler_fast_bg.js',
 };
 
 export type LogOptions<ClientOptions extends Prisma.PrismaClientOptions> =

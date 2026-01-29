@@ -1,3 +1,4 @@
+
 datasource db {
   provider = "sqlite"
 }
@@ -36,9 +37,10 @@ model Session {
   ipAddress String?
   userAgent String?
   userId    String
-  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("session")
+  @@index([userId])
 }
 
 model Account {
@@ -58,6 +60,7 @@ model Account {
   updatedAt             DateTime  @default(now()) @updatedAt
 
   @@map("account")
+  @@index([userId])
 }
 
 model Verification {
@@ -69,6 +72,7 @@ model Verification {
   updatedAt  DateTime? @default(now()) @updatedAt
 
   @@map("verification")
+  @@index([identifier])
 }
 
 model Article {
