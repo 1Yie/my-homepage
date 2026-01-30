@@ -1,9 +1,7 @@
-import { useQueryClient } from '@tanstack/react-query';
 import MDEditor from '@uiw/react-md-editor';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { client } from '@/api/client';
 import { MarkdownRenderer } from '@/components/markdown-renderer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -16,6 +14,8 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
+import { useCreateArticle } from '@/hooks/article/use-create-article';
+import { useUpdateArticle } from '@/hooks/article/use-update-article';
 import { useGetTags } from '@/hooks/tags/use-get-tags';
 import { generateSlug } from '@/lib/generate-slug';
 
@@ -41,9 +41,10 @@ export function ArticleForm({
 	initialData,
 }: ArticleFormProps) {
 	const navigate = useNavigate();
-	const queryClient = useQueryClient();
 	const { tags: availableTags } = useGetTags(false);
-	const [loading, setLoading] = useState(false);
+	const { createArticleAsync, loading: createLoading } = useCreateArticle();
+	const { updateArticleAsync, loading: updateLoading } = useUpdateArticle();
+	const loading = createLoading || updateLoading;
 	const [newTagName, setNewTagName] = useState('');
 
 	const handleAddTag = async () => {
@@ -100,47 +101,32 @@ export function ArticleForm({
 		e.preventDefault();
 
 		try {
-			setLoading(true);
-
-			const newTagIds: number[] = [];
-			for (const tagName of formData.tagNames) {
-				const response = await client.api.v1.tags.post({
-					name: tagName,
-				});
-				if (response.data) {
-					newTagIds.push(response.data.data.id);
-				}
-			}
-
-			const allTagIds = [...formData.tagIds, ...newTagIds];
-
 			if (mode === 'create') {
-				await client.api.v1.articles.post({
+				await createArticleAsync({
 					title: formData.title,
 					slug: formData.slug,
 					content: formData.content,
 					isDraft: formData.isDraft,
-					tagIds: allTagIds,
+					tagIds: formData.tagIds,
+					tagNames: formData.tagNames,
 					headerImage: formData.headerImage,
 				});
 			} else if (mode === 'edit' && articleId) {
-				await client.api.v1.articles({ id: articleId }).put({
+				await updateArticleAsync({
+					id: articleId,
 					title: formData.title,
 					slug: formData.slug,
 					content: formData.content,
 					isDraft: formData.isDraft,
-					tagIds: allTagIds,
+					tagIds: formData.tagIds,
+					tagNames: formData.tagNames,
 					headerImage: formData.headerImage,
 				});
 			}
-
-			queryClient.invalidateQueries({ queryKey: ['tags'] });
 
 			navigate('/dashboard/articles');
 		} catch (error) {
 			console.error(`Failed to ${mode} article:`, error);
-		} finally {
-			setLoading(false);
 		}
 	};
 
