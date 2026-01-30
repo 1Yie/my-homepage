@@ -25,7 +25,7 @@ function ProjectCard({ project }: { project: Project }) {
 
 				{/* 项目标题 */}
 				<CardItem
-					className="mt-4 **:text-xl font-bold text-neutral-600
+					className="mt-4 text-xl font-bold text-neutral-600
 						dark:text-neutral-200"
 					translateZ="80"
 				>
@@ -62,7 +62,7 @@ function ProjectCard({ project }: { project: Project }) {
 					{project.githubUrl && (
 						<CardItem translateZ={20}>
 							<button
-								className="flex gap-1 item-center cursor-pointer px-2 py-1
+								className="flex gap-1 items-center cursor-pointer px-2 py-1
 									rounded-xl text-xs font-normal dark:text-neutral-300
 									hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
 								onClick={() => {
@@ -83,7 +83,7 @@ function ProjectCard({ project }: { project: Project }) {
 					{project.liveUrl && (
 						<CardItem translateZ={20}>
 							<button
-								className="flex gap-1 item-center cursor-pointer px-2 py-1
+								className="flex gap-1 items-center cursor-pointer px-2 py-1
 									rounded-xl text-xs font-normal dark:text-neutral-300
 									hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
 								onClick={() => {
@@ -115,25 +115,45 @@ export default function Project() {
 			<div className="border-b">
 				<section className="section-base">
 					<div className="mx-auto max-w-6xl p-6 sm:p-12">
-						<div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-							{Array.from({ length: 6 }).map((_, i) => (
+						<div
+							className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 items-start"
+						>
+							{Array.from({ length: 3 }).map((_, i) => (
 								<CardContainer className="inter-var" key={i}>
-									<CardBody
-										className="bg-gray-50 relative group/card dark:bg-black
-											dark:border-white/20 border-black/10 w-auto sm:w-full
-											h-auto rounded-xl p-6 border"
-									>
-										<Skeleton className="h-6 w-3/4 mb-2" />
-										<Skeleton className="h-4 w-full mb-4" />
-										<Skeleton className="aspect-video w-full rounded-xl mb-4" />
-										<div className="flex flex-wrap gap-2 mb-4">
-											{Array.from({ length: 3 }).map((_, j) => (
-												<Skeleton className="h-6 w-12 rounded-full" key={j} />
-											))}
-										</div>
-										<div className="flex justify-between items-center mt-8">
-											<Skeleton className="h-8 w-20 rounded-xl" />
-											<Skeleton className="h-8 w-20 rounded-xl" />
+									<CardBody className="relative group/card">
+										{/* 项目图片骨架 */}
+										<CardItem className="w-full px-2" translateZ="60">
+											<Skeleton className="h-40 w-70" />
+										</CardItem>
+
+										{/* 项目标题骨架 */}
+										<CardItem className="mt-4" translateZ="80">
+											<Skeleton className="h-6 w-40" />
+										</CardItem>
+
+										{/* 项目描述骨架 */}
+										<CardItem className="mt-2" translateZ="90">
+											<Skeleton className="h-4 w-60" />
+											<Skeleton className="h-4 w-5/6 mt-1" />
+										</CardItem>
+
+										{/* 标签骨架 */}
+										<CardItem className="w-full mt-4" translateZ="60">
+											<div className="flex flex-wrap gap-2">
+												{Array.from({ length: 3 }).map((_, j) => (
+													<Skeleton className="h-6 w-12 rounded-full" key={j} />
+												))}
+											</div>
+										</CardItem>
+
+										{/* 链接按钮骨架 */}
+										<div className="flex justify-end items-center mt-4 gap-2">
+											<CardItem translateZ={20}>
+												<Skeleton className="h-7 w-16 rounded-xl" />
+											</CardItem>
+											<CardItem translateZ={20}>
+												<Skeleton className="h-7 w-16 rounded-xl" />
+											</CardItem>
 										</div>
 									</CardBody>
 								</CardContainer>
@@ -168,7 +188,9 @@ export default function Project() {
 							<p className="text-muted-foreground">暂无项目</p>
 						</div>
 					) : (
-						<div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+						<div
+							className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 items-start"
+						>
 							{projects.map((project) => (
 								<ProjectCard key={project.id} project={project} />
 							))}
