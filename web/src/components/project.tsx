@@ -13,6 +13,7 @@ function ProjectCard({ project }: { project: Project }) {
 			<CardBody className="relative group/card">
 				{/* 项目图片 */}
 				<CardItem className="w-full px-2" translateZ="60">
+					<div className="absolute inset-0 dark:bg-black/30"></div>
 					{project.imageUrl && (
 						<img
 							alt={project.name}
@@ -24,7 +25,8 @@ function ProjectCard({ project }: { project: Project }) {
 
 				{/* 项目标题 */}
 				<CardItem
-					className="mt-4 **:text-xl font-bold text-neutral-600 dark:text-white"
+					className="mt-4 **:text-xl font-bold text-neutral-600
+						dark:text-neutral-200"
 					translateZ="80"
 				>
 					{project.name}
@@ -46,7 +48,7 @@ function ProjectCard({ project }: { project: Project }) {
 						{project.tags.map((tag) => (
 							<span
 								className="rounded-full bg-primary/10 px-3 py-1 text-xs
-									text-primary dark:bg-primary/20"
+									text-primary dark:text-primary/80 dark:bg-primary/20"
 								key={tag}
 							>
 								{tag}
@@ -61,7 +63,7 @@ function ProjectCard({ project }: { project: Project }) {
 						<CardItem translateZ={20}>
 							<button
 								className="flex gap-1 item-center cursor-pointer px-2 py-1
-									rounded-xl text-xs font-normal dark:text-white
+									rounded-xl text-xs font-normal dark:text-neutral-300
 									hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
 								onClick={() => {
 									if (project.githubUrl) {
@@ -82,7 +84,7 @@ function ProjectCard({ project }: { project: Project }) {
 						<CardItem translateZ={20}>
 							<button
 								className="flex gap-1 item-center cursor-pointer px-2 py-1
-									rounded-xl text-xs font-normal dark:text-white
+									rounded-xl text-xs font-normal dark:text-neutral-300
 									hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
 								onClick={() => {
 									if (project.liveUrl) {
