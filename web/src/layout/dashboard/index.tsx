@@ -7,6 +7,7 @@ import {
 	LayoutDashboard,
 	Tag,
 	Users,
+	ExternalLink,
 } from 'lucide-react';
 import { useEffect } from 'react';
 import { Link, Navigate, Outlet, useLocation } from 'react-router-dom';
@@ -34,7 +35,6 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 	SidebarProvider,
-	SidebarRail,
 } from '@/components/ui/sidebar';
 import {
 	AnchoredToastProvider,
@@ -44,13 +44,20 @@ import {
 import { useBreadcrumbItems } from '@/hooks/use-breadcrumb-items';
 import { useIsMobile } from '@/hooks/use-mobile';
 
-// Sidebar navigation items
-const sidebarNavItems = [
+const navigationItems = [
 	{
 		title: '仪表盘',
 		url: '/dashboard',
 		icon: LayoutDashboard,
 	},
+	{
+		title: '返回主站',
+		url: '/',
+		icon: ExternalLink,
+	},
+];
+
+const managementItems = [
 	{
 		title: '文章管理',
 		url: '/dashboard/articles',
@@ -78,28 +85,27 @@ const sidebarNavItems = [
 	},
 ];
 
+const sidebarNavItems = [...navigationItems, ...managementItems];
+
 export function DashboardLayout() {
 	const { data: session, isPending } = authClient.useSession();
 	const location = useLocation();
 	const breadcrumbs = useBreadcrumbItems();
 	const isMobile = useIsMobile();
 
-	// Find the active menu item - only the most specific match should be active
 	const getActiveMenuItem = () => {
-		// First check for exact matches
 		const exactMatch = sidebarNavItems.find(
 			(item) => item.url === location.pathname
 		);
 		if (exactMatch) return exactMatch.url;
 
-		// Then check for prefix matches, but only for non-dashboard items and find the most specific
 		const prefixMatches = sidebarNavItems
 			.filter(
 				(item) =>
 					item.url !== '/dashboard' &&
 					location.pathname.startsWith(item.url + '/')
 			)
-			.sort((a, b) => b.url.length - a.url.length); // Sort by length, longest first
+			.sort((a, b) => b.url.length - a.url.length);
 
 		return prefixMatches[0]?.url;
 	};
@@ -183,7 +189,28 @@ export function DashboardLayout() {
 								<SidebarGroupLabel>导航</SidebarGroupLabel>
 								<SidebarGroupContent>
 									<SidebarMenu>
-										{sidebarNavItems.map((item) => (
+										{navigationItems.map((item) => (
+											<SidebarMenuItem key={item.title}>
+												<SidebarMenuButton
+													isActive={activeMenuItem === item.url}
+													render={
+														<Link to={item.url}>
+															<item.icon />
+															<span>{item.title}</span>
+														</Link>
+													}
+												></SidebarMenuButton>
+											</SidebarMenuItem>
+										))}
+									</SidebarMenu>
+								</SidebarGroupContent>
+							</SidebarGroup>
+
+							<SidebarGroup>
+								<SidebarGroupLabel>管理</SidebarGroupLabel>
+								<SidebarGroupContent>
+									<SidebarMenu>
+										{managementItems.map((item) => (
 											<SidebarMenuItem key={item.title}>
 												<SidebarMenuButton
 													isActive={activeMenuItem === item.url}
@@ -201,7 +228,6 @@ export function DashboardLayout() {
 							</SidebarGroup>
 						</SidebarContent>
 
-						{/* User Info Footer */}
 						<div className="mt-auto p-2">
 							<DropdownMenu modal={false}>
 								<DropdownMenuTrigger
@@ -253,8 +279,6 @@ export function DashboardLayout() {
 								</DropdownMenuContent>
 							</DropdownMenu>
 						</div>
-
-						<SidebarRail />
 					</Sidebar>
 
 					<SidebarInset className="min-w-0 flex-1 flex flex-col">
