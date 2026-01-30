@@ -1,5 +1,6 @@
 import { ExternalLink, Github } from 'lucide-react';
 
+import { CardContainer, CardBody, CardItem } from '@/components/ui/3d-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
 	useGetProjects,
@@ -8,71 +9,99 @@ import {
 
 function ProjectCard({ project }: { project: Project }) {
 	return (
-		<div
-			className="group relative flex flex-col overflow-hidden border bg-card
-				shadow-md dark:shadow-accent/40"
-		>
-			{/* 项目图片 */}
-			{project.imageUrl && (
-				<div className="relative aspect-video w-full overflow-hidden bg-muted">
-					<img
-						alt={project.name}
-						className="h-full w-full object-cover"
-						src={project.imageUrl}
-					/>
-					<div className="pointer-events-none absolute inset-0 dark:bg-black/30" />
-				</div>
-			)}
+		<CardContainer className="inter-var">
+			<CardBody className="relative group/card">
+				{/* 项目图片 */}
+				<CardItem className="w-full px-2" translateZ="60">
+					{project.imageUrl && (
+						<img
+							alt={project.name}
+							className="h-40 w-full object-cover group-hover/card:shadow-md"
+							src={project.imageUrl}
+						/>
+					)}
+				</CardItem>
 
-			{/* 项目信息 */}
-			<div className="flex flex-1 flex-col p-6">
-				<h3 className="mb-2 text-xl font-bold">{project.name}</h3>
-				<p className="mb-4 text-sm text-muted-foreground">
+				{/* 项目标题 */}
+				<CardItem
+					className="mt-4 **:text-xl font-bold text-neutral-600 dark:text-white"
+					translateZ="80"
+				>
+					{project.name}
+				</CardItem>
+
+				{/* 项目描述 */}
+				<CardItem
+					as="p"
+					className="text-neutral-500 text-sm max-w-sm mt-2
+						dark:text-neutral-300"
+					translateZ="90"
+				>
 					{project.description}
-				</p>
+				</CardItem>
 
 				{/* 标签 */}
-				<div className="mb-4 flex flex-wrap gap-2">
-					{project.tags.map((tag) => (
-						<span
-							className="rounded-full bg-primary/10 px-3 py-1 text-xs
-								text-primary"
-							key={tag}
-						>
-							{tag}
-						</span>
-					))}
-				</div>
+				<CardItem className="w-full mt-4" translateZ="60">
+					<div className="flex flex-wrap gap-2">
+						{project.tags.map((tag) => (
+							<span
+								className="rounded-full bg-primary/10 px-3 py-1 text-xs
+									text-primary dark:bg-primary/20"
+								key={tag}
+							>
+								{tag}
+							</span>
+						))}
+					</div>
+				</CardItem>
 
-				{/* 链接 */}
-				<div className="mt-auto flex gap-3">
+				{/* 链接按钮 */}
+				<div className="flex justify-end items-center mt-4">
 					{project.githubUrl && (
-						<a
-							className="flex items-center gap-1 text-sm text-muted-foreground
-								transition-colors hover:text-primary"
-							href={project.githubUrl}
-							rel="noopener noreferrer"
-							target="_blank"
-						>
-							<Github className="h-4 w-4" />
-							<span>源码</span>
-						</a>
+						<CardItem translateZ={20}>
+							<button
+								className="flex gap-1 item-center cursor-pointer px-2 py-1
+									rounded-xl text-xs font-normal dark:text-white
+									hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+								onClick={() => {
+									if (project.githubUrl) {
+										window.open(
+											project.githubUrl,
+											'_blank',
+											'noopener,noreferrer'
+										);
+									}
+								}}
+							>
+								<Github className="h-4 w-4" />
+								<span>源码</span>
+							</button>
+						</CardItem>
 					)}
 					{project.liveUrl && (
-						<a
-							className="flex items-center gap-1 text-sm text-muted-foreground
-								transition-colors hover:text-primary"
-							href={project.liveUrl}
-							rel="noopener noreferrer"
-							target="_blank"
-						>
-							<ExternalLink className="h-4 w-4" />
-							<span>预览</span>
-						</a>
+						<CardItem translateZ={20}>
+							<button
+								className="flex gap-1 item-center cursor-pointer px-2 py-1
+									rounded-xl text-xs font-normal dark:text-white
+									hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+								onClick={() => {
+									if (project.liveUrl) {
+										window.open(
+											project.liveUrl,
+											'_blank',
+											'noopener,noreferrer'
+										);
+									}
+								}}
+							>
+								<ExternalLink className="h-4 w-4" />
+								<span>预览</span>
+							</button>
+						</CardItem>
 					)}
 				</div>
-			</div>
-		</div>
+			</CardBody>
+		</CardContainer>
 	);
 }
 
@@ -86,27 +115,26 @@ export default function Project() {
 					<div className="mx-auto max-w-6xl p-6 sm:p-12">
 						<div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 							{Array.from({ length: 6 }).map((_, i) => (
-								<div
-									className="group relative flex flex-col overflow-hidden
-										border"
-									key={i}
-								>
-									<Skeleton className="aspect-video w-full" />
-									<div className="flex flex-1 flex-col p-6">
-										<Skeleton className="mb-2 h-6 w-3/4" />
-										<Skeleton className="mb-4 h-4 w-full" />
-										<Skeleton className="mb-2 h-4 w-full" />
-										<div className="mb-4 flex flex-wrap gap-2">
+								<CardContainer className="inter-var" key={i}>
+									<CardBody
+										className="bg-gray-50 relative group/card dark:bg-black
+											dark:border-white/20 border-black/10 w-auto sm:w-full
+											h-auto rounded-xl p-6 border"
+									>
+										<Skeleton className="h-6 w-3/4 mb-2" />
+										<Skeleton className="h-4 w-full mb-4" />
+										<Skeleton className="aspect-video w-full rounded-xl mb-4" />
+										<div className="flex flex-wrap gap-2 mb-4">
 											{Array.from({ length: 3 }).map((_, j) => (
 												<Skeleton className="h-6 w-12 rounded-full" key={j} />
 											))}
 										</div>
-										<div className="mt-auto flex gap-3">
-											<Skeleton className="h-4 w-16" />
-											<Skeleton className="h-4 w-16" />
+										<div className="flex justify-between items-center mt-8">
+											<Skeleton className="h-8 w-20 rounded-xl" />
+											<Skeleton className="h-8 w-20 rounded-xl" />
 										</div>
-									</div>
-								</div>
+									</CardBody>
+								</CardContainer>
 							))}
 						</div>
 					</div>
