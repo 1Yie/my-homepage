@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 import type { Friend } from '@/hooks/friends/use-get-friends';
 
-import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
+import { DashboardHeaderTitle } from '@/components/page-title/dashboard-header-title';
 import {
 	AlertDialog,
 	AlertDialogClose,

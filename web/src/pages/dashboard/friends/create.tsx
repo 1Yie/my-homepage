@@ -1,5 +1,5 @@
-import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
 import { FriendForm } from '@/components/friend-form';
+import { DashboardHeaderTitle } from '@/components/page-title/dashboard-header-title';
 import { useTitle } from '@/hooks/use-page-meta';
 
 export function CreateFriendPage() {

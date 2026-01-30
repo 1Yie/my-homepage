@@ -1,5 +1,5 @@
-import { ArticleForm } from '@/components/article-form';
-import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
+import { ArticleForm } from '@/components/article/article-form';
+import { DashboardHeaderTitle } from '@/components/page-title/dashboard-header-title';
 import { useTitle } from '@/hooks/use-page-meta';
 
 export function CreateArticlePage() {

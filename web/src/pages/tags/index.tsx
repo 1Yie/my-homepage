@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import PageTitle from '@/components/page-title';
+import PageTitle from '@/components/page-title/page-title';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useGetTags } from '@/hooks/tags/use-get-tags';
 import { useSeo } from '@/hooks/use-page-meta';

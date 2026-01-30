@@ -1,9 +1,9 @@
 import { useParams } from 'react-router-dom';
 
-import BlogTOC from '@/components/blog-toc';
-import { Comments } from '@/components/comment';
+import BlogTOC from '@/components/blog/blog-toc';
+import { Comments } from '@/components/blog/comment';
 import { MarkdownRenderer } from '@/components/markdown-renderer';
-import PageTitle from '@/components/page-title';
+import PageTitle from '@/components/page-title/page-title';
 import { useGetArticleBySlug } from '@/hooks/article/use-get-article-by-slug';
 import { useSeo } from '@/hooks/use-page-meta';
 import { cn } from '@/lib/utils';

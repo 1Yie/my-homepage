@@ -2,7 +2,7 @@ import { Plus, Search, Tag as TagIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
+import { DashboardHeaderTitle } from '@/components/page-title/dashboard-header-title';
 import {
 	AlertDialog,
 	AlertDialogClose,

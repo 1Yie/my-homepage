@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 
-import { ArticleForm } from '@/components/article-form';
-import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
+import { ArticleForm } from '@/components/article/article-form';
+import { DashboardHeaderTitle } from '@/components/page-title/dashboard-header-title';
 import { Spinner } from '@/components/ui/spinner';
 import { useGetArticle } from '@/hooks/article/use-get-article';
 import { useTitle } from '@/hooks/use-page-meta';

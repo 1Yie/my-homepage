@@ -1,7 +1,7 @@
 import { FileQuestion, MoveLeft, Home } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
+import { DashboardHeaderTitle } from '@/components/page-title/dashboard-header-title';
 import { Button } from '@/components/ui/button';
 import { useTitle } from '@/hooks/use-page-meta';
 

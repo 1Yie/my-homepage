@@ -1,6 +1,6 @@
 import { Highlighter, Send, StickyNote } from 'lucide-react';
 
-import PageTitle from '@/components/page-title';
+import PageTitle from '@/components/page-title/page-title';
 import {
 	Accordion,
 	AccordionContent,

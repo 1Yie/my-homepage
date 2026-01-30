@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
-import { ArticleCard } from '@/components/article-card';
-import { ArticlePagination } from '@/components/article-pagination';
-import PageTitle from '@/components/page-title';
+import { ArticleCard } from '@/components/article/article-card';
+import { ArticlePagination } from '@/components/article/article-pagination';
+import PageTitle from '@/components/page-title/page-title';
 import { useGetArticlesByTag } from '@/hooks/article/use-get-articles-by-tag';
 import { useSeo } from '@/hooks/use-page-meta';
 

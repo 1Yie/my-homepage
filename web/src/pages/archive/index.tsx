@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 import type { Article } from '@/hooks/article/use-get-articles';
 
-import PageTitle from '@/components/page-title';
+import PageTitle from '@/components/page-title/page-title';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useGetArticles } from '@/hooks/article/use-get-articles';
 import { useSeo } from '@/hooks/use-page-meta';

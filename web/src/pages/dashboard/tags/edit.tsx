@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 
-import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
+import { DashboardHeaderTitle } from '@/components/page-title/dashboard-header-title';
 import { TagForm } from '@/components/tag-form';
 import { Spinner } from '@/components/ui/spinner';
 import { useGetTag } from '@/hooks/tags/use-get-tag';

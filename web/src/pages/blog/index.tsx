@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
-import { ArticleCard } from '@/components/article-card';
-import { ArticlePagination } from '@/components/article-pagination';
-import BlogPanel from '@/components/blog-panel';
-import PageTitle from '@/components/page-title';
+import { ArticleCard } from '@/components/article/article-card';
+import { ArticlePagination } from '@/components/article/article-pagination';
+import BlogPanel from '@/components/blog/blog-panel';
+import PageTitle from '@/components/page-title/page-title';
 import { useGetArticles } from '@/hooks/article/use-get-articles';
 import { useSeo } from '@/hooks/use-page-meta';
 

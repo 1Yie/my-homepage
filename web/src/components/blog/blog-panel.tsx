@@ -1,7 +1,7 @@
 import { Tags, Rss, Archive } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-import BlogSearch from '@/components/blog-search';
+import BlogSearch from '@/components/blog/blog-search';
 
 interface BlogPanelProps {
 	onSearchChange?: (value: string) => void;

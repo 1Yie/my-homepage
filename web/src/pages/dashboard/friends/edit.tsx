@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 
-import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
 import { FriendForm } from '@/components/friend-form';
+import { DashboardHeaderTitle } from '@/components/page-title/dashboard-header-title';
 import { Spinner } from '@/components/ui/spinner';
 import { useGetFriend } from '@/hooks/friends/use-get-friend';
 import { useTitle } from '@/hooks/use-page-meta';

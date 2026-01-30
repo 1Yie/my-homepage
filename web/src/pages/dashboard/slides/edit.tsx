@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 
-import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
+import { DashboardHeaderTitle } from '@/components/page-title/dashboard-header-title';
 import { SlideForm } from '@/components/slide-form';
 import { Spinner } from '@/components/ui/spinner';
 import { useGetSlide } from '@/hooks/slides/use-get-slide';

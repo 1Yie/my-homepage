@@ -12,7 +12,7 @@ import { useEffect } from 'react';
 import { Link, Navigate, Outlet, useLocation } from 'react-router-dom';
 
 import { authClient } from '@/api/client';
-import { DashboardHeader } from '@/components/dashboard-header';
+import { DashboardHeader } from '@/components/header/dashboard-header';
 import { ProgressBar } from '@/components/progress-bar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';

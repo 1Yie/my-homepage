@@ -1,4 +1,4 @@
-import { DashboardHeaderTitle } from '@/components/dashboard-header-title';
+import { DashboardHeaderTitle } from '@/components/page-title/dashboard-header-title';
 import { TagForm } from '@/components/tag-form';
 import { useTitle } from '@/hooks/use-page-meta';
 

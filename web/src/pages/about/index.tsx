@@ -13,8 +13,8 @@ import {
 } from 'react-icons/si';
 
 import Bun from '@/assets/bun.svg?react';
-import Project from '@/components/about/project';
-import PageTitle from '@/components/page-title';
+import PageTitle from '@/components/page-title/page-title';
+import Project from '@/components/project';
 import { Carousel } from '@/components/ui/carousel';
 import { Skeleton } from '@/components/ui/skeleton';
 import TiltedCard from '@/components/ui/tilted-card';

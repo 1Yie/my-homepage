@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 
 import { Footer } from '@/components/footer';
-import { Header } from '@/components/header';
+import { Header } from '@/components/header/home-header';
 import { ProgressBar } from '@/components/progress-bar';
 import { ScrollToTop } from '@/components/scroll-to-top';
 import {
