@@ -39,29 +39,18 @@ export const friendsRoutes = new Elysia({ prefix: '/friends' })
 
 	.get(
 		'/:id',
-		async ({ params }) => {
-			try {
-				const id = Number(params.id);
-				const friend = await getFriendById(id);
+		async ({ params, set }) => {
+			const friend = await getFriendById(Number(params.id));
 
-				if (!friend) {
-					return {
-						success: false,
-						error: 'Friend not found',
-					};
-				}
-
-				return {
-					success: true,
-					data: friend,
-				};
-			} catch (error) {
-				console.error('Failed to get friend:', error);
-				return {
-					success: false,
-					error: 'Failed to fetch friend',
-				};
+			if (!friend) {
+				set.status = 404;
+				throw new Error('Friend not found');
 			}
+
+			return {
+				success: true,
+				data: friend,
+			};
 		},
 		{
 			params: t.Object({ id: t.String({ description: '友链ID' }) }),

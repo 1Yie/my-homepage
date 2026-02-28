@@ -27,9 +27,12 @@ export const slidesRoutes = new Elysia({ prefix: '/slides' })
 	)
 	.get(
 		'/:id',
-		async ({ params }) => {
+		async ({ params, set }) => {
 			const slide = await getSlide(Number(params.id));
-			if (!slide) throw new Error('Slide not found');
+			if (!slide) {
+				set.status = 404;
+				throw new Error('Slide not found');
+			}
 			return { success: true, data: slide };
 		},
 		{

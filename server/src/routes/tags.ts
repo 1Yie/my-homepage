@@ -53,9 +53,12 @@ export const tagsRoutes = new Elysia({ prefix: '/tags' })
 
 	.get(
 		'/:id',
-		async ({ params }) => {
+		async ({ params, set }) => {
 			const tag = await getTagById(Number(params.id));
-			if (!tag) throw new Error('Tag not found');
+			if (!tag) {
+				set.status = 404;
+				throw new Error('Tag not found');
+			}
 			return { success: true, data: tag };
 		},
 		{
