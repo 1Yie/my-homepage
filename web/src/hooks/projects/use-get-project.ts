@@ -20,6 +20,13 @@ export function useGetProject(id: string | undefined) {
 
 			const response = await client.api.v1.projects({ id }).get();
 
+			if (response.error) {
+				if (Number(response.error.status) === 404) {
+					throw new Error('404');
+				}
+				throw new Error('Failed to fetch article');
+			}
+
 			const apiResponse = response.data as ApiResponse<Project>;
 			if (!apiResponse.success) {
 				throw new Error('Failed to fetch project');
@@ -35,5 +42,6 @@ export function useGetProject(id: string | undefined) {
 		loading: query.isLoading,
 		error: query.error?.message ?? null,
 		refetch: query.refetch,
+		isNotFound: query.error?.message === '404',
 	};
 }

@@ -15,6 +15,12 @@ export function useGetTag(id: string | undefined) {
 		queryFn: async () => {
 			if (!id) throw new Error('Tag ID is required');
 			const response = await client.api.v1.tags({ id }).get();
+			if (response.error) {
+				if (Number(response.error.status) === 404) {
+					throw new Error('404');
+				}
+				throw new Error('Failed to fetch article');
+			}
 			if (!response.data || !response.data.success) {
 				throw new Error('Failed to fetch tag');
 			}
@@ -27,5 +33,6 @@ export function useGetTag(id: string | undefined) {
 		tag: query.data,
 		loading: query.isLoading,
 		error: query.error?.message || null,
+		isNotFound: query.error?.message === '404',
 	};
 }

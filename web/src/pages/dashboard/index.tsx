@@ -7,6 +7,13 @@ import {
 	PlusCircle,
 	TrendingUp,
 	Users,
+	Rocket,
+	PencilLine,
+	RadioTower,
+	Newspaper,
+	Briefcase,
+	Aperture,
+	Handshake,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -164,7 +171,7 @@ export function DashboardPage() {
 				<Card>
 					<CardHeader>
 						<CardTitle className="text-3xl">
-							欢迎回来，{session?.user.name || 'unknown'}！
+							👋 欢迎回来，{session?.user.name || 'unknown'}！
 						</CardTitle>
 						<CardDescription>
 							这是您的后台管理仪表盘。您可以在这里管理文章、项目、相册等内容。
@@ -200,18 +207,20 @@ export function DashboardPage() {
 							<div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
 								<div>
 									<p className="text-muted-foreground">已发布</p>
-									<p className="font-semibold text-lg">
+									<p className="font-semibold text-lg flex items-center gap-1">
 										{loading
 											? '...'
 											: (dashboardData?.overview.publishedArticles ?? 0)}
+										<Rocket className="h-3 w-3" />
 									</p>
 								</div>
 								<div>
 									<p className="text-muted-foreground">草稿</p>
-									<p className="font-semibold text-lg">
+									<p className="font-semibold text-lg flex items-center gap-1">
 										{loading
 											? '...'
 											: (dashboardData?.overview.draftArticles ?? 0)}
+										<PencilLine className="h-3 w-3" />
 									</p>
 								</div>
 								<div>
@@ -225,15 +234,16 @@ export function DashboardPage() {
 								</div>
 								<div>
 									<p className="text-muted-foreground">7日活动</p>
-									<p className="font-semibold text-lg">
+									<p className="font-semibold text-lg flex items-center gap-1">
 										{loading ? '...' : (recentTotalActivity ?? 0)}
+										<RadioTower className="h-3 w-3" />
 									</p>
 								</div>
 							</div>
 						</div>
 
 						{/* Top Tags */}
-						{dashboardData && dashboardData.topTags.length > 0 && (
+						{/* {dashboardData && dashboardData.topTags.length > 0 && (
 							<div className="mt-2">
 								<h4 className="text-sm font-semibold mb-3">热门标签</h4>
 								<div className="flex flex-wrap gap-2">
@@ -244,24 +254,27 @@ export function DashboardPage() {
 									))}
 								</div>
 							</div>
-						)}
+						)} */}
 					</CardContent>
 				</Card>
 
 				{/* Four Column Layout - Articles, Projects, Slides, Friends */}
-				<div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-4">
+				<div className="grid gap-4 grid-cols-2">
 					{/* Recent Articles Card */}
 					<Card className="flex flex-col h-full">
-						<CardHeader>
-							<CardTitle>最近文章</CardTitle>
-							<CardDescription>最新创建或编辑的文章</CardDescription>
+						<CardHeader className="pb-3">
+							<CardTitle className="flex items-center gap-1 text-lg">
+								<Newspaper className="h-5 w-5" />
+								最近文章
+							</CardTitle>
+							<CardDescription className="text-xs">
+								最新创建或编辑的文章
+							</CardDescription>
 						</CardHeader>
-						<CardContent className="flex flex-col flex-1">
+						<CardContent className="flex flex-col flex-1 pt-0">
 							{loading ? (
 								<div className="flex items-center justify-center py-8">
-									<div className="text-center">
-										<Spinner className="mx-auto" size={32} />
-									</div>
+									<Spinner className="mx-auto" size={32} />
 								</div>
 							) : !dashboardData ||
 							  dashboardData.recentArticles.length === 0 ? (
@@ -282,38 +295,37 @@ export function DashboardPage() {
 								</div>
 							) : (
 								<>
-									<div className="space-y-4 flex-1">
+									<div className="flex-1 divide-y divide-border">
 										{dashboardData.recentArticles.slice(0, 5).map((article) => (
-											<div className="flex items-start gap-3" key={article.id}>
-												<div className="flex-1 space-y-1 min-w-0">
+											<div
+												className="flex items-center gap-3 py-2.5"
+												key={article.id}
+											>
+												<div className="flex-1 min-w-0">
 													<Link to={`/dashboard/articles/edit/${article.id}`}>
 														<p
-															className="text-sm font-medium leading-tight
-																hover:underline truncate"
+															className="text-sm font-medium truncate
+																hover:underline underline-offset-2"
 														>
 															{article.title}
 														</p>
 													</Link>
-													<div
-														className="flex items-center gap-2 text-xs
-															text-muted-foreground"
-													>
-														<span>{formatDate(article.createdAt)}</span>
+													<p className="text-xs text-muted-foreground mt-0.5">
+														{formatDate(article.createdAt)}
 														{article.tags.length > 0 && (
-															<>
-																<span>·</span>
-																<span className="truncate">
-																	{article.tags
-																		.slice(0, 2)
-																		.map((t) => t.name)
-																		.join(', ')}
-																</span>
-															</>
+															<span
+																className="before:content-['·'] before:mx-1.5"
+															>
+																{article.tags
+																	.slice(0, 2)
+																	.map((t) => t.name)
+																	.join(', ')}
+															</span>
 														)}
-													</div>
+													</p>
 												</div>
 												<Badge
-													className="shrink-0"
+													className="shrink-0 text-xs"
 													variant={article.isDraft ? 'secondary' : 'default'}
 												>
 													{article.isDraft ? '草稿' : '已发布'}
@@ -322,7 +334,7 @@ export function DashboardPage() {
 										))}
 									</div>
 									<Button
-										className="w-full mt-4"
+										className="w-full mt-3"
 										render={<Link to="/dashboard/articles">查看全部</Link>}
 										size="sm"
 										variant="outline"
@@ -334,16 +346,19 @@ export function DashboardPage() {
 
 					{/* Recent Projects Card */}
 					<Card className="flex flex-col h-full">
-						<CardHeader>
-							<CardTitle>最近作品</CardTitle>
-							<CardDescription>最新添加的项目展示</CardDescription>
+						<CardHeader className="pb-3">
+							<CardTitle className="flex items-center gap-1 text-lg">
+								<Briefcase className="h-5 w-5" />
+								最近作品
+							</CardTitle>
+							<CardDescription className="text-xs">
+								最新添加的项目展示
+							</CardDescription>
 						</CardHeader>
-						<CardContent className="flex flex-col flex-1">
+						<CardContent className="flex flex-col flex-1 pt-0">
 							{loading ? (
 								<div className="flex items-center justify-center py-8">
-									<div className="text-center">
-										<Spinner className="mx-auto" size={32} />
-									</div>
+									<Spinner className="mx-auto" size={32} />
 								</div>
 							) : !dashboardData ||
 							  dashboardData.recentProjects.length === 0 ? (
@@ -364,32 +379,33 @@ export function DashboardPage() {
 								</div>
 							) : (
 								<>
-									<div className="space-y-4 flex-1">
+									<div className="flex-1 divide-y divide-border">
 										{dashboardData.recentProjects.slice(0, 3).map((project) => (
-											<div className="flex items-start gap-3" key={project.id}>
+											<div className="flex gap-3 py-2.5" key={project.id}>
 												{project.imageUrl && (
 													<img
 														alt={project.name}
-														className="w-16 h-16 rounded object-cover shrink-0"
+														className="w-14 h-14 rounded-md object-cover
+															shrink-0"
 														src={project.imageUrl}
 													/>
 												)}
 												<div className="flex-1 min-w-0">
 													<Link to={`/dashboard/projects/edit/${project.id}`}>
 														<p
-															className="text-sm font-medium leading-tight
-																hover:underline"
+															className="text-sm font-medium leading-snug
+																hover:underline underline-offset-2"
 														>
 															{project.name}
 														</p>
 													</Link>
 													<p
-														className="text-xs text-muted-foreground mt-1
-															line-clamp-2"
+														className="text-xs text-muted-foreground mt-0.5
+															line-clamp-1"
 													>
 														{project.description}
 													</p>
-													<div className="flex flex-wrap gap-1 mt-2">
+													<div className="flex flex-wrap gap-1 mt-1.5">
 														{project.tags.slice(0, 3).map((tag, idx) => (
 															<Badge
 																className="text-xs"
@@ -405,7 +421,7 @@ export function DashboardPage() {
 										))}
 									</div>
 									<Button
-										className="w-full mt-4"
+										className="w-full mt-3"
 										render={<Link to="/dashboard/projects">查看全部</Link>}
 										size="sm"
 										variant="outline"
@@ -417,16 +433,19 @@ export function DashboardPage() {
 
 					{/* Recent Slides Card */}
 					<Card className="flex flex-col h-full">
-						<CardHeader>
-							<CardTitle>最近图片</CardTitle>
-							<CardDescription>最新添加的相册图片</CardDescription>
+						<CardHeader className="pb-3">
+							<CardTitle className="flex items-center gap-1 text-lg">
+								<Aperture className="h-5 w-5" />
+								最近图片
+							</CardTitle>
+							<CardDescription className="text-xs">
+								最新添加的相册图片
+							</CardDescription>
 						</CardHeader>
-						<CardContent className="flex flex-col flex-1">
+						<CardContent className="flex flex-col flex-1 pt-0">
 							{loading ? (
 								<div className="flex items-center justify-center py-8">
-									<div className="text-center">
-										<Spinner className="mx-auto" size={32} />
-									</div>
+									<Spinner className="mx-auto" size={32} />
 								</div>
 							) : !dashboardData || dashboardData.recentSlides.length === 0 ? (
 								<div
@@ -446,24 +465,27 @@ export function DashboardPage() {
 								</div>
 							) : (
 								<>
-									<div className="space-y-4 flex-1">
+									<div className="flex-1 divide-y divide-border">
 										{dashboardData.recentSlides.slice(0, 3).map((slide) => (
-											<div className="flex items-center gap-3" key={slide.id}>
+											<div
+												className="flex items-center gap-3 py-2.5"
+												key={slide.id}
+											>
 												<img
 													alt={slide.title}
-													className="w-20 h-14 rounded object-cover shrink-0"
+													className="w-20 h-12 rounded-md object-cover shrink-0"
 													src={slide.src}
 												/>
 												<div className="flex-1 min-w-0">
 													<Link to={`/dashboard/slides/edit/${slide.id}`}>
 														<p
-															className="text-sm font-medium leading-tight
-																hover:underline truncate"
+															className="text-sm font-medium truncate
+																hover:underline underline-offset-2"
 														>
 															{slide.title}
 														</p>
 													</Link>
-													<p className="text-xs text-muted-foreground mt-1">
+													<p className="text-xs text-muted-foreground mt-0.5">
 														{formatDate(slide.createdAt)}
 													</p>
 												</div>
@@ -471,7 +493,7 @@ export function DashboardPage() {
 										))}
 									</div>
 									<Button
-										className="w-full mt-4"
+										className="w-full mt-3"
 										render={<Link to="/dashboard/slides">查看全部</Link>}
 										size="sm"
 										variant="outline"
@@ -483,16 +505,19 @@ export function DashboardPage() {
 
 					{/* Recent Friends Card */}
 					<Card className="flex flex-col h-full">
-						<CardHeader>
-							<CardTitle>最近友链</CardTitle>
-							<CardDescription>最新添加的友情链接</CardDescription>
+						<CardHeader className="pb-3">
+							<CardTitle className="flex items-center gap-1 text-lg">
+								<Handshake className="h-5 w-5" />
+								最近友链
+							</CardTitle>
+							<CardDescription className="text-xs">
+								最新添加的友情链接
+							</CardDescription>
 						</CardHeader>
-						<CardContent className="flex flex-col flex-1">
+						<CardContent className="flex flex-col flex-1 pt-0">
 							{loading ? (
 								<div className="flex items-center justify-center py-8">
-									<div className="text-center">
-										<Spinner className="mx-auto" size={32} />
-									</div>
+									<Spinner className="mx-auto" size={32} />
 								</div>
 							) : !dashboardData || dashboardData.recentFriends.length === 0 ? (
 								<div
@@ -512,41 +537,48 @@ export function DashboardPage() {
 								</div>
 							) : (
 								<>
-									<div className="space-y-4 flex-1">
+									<div className="flex-1 divide-y divide-border">
 										{dashboardData.recentFriends.slice(0, 3).map((friend) => (
-											<div className="flex items-center gap-3" key={friend.id}>
+											<div
+												className="flex items-center gap-3 py-2.5"
+												key={friend.id}
+											>
 												<img
 													alt={friend.name}
-													className="w-12 h-12 rounded-full object-cover
-														shrink-0"
+													className="w-9 h-9 rounded-full object-cover shrink-0"
 													src={friend.image}
 												/>
 												<div className="flex-1 min-w-0">
-													<Link to={`/dashboard/friends/edit/${friend.id}`}>
-														<p
-															className="text-sm font-medium leading-tight
-																hover:underline truncate"
-														>
-															{friend.name}
-														</p>
-													</Link>
+													<div className="flex items-center gap-1.5">
+														<Link to={`/dashboard/friends/edit/${friend.id}`}>
+															<p
+																className="text-sm font-medium truncate
+																	hover:underline underline-offset-2"
+															>
+																{friend.name}
+															</p>
+														</Link>
+														{friend.pinned && (
+															<Badge
+																className="shrink-0 text-xs"
+																variant="secondary"
+															>
+																置顶
+															</Badge>
+														)}
+													</div>
 													<p
-														className="text-xs text-muted-foreground mt-1
+														className="text-xs text-muted-foreground mt-0.5
 															truncate"
 													>
 														{friend.description}
 													</p>
 												</div>
-												{friend.pinned && (
-													<Badge className="shrink-0" variant="secondary">
-														置顶
-													</Badge>
-												)}
 											</div>
 										))}
 									</div>
 									<Button
-										className="w-full mt-4"
+										className="w-full mt-3"
 										render={<Link to="/dashboard/friends">查看全部</Link>}
 										size="sm"
 										variant="outline"

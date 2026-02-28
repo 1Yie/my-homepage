@@ -6,25 +6,28 @@ import { Spinner } from '@/components/ui/spinner';
 import { useGetSlide } from '@/hooks/slides/use-get-slide';
 import { useTitle } from '@/hooks/use-page-meta';
 
+import { DashboardNotFoundPage } from '../not-found';
+
 export function EditSlidePage() {
 	const { id } = useParams<{ id: string }>();
-	const { slide, loading, error } = useGetSlide(id);
+	const { slide, loading, error, isNotFound } = useGetSlide(id);
 
 	useTitle(`编辑图片 ${slide?.title || ''}`);
 
 	if (loading) {
 		return (
-			<div className="flex flex-1 flex-col gap-4 p-4">
-				<div className="flex items-center justify-center py-8">
-					<div className="text-center">
-						<Spinner className="mx-auto" size={32} />
-					</div>
+			<div className="flex flex-1 items-center justify-center">
+				<div className="text-center">
+					<Spinner className="mx-auto" size={32} />
 				</div>
 			</div>
 		);
 	}
 
-	if (error || !slide) {
+	if (error) {
+		if (isNotFound) {
+			return <DashboardNotFoundPage />;
+		}
 		return (
 			<div className="flex flex-1 flex-col gap-4 p-4">
 				<div className="flex items-center justify-center py-8">
@@ -35,12 +38,12 @@ export function EditSlidePage() {
 	}
 
 	const initialFormData = {
-		title: slide.title,
-		src: slide.src,
-		button: slide.button || '',
-		link: slide.link || '',
-		newTab: slide.newTab,
-		order: slide.order,
+		title: slide?.title,
+		src: slide?.src,
+		button: slide?.button || '',
+		link: slide?.link || '',
+		newTab: slide?.newTab,
+		order: slide?.order,
 	};
 
 	return (

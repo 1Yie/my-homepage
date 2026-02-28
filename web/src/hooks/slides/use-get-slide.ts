@@ -27,6 +27,14 @@ export function useGetSlide(id: string | undefined) {
 				throw new Error('Slide ID is required');
 			}
 			const response = await client.api.v1.slides({ id }).get();
+
+			if (response.error) {
+				if (Number(response.error.status) === 404) {
+					throw new Error('404');
+				}
+				throw new Error('Failed to fetch article');
+			}
+
 			const apiResponse = response.data as ApiResponse<Slide>;
 			if (!apiResponse.success || !apiResponse.data) {
 				throw new Error('Failed to fetch slide');
@@ -40,5 +48,6 @@ export function useGetSlide(id: string | undefined) {
 		slide: query.data,
 		loading: query.isLoading,
 		error: query.error?.message || null,
+		isNotFound: query.error?.message === '404',
 	};
 }

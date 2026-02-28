@@ -29,6 +29,12 @@ export function useGetArticle(id: string | undefined) {
 		queryFn: async () => {
 			if (!id) throw new Error('Article ID is required');
 			const response = await client.api.v1.articles({ id }).get();
+			if (response.error) {
+				if (Number(response.error.status) === 404) {
+					throw new Error('404');
+				}
+				throw new Error('Failed to fetch article');
+			}
 			if (!response.data || !response.data.success) {
 				throw new Error('Failed to fetch article');
 			}
@@ -41,5 +47,6 @@ export function useGetArticle(id: string | undefined) {
 		article: query.data,
 		loading: query.isLoading,
 		error: query.error?.message || null,
+		isNotFound: query.error?.message === '404',
 	};
 }

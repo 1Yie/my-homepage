@@ -6,9 +6,11 @@ import { Spinner } from '@/components/ui/spinner';
 import { useGetTag } from '@/hooks/tags/use-get-tag';
 import { useTitle } from '@/hooks/use-page-meta';
 
+import { DashboardNotFoundPage } from '../not-found';
+
 export function EditTagPage() {
 	const { id } = useParams<{ id: string }>();
-	const { tag, loading, error } = useGetTag(id);
+	const { tag, loading, error, isNotFound } = useGetTag(id);
 
 	useTitle(`编辑标签 ${tag?.name || ''}`);
 
@@ -20,17 +22,16 @@ export function EditTagPage() {
 
 	if (loading) {
 		return (
-			<div className="flex flex-1 flex-col gap-4 p-4">
-				<div className="flex items-center justify-center py-8">
-					<div className="text-center">
-						<Spinner className="mx-auto" size={32} />
-					</div>
+			<div className="flex flex-1 items-center justify-center">
+				<div className="text-center">
+					<Spinner className="mx-auto" size={32} />
 				</div>
 			</div>
 		);
 	}
 
 	if (error) {
+		if (isNotFound) return <DashboardNotFoundPage />;
 		return (
 			<div className="flex flex-1 flex-col gap-4 p-4">
 				<div className="flex items-center justify-center py-8">

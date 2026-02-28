@@ -6,9 +6,11 @@ import { Spinner } from '@/components/ui/spinner';
 import { useGetFriend } from '@/hooks/friends/use-get-friend';
 import { useTitle } from '@/hooks/use-page-meta';
 
+import { DashboardNotFoundPage } from '../not-found';
+
 export function EditFriendPage() {
 	const { id } = useParams<{ id: string }>();
-	const { friend, loading: fetchLoading, error } = useGetFriend(id);
+	const { friend, loading: fetchLoading, error, isNotFound } = useGetFriend(id);
 
 	const initialFormData = friend
 		? {
@@ -39,6 +41,7 @@ export function EditFriendPage() {
 	}
 
 	if (error) {
+		if (isNotFound) return <DashboardNotFoundPage />;
 		return (
 			<div className="flex flex-1 items-center justify-center">
 				<p className="text-muted-foreground">加载友链失败: {error}</p>

@@ -6,9 +6,16 @@ import { Spinner } from '@/components/ui/spinner';
 import { useGetProject } from '@/hooks/projects/use-get-project';
 import { useTitle } from '@/hooks/use-page-meta';
 
+import { DashboardNotFoundPage } from '../not-found';
+
 export function EditProjectPage() {
 	const { id } = useParams<{ id: string }>();
-	const { project, loading: fetchLoading, error } = useGetProject(id);
+	const {
+		project,
+		loading: fetchLoading,
+		error,
+		isNotFound,
+	} = useGetProject(id);
 
 	useTitle(`编辑项目 ${project?.name || ''}`);
 
@@ -26,17 +33,16 @@ export function EditProjectPage() {
 
 	if (fetchLoading) {
 		return (
-			<div className="flex flex-1 flex-col gap-4 p-4">
-				<div className="flex items-center justify-center py-8">
-					<div className="text-center">
-						<Spinner className="mx-auto" size={32} />
-					</div>
+			<div className="flex flex-1 items-center justify-center">
+				<div className="text-center">
+					<Spinner className="mx-auto" size={32} />
 				</div>
 			</div>
 		);
 	}
 
 	if (error) {
+		if (isNotFound) return <DashboardNotFoundPage />;
 		return (
 			<div className="flex flex-1 flex-col gap-4 p-4">
 				<div className="flex items-center justify-center py-8">
