@@ -100,6 +100,7 @@ export function BlogDetailPage() {
 				title={article.title}
 				type="blog"
 				updatedAt={article.updatedAt}
+				view={article.views}
 			/>
 			<div className="h-full w-full">
 				<section className="section-base">

@@ -1,4 +1,4 @@
-import { CalendarDays, Clock, Edit } from 'lucide-react';
+import { CalendarDays, Clock, Edit, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 import type { Article } from '@/hooks/article/use-get-articles';
@@ -89,6 +89,12 @@ export function ArticleCard({ article }: ArticleCardProps) {
 											<div className="flex items-center gap-1">
 												<Edit className="w-4 h-4" />
 												<span>{formatDateTime(updated)}</span>
+											</div>
+										)}
+										{article.views && (
+											<div className="flex items-center gap-1">
+												<Eye className="w-4 h-4" />
+												<span>{article.views}</span>
 											</div>
 										)}
 									</>

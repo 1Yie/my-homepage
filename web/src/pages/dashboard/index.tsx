@@ -204,7 +204,7 @@ export function DashboardPage() {
 								<BarChart3 className="h-4 w-4" />
 								系统概览
 							</h4>
-							<div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+							<div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
 								<div>
 									<p className="text-muted-foreground">已发布</p>
 									<p className="font-semibold text-lg flex items-center gap-1">
@@ -221,6 +221,15 @@ export function DashboardPage() {
 											? '...'
 											: (dashboardData?.overview.draftArticles ?? 0)}
 										<PencilLine className="h-3 w-3" />
+									</p>
+								</div>
+								<div>
+									<p className="text-muted-foreground">总阅读量</p>
+									<p className="font-semibold text-lg flex items-center gap-1">
+										{loading
+											? '...'
+											: (dashboardData?.overview.totalArticleViews ?? 0)}
+										<TrendingUp className="h-3 w-3" />
 									</p>
 								</div>
 								<div>
@@ -259,7 +268,7 @@ export function DashboardPage() {
 				</Card>
 
 				{/* Four Column Layout - Articles, Projects, Slides, Friends */}
-				<div className="grid gap-4 grid-cols-2">
+				<div className="grid gap-4 lg:grid-cols-2">
 					{/* Recent Articles Card */}
 					<Card className="flex flex-col h-full">
 						<CardHeader className="pb-3">

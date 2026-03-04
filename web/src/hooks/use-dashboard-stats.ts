@@ -12,11 +12,13 @@ export interface DashboardData {
 		totalTags: number;
 		totalFriends: number;
 		totalUsers: number;
+		totalArticleViews: number;
 	};
 	recentArticles: Array<{
 		id: number;
 		title: string;
 		slug: string;
+		views: number;
 		isDraft: boolean;
 		createdAt: Date;
 		updatedAt: Date;

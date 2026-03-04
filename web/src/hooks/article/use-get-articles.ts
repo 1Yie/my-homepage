@@ -13,6 +13,7 @@ export interface Article {
 	updatedAt: Date;
 	authorId: string;
 	readingTime?: number;
+	views?: number;
 	tags: {
 		id: number;
 		name: string;

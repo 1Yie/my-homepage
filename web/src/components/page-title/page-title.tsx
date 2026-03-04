@@ -1,4 +1,4 @@
-import { CalendarDays, Edit } from 'lucide-react';
+import { CalendarDays, Edit, Eye } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 import SplitText from '@/components/ui/split-text';
@@ -11,6 +11,7 @@ interface PageTitleProps {
 	backgroundImage?: string;
 	createdAt?: Date | string;
 	updatedAt?: Date | string;
+	view?: number;
 	tags?: { id: number; name: string }[];
 	loading?: boolean;
 }
@@ -24,6 +25,7 @@ export default function PageTitle({
 	createdAt,
 	updatedAt,
 	tags,
+	view,
 	loading = false,
 }: PageTitleProps) {
 	const displayText = subtitle ? `${title} / ${subtitle}` : title || '';
@@ -139,6 +141,12 @@ export default function PageTitle({
 								<div className="flex items-center gap-1">
 									<Edit className="w-4 h-4" />
 									<span>{displayUpdatedAt}</span>
+								</div>
+							)}
+							{view && (
+								<div className="flex items-center gap-1">
+									<Eye className="w-5 h-5" />
+									<span>{view}</span>
 								</div>
 							)}
 						</div>
