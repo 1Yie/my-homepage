@@ -127,8 +127,30 @@ export const articlesRoutes = new Elysia({ prefix: '/articles' })
 	)
 	.get(
 		'/slug/:slug',
-		async ({ params, set }) => {
-			const article = await getPublishedArticleBySlug(params.slug);
+		async ({ params, request, set }) => {
+			let visitorKey: string | undefined;
+			try {
+				const session = await auth.api.getSession({ headers: request.headers });
+				if (session) {
+					visitorKey = `user:${session.user.id}`;
+				} else {
+					const headers = request.headers;
+					const ip =
+						headers.get('x-forwarded-for') ||
+						headers.get('x-real-ip') ||
+						headers.get('cf-connecting-ip') ||
+						headers.get('true-client-ip') ||
+						'unknown';
+					const ua = headers.get('user-agent') || '';
+					visitorKey = `anon:${ip}:${ua}`;
+				}
+			} catch (e) {
+				console.log(e);
+			}
+
+			const article = await getPublishedArticleBySlug(params.slug, {
+				visitorKey,
+			});
 			if (!article) {
 				set.status = 404;
 				throw new Error('Article not found');

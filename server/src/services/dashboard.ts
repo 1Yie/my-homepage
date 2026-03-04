@@ -11,6 +11,7 @@ export interface DashboardStats {
 		totalTags: number;
 		totalFriends: number;
 		totalUsers: number;
+		totalArticleViews: number;
 	};
 
 	// 最近文章（最新 10 篇）
@@ -18,6 +19,7 @@ export interface DashboardStats {
 		id: number;
 		title: string;
 		slug: string;
+		views: number;
 		isDraft: boolean;
 		createdAt: Date;
 		updatedAt: Date;
@@ -122,6 +124,14 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 		db.friend.count(),
 		db.user.count(),
 	]);
+
+	// 文章总阅读数
+	const totalArticleViewsResult = await db.article.aggregate({
+		_sum: {
+			views: true,
+		},
+	});
+	const totalArticleViews = totalArticleViewsResult._sum?.views ?? 0;
 
 	// 2. 获取最近 10 篇文章
 	const recentArticles = await db.article.findMany({
@@ -341,11 +351,13 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 			totalTags,
 			totalFriends,
 			totalUsers,
+			totalArticleViews,
 		},
 		recentArticles: recentArticles.map((article) => ({
 			id: article.id,
 			title: article.title,
 			slug: article.slug,
+			views: article.views,
 			isDraft: article.isDraft,
 			createdAt: article.createdAt,
 			updatedAt: article.updatedAt,

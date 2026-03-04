@@ -3,9 +3,39 @@ import type { createArticleSchema, updateArticleSchema } from '../lib/schema';
 import { Prisma } from '../../prisma/generated/prisma/client';
 import { db } from '../lib/db';
 
+const VIEW_TTL_MS = 1000 * 60 * 60; // 1 hour
+const viewCache = new Map<string, number>();
+
+function shouldCountView(
+	articleId: number,
+	visitorKey: string,
+	ttl = VIEW_TTL_MS
+) {
+	try {
+		const key = `${articleId}:${visitorKey}`;
+		const now = Date.now();
+		const last = viewCache.get(key);
+		if (!last || now - last > ttl) {
+			viewCache.set(key, now);
+			return true;
+		}
+		return false;
+	} catch (e) {
+		console.log(e);
+		return true;
+	}
+}
+
+setInterval(() => {
+	const now = Date.now();
+	for (const [k, ts] of viewCache) {
+		if (now - ts > VIEW_TTL_MS * 2) viewCache.delete(k);
+	}
+}, 1000 * 60);
+
 function estimateReadingTime(content: string): number {
 	const plainText = content
-		.replace(/<[^>]*>/g, '') // Remove HTML tags
+		.replace(/<[^>]*>/g, '')
 		.replace(/^#+\s*/gm, '')
 		.replace(/\[[^\]]+\]\([^)]+\)/g, '$1')
 		.replace(/[*_`]/g, '')
@@ -168,12 +198,12 @@ export async function getPublishedArticles(
 	};
 }
 
-export async function getPublishedArticleBySlug(slug: string) {
+export async function getPublishedArticleBySlug(
+	slug: string,
+	options?: { visitorKey?: string; ttlMs?: number }
+) {
 	const article = await db.article.findUnique({
-		where: {
-			slug,
-			isDraft: false,
-		},
+		where: { slug },
 		include: {
 			tags: true,
 			author: {
@@ -185,14 +215,51 @@ export async function getPublishedArticleBySlug(slug: string) {
 		},
 	});
 
-	if (article) {
+	if (!article || article.isDraft) return null;
+
+	const visitorKey = options?.visitorKey;
+	const ttl = options?.ttlMs ?? VIEW_TTL_MS;
+
+	if (visitorKey) {
+		const should = shouldCountView(article.id, visitorKey, ttl);
+		if (should) {
+			const updated = await db.article.update({
+				where: { id: article.id },
+				data: { views: { increment: 1 } },
+				include: {
+					tags: true,
+					author: {
+						select: { id: true, name: true },
+					},
+				},
+			});
+
+			return {
+				...updated,
+				readingTime: estimateReadingTime(updated.content),
+			};
+		}
+		// not counting this view; return current article (views included)
 		return {
 			...article,
 			readingTime: estimateReadingTime(article.content),
 		};
 	}
 
-	return null;
+	// No visitorKey provided: fallback to always increment
+	const updated = await db.article.update({
+		where: { id: article.id },
+		data: { views: { increment: 1 } },
+		include: {
+			tags: true,
+			author: { select: { id: true, name: true } },
+		},
+	});
+
+	return {
+		...updated,
+		readingTime: estimateReadingTime(updated.content),
+	};
 }
 
 export async function getPublishedArticlesByTag(

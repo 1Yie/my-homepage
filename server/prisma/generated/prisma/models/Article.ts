@@ -28,10 +28,12 @@ export type AggregateArticle = {
 
 export type ArticleAvgAggregateOutputType = {
 	id: number | null;
+	views: number | null;
 };
 
 export type ArticleSumAggregateOutputType = {
 	id: number | null;
+	views: number | null;
 };
 
 export type ArticleMinAggregateOutputType = {
@@ -40,6 +42,7 @@ export type ArticleMinAggregateOutputType = {
 	slug: string | null;
 	content: string | null;
 	headerImage: string | null;
+	views: number | null;
 	isDraft: boolean | null;
 	createdAt: Date | null;
 	updatedAt: Date | null;
@@ -52,6 +55,7 @@ export type ArticleMaxAggregateOutputType = {
 	slug: string | null;
 	content: string | null;
 	headerImage: string | null;
+	views: number | null;
 	isDraft: boolean | null;
 	createdAt: Date | null;
 	updatedAt: Date | null;
@@ -64,6 +68,7 @@ export type ArticleCountAggregateOutputType = {
 	slug: number;
 	content: number;
 	headerImage: number;
+	views: number;
 	isDraft: number;
 	createdAt: number;
 	updatedAt: number;
@@ -73,10 +78,12 @@ export type ArticleCountAggregateOutputType = {
 
 export type ArticleAvgAggregateInputType = {
 	id?: true;
+	views?: true;
 };
 
 export type ArticleSumAggregateInputType = {
 	id?: true;
+	views?: true;
 };
 
 export type ArticleMinAggregateInputType = {
@@ -85,6 +92,7 @@ export type ArticleMinAggregateInputType = {
 	slug?: true;
 	content?: true;
 	headerImage?: true;
+	views?: true;
 	isDraft?: true;
 	createdAt?: true;
 	updatedAt?: true;
@@ -97,6 +105,7 @@ export type ArticleMaxAggregateInputType = {
 	slug?: true;
 	content?: true;
 	headerImage?: true;
+	views?: true;
 	isDraft?: true;
 	createdAt?: true;
 	updatedAt?: true;
@@ -109,6 +118,7 @@ export type ArticleCountAggregateInputType = {
 	slug?: true;
 	content?: true;
 	headerImage?: true;
+	views?: true;
 	isDraft?: true;
 	createdAt?: true;
 	updatedAt?: true;
@@ -215,6 +225,7 @@ export type ArticleGroupByOutputType = {
 	slug: string;
 	content: string;
 	headerImage: string | null;
+	views: number;
 	isDraft: boolean;
 	createdAt: Date;
 	updatedAt: Date;
@@ -248,6 +259,7 @@ export type ArticleWhereInput = {
 	slug?: Prisma.StringFilter<'Article'> | string;
 	content?: Prisma.StringFilter<'Article'> | string;
 	headerImage?: Prisma.StringNullableFilter<'Article'> | string | null;
+	views?: Prisma.IntFilter<'Article'> | number;
 	isDraft?: Prisma.BoolFilter<'Article'> | boolean;
 	createdAt?: Prisma.DateTimeFilter<'Article'> | Date | string;
 	updatedAt?: Prisma.DateTimeFilter<'Article'> | Date | string;
@@ -262,6 +274,7 @@ export type ArticleOrderByWithRelationInput = {
 	slug?: Prisma.SortOrder;
 	content?: Prisma.SortOrder;
 	headerImage?: Prisma.SortOrderInput | Prisma.SortOrder;
+	views?: Prisma.SortOrder;
 	isDraft?: Prisma.SortOrder;
 	createdAt?: Prisma.SortOrder;
 	updatedAt?: Prisma.SortOrder;
@@ -280,6 +293,7 @@ export type ArticleWhereUniqueInput = Prisma.AtLeast<
 		title?: Prisma.StringFilter<'Article'> | string;
 		content?: Prisma.StringFilter<'Article'> | string;
 		headerImage?: Prisma.StringNullableFilter<'Article'> | string | null;
+		views?: Prisma.IntFilter<'Article'> | number;
 		isDraft?: Prisma.BoolFilter<'Article'> | boolean;
 		createdAt?: Prisma.DateTimeFilter<'Article'> | Date | string;
 		updatedAt?: Prisma.DateTimeFilter<'Article'> | Date | string;
@@ -296,6 +310,7 @@ export type ArticleOrderByWithAggregationInput = {
 	slug?: Prisma.SortOrder;
 	content?: Prisma.SortOrder;
 	headerImage?: Prisma.SortOrderInput | Prisma.SortOrder;
+	views?: Prisma.SortOrder;
 	isDraft?: Prisma.SortOrder;
 	createdAt?: Prisma.SortOrder;
 	updatedAt?: Prisma.SortOrder;
@@ -323,6 +338,7 @@ export type ArticleScalarWhereWithAggregatesInput = {
 		| Prisma.StringNullableWithAggregatesFilter<'Article'>
 		| string
 		| null;
+	views?: Prisma.IntWithAggregatesFilter<'Article'> | number;
 	isDraft?: Prisma.BoolWithAggregatesFilter<'Article'> | boolean;
 	createdAt?: Prisma.DateTimeWithAggregatesFilter<'Article'> | Date | string;
 	updatedAt?: Prisma.DateTimeWithAggregatesFilter<'Article'> | Date | string;
@@ -334,6 +350,7 @@ export type ArticleCreateInput = {
 	slug: string;
 	content: string;
 	headerImage?: string | null;
+	views?: number;
 	isDraft?: boolean;
 	createdAt?: Date | string;
 	updatedAt?: Date | string;
@@ -347,6 +364,7 @@ export type ArticleUncheckedCreateInput = {
 	slug: string;
 	content: string;
 	headerImage?: string | null;
+	views?: number;
 	isDraft?: boolean;
 	createdAt?: Date | string;
 	updatedAt?: Date | string;
@@ -359,6 +377,7 @@ export type ArticleUpdateInput = {
 	slug?: Prisma.StringFieldUpdateOperationsInput | string;
 	content?: Prisma.StringFieldUpdateOperationsInput | string;
 	headerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+	views?: Prisma.IntFieldUpdateOperationsInput | number;
 	isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -372,6 +391,7 @@ export type ArticleUncheckedUpdateInput = {
 	slug?: Prisma.StringFieldUpdateOperationsInput | string;
 	content?: Prisma.StringFieldUpdateOperationsInput | string;
 	headerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+	views?: Prisma.IntFieldUpdateOperationsInput | number;
 	isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -385,6 +405,7 @@ export type ArticleCreateManyInput = {
 	slug: string;
 	content: string;
 	headerImage?: string | null;
+	views?: number;
 	isDraft?: boolean;
 	createdAt?: Date | string;
 	updatedAt?: Date | string;
@@ -396,6 +417,7 @@ export type ArticleUpdateManyMutationInput = {
 	slug?: Prisma.StringFieldUpdateOperationsInput | string;
 	content?: Prisma.StringFieldUpdateOperationsInput | string;
 	headerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+	views?: Prisma.IntFieldUpdateOperationsInput | number;
 	isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -407,6 +429,7 @@ export type ArticleUncheckedUpdateManyInput = {
 	slug?: Prisma.StringFieldUpdateOperationsInput | string;
 	content?: Prisma.StringFieldUpdateOperationsInput | string;
 	headerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+	views?: Prisma.IntFieldUpdateOperationsInput | number;
 	isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -429,6 +452,7 @@ export type ArticleCountOrderByAggregateInput = {
 	slug?: Prisma.SortOrder;
 	content?: Prisma.SortOrder;
 	headerImage?: Prisma.SortOrder;
+	views?: Prisma.SortOrder;
 	isDraft?: Prisma.SortOrder;
 	createdAt?: Prisma.SortOrder;
 	updatedAt?: Prisma.SortOrder;
@@ -437,6 +461,7 @@ export type ArticleCountOrderByAggregateInput = {
 
 export type ArticleAvgOrderByAggregateInput = {
 	id?: Prisma.SortOrder;
+	views?: Prisma.SortOrder;
 };
 
 export type ArticleMaxOrderByAggregateInput = {
@@ -445,6 +470,7 @@ export type ArticleMaxOrderByAggregateInput = {
 	slug?: Prisma.SortOrder;
 	content?: Prisma.SortOrder;
 	headerImage?: Prisma.SortOrder;
+	views?: Prisma.SortOrder;
 	isDraft?: Prisma.SortOrder;
 	createdAt?: Prisma.SortOrder;
 	updatedAt?: Prisma.SortOrder;
@@ -457,6 +483,7 @@ export type ArticleMinOrderByAggregateInput = {
 	slug?: Prisma.SortOrder;
 	content?: Prisma.SortOrder;
 	headerImage?: Prisma.SortOrder;
+	views?: Prisma.SortOrder;
 	isDraft?: Prisma.SortOrder;
 	createdAt?: Prisma.SortOrder;
 	updatedAt?: Prisma.SortOrder;
@@ -465,6 +492,7 @@ export type ArticleMinOrderByAggregateInput = {
 
 export type ArticleSumOrderByAggregateInput = {
 	id?: Prisma.SortOrder;
+	views?: Prisma.SortOrder;
 };
 
 export type ArticleCreateNestedManyWithoutAuthorInput = {
@@ -664,6 +692,7 @@ export type ArticleCreateWithoutAuthorInput = {
 	slug: string;
 	content: string;
 	headerImage?: string | null;
+	views?: number;
 	isDraft?: boolean;
 	createdAt?: Date | string;
 	updatedAt?: Date | string;
@@ -676,6 +705,7 @@ export type ArticleUncheckedCreateWithoutAuthorInput = {
 	slug: string;
 	content: string;
 	headerImage?: string | null;
+	views?: number;
 	isDraft?: boolean;
 	createdAt?: Date | string;
 	updatedAt?: Date | string;
@@ -733,6 +763,7 @@ export type ArticleScalarWhereInput = {
 	slug?: Prisma.StringFilter<'Article'> | string;
 	content?: Prisma.StringFilter<'Article'> | string;
 	headerImage?: Prisma.StringNullableFilter<'Article'> | string | null;
+	views?: Prisma.IntFilter<'Article'> | number;
 	isDraft?: Prisma.BoolFilter<'Article'> | boolean;
 	createdAt?: Prisma.DateTimeFilter<'Article'> | Date | string;
 	updatedAt?: Prisma.DateTimeFilter<'Article'> | Date | string;
@@ -744,6 +775,7 @@ export type ArticleCreateWithoutTagsInput = {
 	slug: string;
 	content: string;
 	headerImage?: string | null;
+	views?: number;
 	isDraft?: boolean;
 	createdAt?: Date | string;
 	updatedAt?: Date | string;
@@ -756,6 +788,7 @@ export type ArticleUncheckedCreateWithoutTagsInput = {
 	slug: string;
 	content: string;
 	headerImage?: string | null;
+	views?: number;
 	isDraft?: boolean;
 	createdAt?: Date | string;
 	updatedAt?: Date | string;
@@ -804,6 +837,7 @@ export type ArticleCreateManyAuthorInput = {
 	slug: string;
 	content: string;
 	headerImage?: string | null;
+	views?: number;
 	isDraft?: boolean;
 	createdAt?: Date | string;
 	updatedAt?: Date | string;
@@ -814,6 +848,7 @@ export type ArticleUpdateWithoutAuthorInput = {
 	slug?: Prisma.StringFieldUpdateOperationsInput | string;
 	content?: Prisma.StringFieldUpdateOperationsInput | string;
 	headerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+	views?: Prisma.IntFieldUpdateOperationsInput | number;
 	isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -826,6 +861,7 @@ export type ArticleUncheckedUpdateWithoutAuthorInput = {
 	slug?: Prisma.StringFieldUpdateOperationsInput | string;
 	content?: Prisma.StringFieldUpdateOperationsInput | string;
 	headerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+	views?: Prisma.IntFieldUpdateOperationsInput | number;
 	isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -838,6 +874,7 @@ export type ArticleUncheckedUpdateManyWithoutAuthorInput = {
 	slug?: Prisma.StringFieldUpdateOperationsInput | string;
 	content?: Prisma.StringFieldUpdateOperationsInput | string;
 	headerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+	views?: Prisma.IntFieldUpdateOperationsInput | number;
 	isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -848,6 +885,7 @@ export type ArticleUpdateWithoutTagsInput = {
 	slug?: Prisma.StringFieldUpdateOperationsInput | string;
 	content?: Prisma.StringFieldUpdateOperationsInput | string;
 	headerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+	views?: Prisma.IntFieldUpdateOperationsInput | number;
 	isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -860,6 +898,7 @@ export type ArticleUncheckedUpdateWithoutTagsInput = {
 	slug?: Prisma.StringFieldUpdateOperationsInput | string;
 	content?: Prisma.StringFieldUpdateOperationsInput | string;
 	headerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+	views?: Prisma.IntFieldUpdateOperationsInput | number;
 	isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -872,6 +911,7 @@ export type ArticleUncheckedUpdateManyWithoutTagsInput = {
 	slug?: Prisma.StringFieldUpdateOperationsInput | string;
 	content?: Prisma.StringFieldUpdateOperationsInput | string;
 	headerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+	views?: Prisma.IntFieldUpdateOperationsInput | number;
 	isDraft?: Prisma.BoolFieldUpdateOperationsInput | boolean;
 	createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
 	updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
@@ -926,6 +966,7 @@ export type ArticleSelect<
 		slug?: boolean;
 		content?: boolean;
 		headerImage?: boolean;
+		views?: boolean;
 		isDraft?: boolean;
 		createdAt?: boolean;
 		updatedAt?: boolean;
@@ -947,6 +988,7 @@ export type ArticleSelectCreateManyAndReturn<
 		slug?: boolean;
 		content?: boolean;
 		headerImage?: boolean;
+		views?: boolean;
 		isDraft?: boolean;
 		createdAt?: boolean;
 		updatedAt?: boolean;
@@ -966,6 +1008,7 @@ export type ArticleSelectUpdateManyAndReturn<
 		slug?: boolean;
 		content?: boolean;
 		headerImage?: boolean;
+		views?: boolean;
 		isDraft?: boolean;
 		createdAt?: boolean;
 		updatedAt?: boolean;
@@ -981,6 +1024,7 @@ export type ArticleSelectScalar = {
 	slug?: boolean;
 	content?: boolean;
 	headerImage?: boolean;
+	views?: boolean;
 	isDraft?: boolean;
 	createdAt?: boolean;
 	updatedAt?: boolean;
@@ -996,6 +1040,7 @@ export type ArticleOmit<
 	| 'slug'
 	| 'content'
 	| 'headerImage'
+	| 'views'
 	| 'isDraft'
 	| 'createdAt'
 	| 'updatedAt'
@@ -1039,6 +1084,7 @@ export type $ArticlePayload<
 			slug: string;
 			content: string;
 			headerImage: string | null;
+			views: number;
 			isDraft: boolean;
 			createdAt: Date;
 			updatedAt: Date;
@@ -1665,6 +1711,7 @@ export interface ArticleFieldRefs {
 	readonly slug: Prisma.FieldRef<'Article', 'String'>;
 	readonly content: Prisma.FieldRef<'Article', 'String'>;
 	readonly headerImage: Prisma.FieldRef<'Article', 'String'>;
+	readonly views: Prisma.FieldRef<'Article', 'Int'>;
 	readonly isDraft: Prisma.FieldRef<'Article', 'Boolean'>;
 	readonly createdAt: Prisma.FieldRef<'Article', 'DateTime'>;
 	readonly updatedAt: Prisma.FieldRef<'Article', 'DateTime'>;

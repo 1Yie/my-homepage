@@ -143,6 +143,7 @@ export const ArticleScalarFieldEnum = {
 	slug: 'slug',
 	content: 'content',
 	headerImage: 'headerImage',
+	views: 'views',
 	isDraft: 'isDraft',
 	createdAt: 'createdAt',
 	updatedAt: 'updatedAt',
