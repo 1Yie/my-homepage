@@ -61,8 +61,10 @@ export function ArticleCard({ article }: ArticleCardProps) {
 
 					<div className="flex-1 min-w-0">
 						<p className="text-2xl font-semibold">{article.title}</p>
-						<div className="text-lg text-muted-foreground flex items-center
-							gap-4">
+						<div
+							className="text-lg text-muted-foreground flex items-center gap-2
+								lg:gap-4 flex-wrap"
+						>
 							{(() => {
 								const created = new Date(article.createdAt);
 								const updated = new Date(article.updatedAt);

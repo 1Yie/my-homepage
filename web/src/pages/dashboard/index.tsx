@@ -167,7 +167,7 @@ export function DashboardPage() {
 					))}
 				</div>
 
-				{/* Welcome Card - Full Width */}
+				{/* Welcome Card */}
 				<Card>
 					<CardHeader>
 						<CardTitle className="text-3xl">
@@ -267,7 +267,7 @@ export function DashboardPage() {
 					</CardContent>
 				</Card>
 
-				{/* Four Column Layout - Articles, Projects, Slides, Friends */}
+				{/* Four Column Layout */}
 				<div className="grid gap-4 lg:grid-cols-2">
 					{/* Recent Articles Card */}
 					<Card className="flex flex-col h-full">
