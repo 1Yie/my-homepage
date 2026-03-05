@@ -1,5 +1,5 @@
 import { Plus, Search } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { DashboardHeaderTitle } from '@/components/page-title/dashboard-header-title';
@@ -14,7 +14,11 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import {
+	InputGroup,
+	InputGroupAddon,
+	InputGroupInput,
+} from '@/components/ui/input-group';
 import { Spinner } from '@/components/ui/spinner';
 import {
 	Table,
@@ -30,15 +34,20 @@ import { useTitle } from '@/hooks/use-page-meta';
 
 export function SlidesPage() {
 	const [searchQuery, setSearchQuery] = useState('');
+	const [debouncedQuery, setDebouncedQuery] = useState('');
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 	const [slideToDelete, setSlideToDelete] = useState<Slide | null>(null);
 
-	const { slides: allSlides, loading } = useGetSlides();
+	const { slides: allSlides, loading } = useGetSlides(debouncedQuery);
 	const { deleteSlide } = useDeleteSlide();
+
+	useEffect(() => {
+		const t = setTimeout(() => setDebouncedQuery(searchQuery), 300);
+		return () => clearTimeout(t);
+	}, [searchQuery]);
 
 	useTitle('相册管理');
 
-	// Filter slides based on search query
 	const slides = useMemo(() => {
 		if (!searchQuery) return allSlides;
 		return allSlides.filter((slide) =>
@@ -72,18 +81,16 @@ export function SlidesPage() {
 
 				<div className="flex items-center justify-between">
 					<div className="flex items-center gap-4">
-						<div className="relative">
-							<Search
-								className="absolute z-50 left-2 top-2 h-4 w-4
-									text-muted-foreground"
-							/>
-							<Input
-								className="pl-8 w-64 h-full"
+						<InputGroup className="w-64 h-full">
+							<InputGroupInput
 								onChange={(e) => setSearchQuery(e.target.value)}
 								placeholder="搜索相册..."
 								value={searchQuery}
 							/>
-						</div>
+							<InputGroupAddon>
+								<Search className="text-muted-foreground" />
+							</InputGroupAddon>
+						</InputGroup>
 					</div>
 
 					<Button

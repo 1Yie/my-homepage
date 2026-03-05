@@ -16,13 +16,15 @@ interface ApiResponse<T> {
 	error?: string;
 }
 
-export function useGetTags(isPublic: boolean = false) {
+export function useGetTags(search: string, isPublic: boolean = false) {
 	const query = useQuery<Tag[]>({
-		queryKey: ['tags', isPublic ? 'public' : 'auth'],
+		queryKey: ['tags', isPublic ? 'public' : 'auth', search],
 		queryFn: async () => {
-			const response = await client.api.v1.tags.get(
-				isPublic ? { query: { public: 'true' } } : {}
-			);
+			const queryObj: Record<string, string> = {};
+			if (search) queryObj.q = search;
+			if (isPublic) queryObj.public = 'true';
+
+			const response = await client.api.v1.tags.get({ query: queryObj });
 
 			const apiResponse = response.data as ApiResponse<Tag[]>;
 			if (!apiResponse.success) {

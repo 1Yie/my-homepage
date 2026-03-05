@@ -25,11 +25,13 @@ export interface Friend {
 	socialLinks: SocialLink[];
 }
 
-export function useGetFriends() {
+export function useGetFriends(search?: string) {
 	const query = useQuery({
-		queryKey: ['friends'],
+		queryKey: ['friends', search],
 		queryFn: async () => {
-			const response = await client.api.v1.friends.get();
+			const queryObj: Record<string, string> = {};
+			if (search) queryObj.q = search;
+			const response = await client.api.v1.friends.get({ query: queryObj });
 			if (!response.data) {
 				throw new Error('Failed to fetch friends');
 			}

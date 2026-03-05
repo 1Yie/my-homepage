@@ -21,14 +21,19 @@ interface ApiResponse<T> {
 	error?: string;
 }
 
-export function useGetProjects() {
+export function useGetProjects(search?: string) {
 	const query = useQuery<Project[]>({
-		queryKey: ['projects'],
+		queryKey: ['projects', search],
 		queryFn: async () => {
-			const response = await client.api.v1.projects.get();
+			const queryObj: Record<string, string> = {};
+			if (search) queryObj.q = search;
+
+			const response = await client.api.v1.projects.get({
+				query: queryObj,
+			});
 
 			const apiResponse = response.data as ApiResponse<Project[]>;
-			if (!apiResponse.success) {
+			if (!apiResponse || !apiResponse.success) {
 				throw new Error('Failed to fetch projects');
 			}
 

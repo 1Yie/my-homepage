@@ -65,9 +65,7 @@ export function useGetArticles(options: UseGetArticlesOptions = {}) {
 
 			const data = response.data.data;
 
-			// Handle both paginated and direct array responses
 			if (Array.isArray(data)) {
-				// Direct array response (like dashboard)
 				return {
 					articles: data,
 					total: data.length,

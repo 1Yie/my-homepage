@@ -1,5 +1,5 @@
 import { Plus, Search } from 'lucide-react';
-import { useState, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { DashboardHeaderTitle } from '@/components/page-title/dashboard-header-title';
@@ -15,7 +15,11 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import {
+	InputGroup,
+	InputGroupAddon,
+	InputGroupInput,
+} from '@/components/ui/input-group';
 import { Spinner } from '@/components/ui/spinner';
 import {
 	Table,
@@ -44,23 +48,22 @@ interface ProjectListItem {
 
 export function ProjectsPage() {
 	const [searchQuery, setSearchQuery] = useState('');
+	const [debouncedQuery, setDebouncedQuery] = useState('');
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 	const [projectToDelete, setProjectToDelete] =
 		useState<ProjectListItem | null>(null);
 
-	const { projects, loading } = useGetProjects();
+	useEffect(() => {
+		const t = setTimeout(() => setDebouncedQuery(searchQuery), 300);
+		return () => clearTimeout(t);
+	}, [searchQuery]);
+
+	const { projects, loading } = useGetProjects(debouncedQuery);
 	const { deleteProject, loading: deleteLoading } = useDeleteProject();
 
 	useTitle('项目管理');
 
-	const filteredProjects = useMemo(() => {
-		if (!searchQuery) return projects;
-		return projects.filter(
-			(project) =>
-				project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-				project.description.toLowerCase().includes(searchQuery.toLowerCase())
-		);
-	}, [projects, searchQuery]);
+	const filteredProjects = projects;
 
 	const handleDelete = (project: ProjectListItem) => {
 		setProjectToDelete(project);
@@ -91,18 +94,16 @@ export function ProjectsPage() {
 
 				<div className="flex items-center justify-between">
 					<div className="flex items-center gap-4">
-						<div className="relative">
-							<Search
-								className="absolute z-50 left-2 top-2 h-4 w-4
-									text-muted-foreground"
-							/>
-							<Input
-								className="pl-8 w-64 h-full"
+						<InputGroup className="w-64 h-full">
+							<InputGroupInput
 								onChange={(e) => setSearchQuery(e.target.value)}
 								placeholder="搜索项目..."
 								value={searchQuery}
 							/>
-						</div>
+							<InputGroupAddon>
+								<Search className="text-muted-foreground" />
+							</InputGroupAddon>
+						</InputGroup>
 					</div>
 
 					<Button

@@ -1,5 +1,5 @@
 import { Pin, Plus, Search, Users } from 'lucide-react';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import type { Friend } from '@/hooks/friends/use-get-friends';
@@ -17,7 +17,11 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import {
+	InputGroup,
+	InputGroupAddon,
+	InputGroupInput,
+} from '@/components/ui/input-group';
 import { Spinner } from '@/components/ui/spinner';
 import {
 	Table,
@@ -33,11 +37,17 @@ import { useTitle } from '@/hooks/use-page-meta';
 
 export function FriendsPage() {
 	const [searchQuery, setSearchQuery] = useState('');
+	const [debouncedQuery, setDebouncedQuery] = useState('');
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 	const [friendToDelete, setFriendToDelete] = useState<Friend | null>(null);
 
-	const { friends, loading } = useGetFriends();
+	const { friends, loading } = useGetFriends(debouncedQuery);
 	const { deleteFriend, loading: deleteLoading } = useDeleteFriend();
+
+	useEffect(() => {
+		const t = setTimeout(() => setDebouncedQuery(searchQuery), 300);
+		return () => clearTimeout(t);
+	}, [searchQuery]);
 
 	useTitle('友链管理');
 
@@ -79,18 +89,16 @@ export function FriendsPage() {
 
 				<div className="flex items-center justify-between">
 					<div className="flex items-center gap-4">
-						<div className="relative">
-							<Search
-								className="absolute z-50 left-2 top-2 h-4 w-4
-									text-muted-foreground"
-							/>
-							<Input
-								className="pl-8 w-64 h-full"
+						<InputGroup className="w-64 h-full">
+							<InputGroupInput
 								onChange={(e) => setSearchQuery(e.target.value)}
 								placeholder="搜索友链..."
 								value={searchQuery}
 							/>
-						</div>
+							<InputGroupAddon>
+								<Search className="text-muted-foreground" />
+							</InputGroupAddon>
+						</InputGroup>
 					</div>
 
 					<Button

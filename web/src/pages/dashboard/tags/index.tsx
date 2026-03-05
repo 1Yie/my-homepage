@@ -1,5 +1,5 @@
 import { Plus, Search, Tag as TagIcon } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { DashboardHeaderTitle } from '@/components/page-title/dashboard-header-title';
@@ -15,7 +15,11 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import {
+	InputGroup,
+	InputGroupAddon,
+	InputGroupInput,
+} from '@/components/ui/input-group';
 import { Spinner } from '@/components/ui/spinner';
 import {
 	Table,
@@ -31,14 +35,20 @@ import { useTitle } from '@/hooks/use-page-meta';
 
 export function TagsPage() {
 	const [searchQuery, setSearchQuery] = useState('');
+	const [debouncedQuery, setDebouncedQuery] = useState('');
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 	const [tagToDelete, setTagToDelete] = useState<Tag | null>(null);
 	const [deleteError, setDeleteError] = useState<string | null>(null);
 
-	const { tags: allTags, loading } = useGetTags(false);
+	const { tags: allTags, loading } = useGetTags(debouncedQuery, false);
 	const { deleteTag } = useDeleteTag();
 
 	useTitle('标签管理');
+
+	useEffect(() => {
+		const t = setTimeout(() => setDebouncedQuery(searchQuery), 300);
+		return () => clearTimeout(t);
+	}, [searchQuery]);
 
 	// Filter tags based on search query
 	const tags = useMemo(() => {
@@ -87,18 +97,16 @@ export function TagsPage() {
 
 				<div className="flex items-center justify-between">
 					<div className="flex items-center gap-4">
-						<div className="relative">
-							<Search
-								className="absolute z-50 left-2 top-2 h-4 w-4
-									text-muted-foreground"
-							/>
-							<Input
-								className="pl-8 w-64 h-full"
+						<InputGroup className="w-64 h-full">
+							<InputGroupInput
 								onChange={(e) => setSearchQuery(e.target.value)}
 								placeholder="搜索标签..."
 								value={searchQuery}
 							/>
-						</div>
+							<InputGroupAddon>
+								<Search className="text-muted-foreground" />
+							</InputGroupAddon>
+						</InputGroup>
 					</div>
 
 					<Button

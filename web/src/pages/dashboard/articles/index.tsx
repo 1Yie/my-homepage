@@ -1,5 +1,5 @@
 import { Plus, Search } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { DashboardHeaderTitle } from '@/components/page-title/dashboard-header-title';
@@ -15,7 +15,11 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import {
+	InputGroup,
+	InputGroupAddon,
+	InputGroupInput,
+} from '@/components/ui/input-group';
 import { Spinner } from '@/components/ui/spinner';
 import {
 	Table,
@@ -50,13 +54,19 @@ interface Article {
 
 export function ArticlesPage() {
 	const [searchQuery, setSearchQuery] = useState('');
+	const [debouncedQuery, setDebouncedQuery] = useState('');
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 	const [articleToDelete, setArticleToDelete] = useState<Article | null>(null);
 	const [deleteError, setDeleteError] = useState<string | null>(null);
 
+	useEffect(() => {
+		const t = setTimeout(() => setDebouncedQuery(searchQuery), 300);
+		return () => clearTimeout(t);
+	}, [searchQuery]);
+
 	const { articles, loading } = useGetArticles({
-		search: searchQuery,
-		limit: 100, // Get all articles for dashboard
+		search: debouncedQuery,
+		limit: 100,
 	});
 	const { deleteArticle, loading: deleteLoading } = useDeleteArticle();
 
@@ -93,18 +103,16 @@ export function ArticlesPage() {
 
 				<div className="flex items-center justify-between">
 					<div className="flex items-center gap-4">
-						<div className="relative">
-							<Search
-								className="absolute z-50 left-2 top-2 h-4 w-4
-									text-muted-foreground"
-							/>
-							<Input
-								className="pl-8 w-64 h-full"
+						<InputGroup className="w-64 h-full">
+							<InputGroupInput
 								onChange={(e) => setSearchQuery(e.target.value)}
 								placeholder="搜索文章..."
 								value={searchQuery}
 							/>
-						</div>
+							<InputGroupAddon>
+								<Search className="text-muted-foreground" />
+							</InputGroupAddon>
+						</InputGroup>
 					</div>
 
 					<Button
