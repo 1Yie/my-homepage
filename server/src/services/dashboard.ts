@@ -104,7 +104,7 @@ export interface DashboardStats {
 }
 
 export async function getDashboardStats(): Promise<DashboardStats> {
-	// 1. 获取总体统计
+	// 获取总体统计
 	const [
 		totalArticles,
 		publishedArticles,
@@ -133,7 +133,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 	});
 	const totalArticleViews = totalArticleViewsResult._sum?.views ?? 0;
 
-	// 2. 获取最近 10 篇文章
+	// 获取最近 10 篇文章
 	const recentArticles = await db.article.findMany({
 		take: 10,
 		orderBy: { createdAt: 'desc' },
@@ -154,19 +154,19 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 		},
 	});
 
-	// 3. 获取最近 5 个项目
+	// 获取最近 5 个项目
 	const recentProjects = await db.project.findMany({
 		take: 5,
 		orderBy: { createdAt: 'desc' },
 	});
 
-	// 4. 获取最近 5 张相册图片
+	// 获取最近 5 张相册图片
 	const recentSlides = await db.slide.findMany({
 		take: 5,
 		orderBy: { createdAt: 'desc' },
 	});
 
-	// 5. 获取最近 5 个友链
+	// 获取最近 5 个友链
 	const recentFriends = await db.friend.findMany({
 		take: 5,
 		orderBy: { createdAt: 'desc' },
@@ -182,7 +182,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 		},
 	});
 
-	// 6. 获取所有文章用于统计
+	// 获取所有文章用于统计
 	const allArticles = await db.article.findMany({
 		select: {
 			createdAt: true,
@@ -190,7 +190,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 		},
 	});
 
-	// 7. 计算按月份统计（最近 12 个月）
+	// 计算按月份统计（最近 12 个月）
 	const now = new Date();
 	const monthsMap = new Map<
 		string,
@@ -229,7 +229,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 		})
 	);
 
-	// 8. 获取热门标签
+	// 获取热门标签
 	const tagsWithCount = await db.tag.findMany({
 		include: {
 			_count: {
@@ -252,13 +252,13 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 		articleCount: tag._count.articles,
 	}));
 
-	// 9. 文章状态分布
+	// 文章状态分布
 	const articleStatusDistribution = {
 		published: publishedArticles,
 		draft: draftArticles,
 	};
 
-	// 10. 最近 7 天的活动趋势
+	// 最近 7 天的活动趋势
 	const sevenDaysAgo = new Date();
 	sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
 	sevenDaysAgo.setHours(0, 0, 0, 0);
