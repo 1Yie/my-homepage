@@ -34,4 +34,4 @@ ENV DATABASE_URL="file:/app/server/data/sqlite.db"
 RUN mkdir -p /app/server/data
 
 EXPOSE 3000
-CMD ["bun", "src/index.ts"]
+CMD ["sh", "-c", "bunx prisma db push && bun src/index.ts"]
