@@ -1,3 +1,4 @@
+import { Prisma } from '../../prisma/generated/prisma/client';
 import { db } from '../lib/db';
 
 export interface Tag {
@@ -28,7 +29,13 @@ export async function getTags(): Promise<Tag[]> {
 	});
 }
 
-export async function getTagsWithArticles(): Promise<TagWithCount[]> {
+export async function getTagsWithArticles(
+	search?: string
+): Promise<TagWithCount[]> {
+	const where: Prisma.TagWhereInput = {};
+	if (search) {
+		where.OR = [{ name: { contains: search } }];
+	}
 	const tags = await db.tag.findMany({
 		include: {
 			_count: { select: { articles: true } },

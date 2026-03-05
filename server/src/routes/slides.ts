@@ -14,13 +14,20 @@ export const slidesRoutes = new Elysia({ prefix: '/slides' })
 	.use(authMiddleware)
 	.get(
 		'/',
-		async () => {
-			const slides = await getSlides();
+		async ({ query }) => {
+			const slides = await getSlides(query.q);
 			return { success: true, data: slides };
 		},
 		{
+			query: t.Optional(
+				t.Object({
+					q: t.Optional(
+						t.String({ description: '搜索关键词，用于筛选轮播图标题或链接' })
+					),
+				})
+			),
 			detail: {
-				description: '获取所有轮播图列表',
+				description: '获取所有轮播图列表（支持按标题或链接搜索）',
 				tags: ['轮播图'],
 			},
 		}

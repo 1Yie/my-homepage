@@ -121,6 +121,7 @@ export async function getArticlesByAuthor(authorId: string, search?: string) {
 	if (search) {
 		where.OR = [
 			{ content: { contains: search } },
+			{ title: { contains: search } },
 			{ slug: { contains: search } },
 		];
 	}

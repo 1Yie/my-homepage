@@ -1,5 +1,5 @@
+import { Prisma } from '../../prisma/generated/prisma/client';
 import { db } from '../lib/db';
-
 export interface SocialLink {
 	id: number;
 	name: string;
@@ -50,7 +50,14 @@ export interface UpdateFriendInput {
 }
 
 // 获取所有友链
-export async function getFriends(): Promise<Friend[]> {
+export async function getFriends(search?: string): Promise<Friend[]> {
+	const where: Prisma.FriendWhereInput = {};
+	if (search) {
+		where.OR = [
+			{ name: { contains: search } },
+			{ description: { contains: search } },
+		];
+	}
 	return await db.friend.findMany({
 		include: {
 			socialLinks: true,

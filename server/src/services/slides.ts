@@ -1,3 +1,4 @@
+import { Prisma } from '../../prisma/generated/prisma/client';
 import { db } from '../lib/db';
 
 export interface Slide {
@@ -28,8 +29,17 @@ interface UpdateSlideInput {
 	order?: number;
 }
 
-export async function getSlides(): Promise<Slide[]> {
+export async function getSlides(search?: string): Promise<Slide[]> {
+	const where: Prisma.SlideWhereInput = {};
+	if (search) {
+		where.OR = [
+			{ title: { contains: search } },
+			{ link: { contains: search } },
+		];
+	}
+
 	const slides = await db.slide.findMany({
+		where,
 		orderBy: { order: 'asc' },
 	});
 

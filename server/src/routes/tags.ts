@@ -20,7 +20,7 @@ export const tagsRoutes = new Elysia({ prefix: '/tags' })
 		'/',
 		async ({ query, request }) => {
 			if (query.public === 'true') {
-				const tags = await getTagsWithArticles();
+				const tags = await getTagsWithArticles(query.q);
 				return { success: true, data: tags };
 			}
 
@@ -42,6 +42,7 @@ export const tagsRoutes = new Elysia({ prefix: '/tags' })
 							description: '是否获取公开标签，值为"true"时包含文章信息',
 						})
 					),
+					q: t.Optional(t.String({ description: '搜索关键词，用于筛选标签' })),
 				})
 			),
 			detail: {

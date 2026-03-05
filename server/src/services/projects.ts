@@ -1,3 +1,4 @@
+import { Prisma } from '../../prisma/generated/prisma/client';
 import { db } from '../lib/db';
 
 export interface Project {
@@ -31,8 +32,17 @@ interface UpdateProjectInput {
 	order?: number;
 }
 
-export async function getProjects(): Promise<Project[]> {
+export async function getProjects(search?: string): Promise<Project[]> {
+	const where: Prisma.ProjectWhereInput = {};
+	if (search) {
+		where.OR = [
+			{ name: { contains: search } },
+			{ description: { contains: search } },
+		];
+	}
+
 	const projects = await db.project.findMany({
+		where,
 		orderBy: { order: 'asc' },
 	});
 

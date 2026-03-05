@@ -14,13 +14,20 @@ export const projectsRoutes = new Elysia({ prefix: '/projects' })
 	.use(authMiddleware)
 	.get(
 		'/',
-		async () => {
-			const projects = await getProjects();
+		async ({ query }) => {
+			const projects = await getProjects(query.q);
 			return { success: true, data: projects };
 		},
 		{
+			query: t.Optional(
+				t.Object({
+					q: t.Optional(
+						t.String({ description: '搜索关键词，用于筛选项目名称或描述' })
+					),
+				})
+			),
 			detail: {
-				description: '获取所有项目列表',
+				description: '获取所有项目列表（支持按名称或描述搜索）',
 				tags: ['项目'],
 			},
 		}

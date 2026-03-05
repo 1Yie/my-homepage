@@ -14,9 +14,9 @@ export const friendsRoutes = new Elysia({ prefix: '/friends' })
 	.use(authMiddleware)
 	.get(
 		'/',
-		async () => {
+		async ({ query }) => {
 			try {
-				const friends = await getFriends();
+				const friends = await getFriends(query.q);
 				return {
 					success: true,
 					data: friends,
