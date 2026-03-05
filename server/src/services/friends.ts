@@ -59,6 +59,7 @@ export async function getFriends(search?: string): Promise<Friend[]> {
 		];
 	}
 	return await db.friend.findMany({
+		where,
 		include: {
 			socialLinks: true,
 		},

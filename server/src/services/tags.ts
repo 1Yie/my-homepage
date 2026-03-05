@@ -37,6 +37,7 @@ export async function getTagsWithArticles(
 		where.OR = [{ name: { contains: search } }];
 	}
 	const tags = await db.tag.findMany({
+		where,
 		include: {
 			_count: { select: { articles: true } },
 		},
