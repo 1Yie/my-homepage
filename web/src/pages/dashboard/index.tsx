@@ -14,8 +14,20 @@ import {
 	Briefcase,
 	Aperture,
 	Handshake,
+	Zap,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import {
+	Bar,
+	BarChart,
+	CartesianGrid,
+	Line,
+	LineChart,
+	ResponsiveContainer,
+	Tooltip as RechartsTooltip,
+	XAxis,
+	YAxis,
+} from 'recharts';
 
 import { authClient } from '@/api/client';
 import { Badge } from '@/components/ui/badge';
@@ -130,11 +142,61 @@ export function DashboardPage() {
 		0
 	);
 
+	const recentActivityChartData =
+		dashboardData?.recentActivityTrend.map((day) => ({
+			articles: day.articlesCreated,
+			date: new Date(day.date).toLocaleDateString('zh-CN', {
+				day: '2-digit',
+				month: '2-digit',
+			}),
+			projects: day.projectsCreated,
+			slides: day.slidesCreated,
+			total: day.articlesCreated + day.projectsCreated + day.slidesCreated,
+		})) ?? [];
+
+	const articlesByMonthChartData =
+		dashboardData?.articlesByMonth.map((item) => {
+			const [, month] = item.month.split('-');
+			return {
+				draft: item.draftCount,
+				month: `${month}月`,
+				published: item.publishedCount,
+			};
+		}) ?? [];
+
+	const systemOverviewItems = [
+		{
+			icon: Rocket,
+			label: '已发布',
+			value: dashboardData?.overview.publishedArticles ?? 0,
+		},
+		{
+			icon: PencilLine,
+			label: '草稿',
+			value: dashboardData?.overview.draftArticles ?? 0,
+		},
+		{
+			icon: TrendingUp,
+			label: '总阅读量',
+			value: dashboardData?.overview.totalArticleViews ?? 0,
+		},
+		{
+			icon: Users,
+			label: '用户数',
+			value: dashboardData?.overview.totalUsers ?? 0,
+		},
+		{
+			icon: RadioTower,
+			label: '7日活动',
+			value: recentTotalActivity ?? 0,
+		},
+	];
+
 	return (
 		<div className="flex flex-1 flex-col gap-4 p-4">
 			<div className="flex flex-1 flex-col gap-4">
 				{/* Stats Cards */}
-				<div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-5">
+				<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
 					{statCards.map((stat, index) => (
 						<Link key={index} to={stat.href}>
 							<Card
@@ -145,7 +207,7 @@ export function DashboardPage() {
 							>
 								<CardHeader
 									className="flex flex-row items-center justify-between
-										space-y-0 pb-2"
+										space-y-0"
 								>
 									<CardTitle className="text-sm font-medium">
 										{stat.title}
@@ -179,15 +241,18 @@ export function DashboardPage() {
 					</CardHeader>
 					<CardContent className="flex flex-col gap-4">
 						{/* Quick Actions */}
-						<div>
-							<h4 className="text-sm font-semibold mb-3">快速操作</h4>
-							<div className="flex flex-wrap gap-2">
+						<div className="mt-2 p-4 bg-muted rounded-lg">
+							<h4 className="text-sm font-semibold mb-3 flex items-center gap-2">
+								<Zap className="h-4 w-4" />
+								快速操作
+							</h4>
+							<div className="flex flex-wrap gap-3">
 								{quickActions.map((action, index) => (
 									<Button
 										key={index}
 										render={
 											<Link to={action.href}>
-												<PlusCircle className="mr-2 h-4 w-4" />
+												<action.icon className="mr-2 h-4 w-4" />
 												{action.label}
 											</Link>
 										}
@@ -204,49 +269,216 @@ export function DashboardPage() {
 								<BarChart3 className="h-4 w-4" />
 								系统概览
 							</h4>
-							<div className="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
-								<div>
-									<p className="text-muted-foreground">已发布</p>
-									<p className="font-semibold text-lg flex items-center gap-1">
-										{loading
-											? '...'
-											: (dashboardData?.overview.publishedArticles ?? 0)}
-										<Rocket className="h-3 w-3" />
+							<div
+								className="grid grid-cols-2 gap-3 text-sm md:grid-cols-4
+									lg:grid-cols-5"
+							>
+								{systemOverviewItems.map((item, index) => (
+									<div className="rounded-md border bg-card p-3" key={index}>
+										<div
+											className="flex items-center justify-between text-xs
+												text-muted-foreground"
+										>
+											<p>{item.label}</p>
+											<item.icon className="h-3.5 w-3.5" />
+										</div>
+										<p
+											className="mt-2 text-2xl leading-none font-semibold
+												tabular-nums"
+										>
+											{loading ? '...' : item.value}
+										</p>
+									</div>
+								))}
+							</div>
+
+							<div className="mt-4 grid gap-4 lg:grid-cols-2">
+								<div className="rounded-md border bg-card p-3">
+									<p className="text-xs text-muted-foreground mb-2">
+										近 7 日内容新增趋势
 									</p>
+									{loading ? (
+										<div className="flex h-44 items-center justify-center">
+											<Spinner size={24} />
+										</div>
+									) : recentActivityChartData.length === 0 ? (
+										<div
+											className="flex h-44 items-center justify-center text-xs
+												text-muted-foreground"
+										>
+											暂无趋势数据
+										</div>
+									) : (
+										<div className="h-44 w-full">
+											<ResponsiveContainer height="100%" width="100%">
+												<LineChart
+													data={recentActivityChartData}
+													margin={{
+														bottom: 0,
+														left: -24,
+														right: 8,
+														top: 8,
+													}}
+												>
+													<CartesianGrid
+														stroke="var(--border)"
+														strokeDasharray="3 3"
+														strokeOpacity={0.5}
+														vertical={false}
+													/>
+													<XAxis
+														axisLine={false}
+														dataKey="date"
+														tick={{
+															fill: 'var(--muted-foreground)',
+															fontSize: 12,
+														}}
+														tickLine={false}
+													/>
+													<YAxis
+														allowDecimals={false}
+														axisLine={false}
+														tick={{
+															fill: 'var(--muted-foreground)',
+															fontSize: 12,
+														}}
+														tickLine={false}
+														width={24}
+													/>
+													<RechartsTooltip
+														contentStyle={{
+															background: 'var(--popover)',
+															borderColor: 'var(--border)',
+															borderRadius: 'var(--radius)',
+															color: 'var(--popover-foreground)',
+														}}
+														formatter={(value, name) => {
+															const labelMap: Record<string, string> = {
+																articles: '文章',
+																projects: '项目',
+																slides: '图片',
+																total: '总新增',
+															};
+															return [
+																value ?? 0,
+																labelMap[String(name)] ?? String(name),
+															];
+														}}
+													/>
+													<Line
+														activeDot={{ r: 4 }}
+														dataKey="total"
+														dot={{ r: 2 }}
+														name="总新增"
+														stroke="var(--chart-1)"
+														strokeWidth={2.5}
+														type="monotone"
+													/>
+												</LineChart>
+											</ResponsiveContainer>
+										</div>
+									)}
 								</div>
-								<div>
-									<p className="text-muted-foreground">草稿</p>
-									<p className="font-semibold text-lg flex items-center gap-1">
-										{loading
-											? '...'
-											: (dashboardData?.overview.draftArticles ?? 0)}
-										<PencilLine className="h-3 w-3" />
-									</p>
-								</div>
-								<div>
-									<p className="text-muted-foreground">总阅读量</p>
-									<p className="font-semibold text-lg flex items-center gap-1">
-										{loading
-											? '...'
-											: (dashboardData?.overview.totalArticleViews ?? 0)}
-										<TrendingUp className="h-3 w-3" />
-									</p>
-								</div>
-								<div>
-									<p className="text-muted-foreground">用户数</p>
-									<p className="font-semibold text-lg flex items-center gap-1">
-										{loading
-											? '...'
-											: (dashboardData?.overview.totalUsers ?? 0)}
-										<Users className="h-3 w-3" />
-									</p>
-								</div>
-								<div>
-									<p className="text-muted-foreground">7日活动</p>
-									<p className="font-semibold text-lg flex items-center gap-1">
-										{loading ? '...' : (recentTotalActivity ?? 0)}
-										<RadioTower className="h-3 w-3" />
-									</p>
+
+								<div className="rounded-md border bg-card p-3">
+									<div className="mb-2 flex items-center justify-between gap-2">
+										<p className="text-xs text-muted-foreground">
+											近 12 月文章趋势
+										</p>
+										<div
+											className="flex items-center gap-3 text-xs
+												text-muted-foreground"
+										>
+											<div className="flex items-center gap-1">
+												<span className="h-2 w-2 rounded-full bg-chart-2" />
+												已发布
+											</div>
+											<div className="flex items-center gap-1">
+												<span className="h-2 w-2 rounded-full bg-chart-3" />
+												草稿
+											</div>
+										</div>
+									</div>
+									{loading ? (
+										<div className="flex h-44 items-center justify-center">
+											<Spinner size={24} />
+										</div>
+									) : articlesByMonthChartData.length === 0 ? (
+										<div
+											className="flex h-44 items-center justify-center text-xs
+												text-muted-foreground"
+										>
+											暂无趋势数据
+										</div>
+									) : (
+										<div className="h-44 w-full">
+											<ResponsiveContainer height="100%" width="100%">
+												<BarChart
+													data={articlesByMonthChartData}
+													margin={{
+														bottom: 0,
+														left: -24,
+														right: 8,
+														top: 8,
+													}}
+												>
+													<CartesianGrid
+														stroke="var(--border)"
+														strokeDasharray="3 3"
+														strokeOpacity={0.5}
+														vertical={false}
+													/>
+													<XAxis
+														axisLine={false}
+														dataKey="month"
+														tick={{
+															fill: 'var(--muted-foreground)',
+															fontSize: 12,
+														}}
+														tickLine={false}
+													/>
+													<YAxis
+														allowDecimals={false}
+														axisLine={false}
+														tick={{
+															fill: 'var(--muted-foreground)',
+															fontSize: 12,
+														}}
+														tickLine={false}
+														width={24}
+													/>
+													<RechartsTooltip
+														contentStyle={{
+															background: 'var(--popover)',
+															borderColor: 'var(--border)',
+															borderRadius: 'var(--radius)',
+															color: 'var(--popover-foreground)',
+														}}
+														formatter={(value, name) => {
+															const labelMap: Record<string, string> = {
+																draft: '草稿',
+																published: '已发布',
+															};
+															return [
+																value ?? 0,
+																labelMap[String(name)] ?? String(name),
+															];
+														}}
+													/>
+													<Bar
+														dataKey="published"
+														fill="var(--chart-2)"
+														radius={[3, 3, 0, 0]}
+													/>
+													<Bar
+														dataKey="draft"
+														fill="var(--chart-3)"
+														radius={[3, 3, 0, 0]}
+													/>
+												</BarChart>
+											</ResponsiveContainer>
+										</div>
+									)}
 								</div>
 							</div>
 						</div>
