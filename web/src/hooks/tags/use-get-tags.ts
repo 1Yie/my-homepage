@@ -16,7 +16,7 @@ interface ApiResponse<T> {
 	error?: string;
 }
 
-export function useGetTags(search: string, isPublic: boolean = false) {
+export function useGetTags(search?: string, isPublic: boolean = false) {
 	const query = useQuery<Tag[]>({
 		queryKey: ['tags', isPublic ? 'public' : 'auth', search],
 		queryFn: async () => {
