@@ -102,7 +102,7 @@ export function FriendForm({ mode, friendId, initialData }: FriendFormProps) {
 	return (
 		<form onSubmit={handleSubmit}>
 			<Card>
-				<CardContent className="space-y-6 pt-6">
+				<CardContent className="space-y-6">
 					<div className="space-y-2">
 						<Label htmlFor="name">名称</Label>
 						<Input

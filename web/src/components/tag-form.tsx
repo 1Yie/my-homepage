@@ -63,7 +63,7 @@ export function TagForm({ mode, tagId, initialData }: TagFormProps) {
 	return (
 		<form onSubmit={handleSubmit}>
 			<Card>
-				<CardContent className="space-y-6 pt-6">
+				<CardContent className="space-y-6">
 					{(error || apiError) && (
 						<div
 							className="p-3 text-sm text-destructive bg-destructive/10

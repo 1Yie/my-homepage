@@ -6,7 +6,7 @@ import { useGetTags } from '@/hooks/tags/use-get-tags';
 import { useSeo } from '@/hooks/use-page-meta';
 
 export function TagsPage() {
-	const { tags, loading, error } = useGetTags(true);
+	const { tags, loading, error } = useGetTags(undefined, true);
 	useSeo({
 		title: '标签',
 		description: '文章标签 / ichiyo (@1Yie)',

@@ -25,7 +25,7 @@ interface ArticleFormData {
 	content: string;
 	isDraft: boolean;
 	tagIds: number[];
-	tagNames: string[]; // Store new tag names that don't exist yet
+	tagNames: string[];
 	headerImage: string;
 }
 
@@ -41,7 +41,7 @@ export function ArticleForm({
 	initialData,
 }: ArticleFormProps) {
 	const navigate = useNavigate();
-	const { tags: availableTags } = useGetTags(false);
+	const { tags: availableTags } = useGetTags(undefined, false);
 	const { createArticleAsync, loading: createLoading } = useCreateArticle();
 	const { updateArticleAsync, loading: updateLoading } = useUpdateArticle();
 	const loading = createLoading || updateLoading;

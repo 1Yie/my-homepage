@@ -78,7 +78,7 @@ export function SlideForm({ mode, slideId, initialData }: SlideFormProps) {
 	return (
 		<form onSubmit={handleSubmit}>
 			<Card>
-				<CardContent className="space-y-6 pt-6">
+				<CardContent className="space-y-6">
 					<div className="space-y-2">
 						<Label htmlFor="title">标题</Label>
 						<Input
