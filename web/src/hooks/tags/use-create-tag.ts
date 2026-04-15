@@ -13,7 +13,7 @@ export function useCreateTag() {
 		mutationFn: async (data: CreateTagData) => {
 			const response = await client.api.v1.tags.post(data);
 			if (!response.data?.success) {
-				throw new Error(response.data?.error || 'Failed to create tag');
+				throw new Error('Failed to create tag');
 			}
 			return response.data;
 		},

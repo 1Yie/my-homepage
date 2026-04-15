@@ -9,7 +9,7 @@ export function useDeleteTag() {
 		mutationFn: async (id: string) => {
 			const response = await client.api.v1.tags({ id }).delete();
 			if (!response.data?.success) {
-				throw new Error(response.data?.error || 'Failed to delete tag');
+				throw new Error('Failed to delete tag');
 			}
 			return response.data;
 		},

@@ -11,7 +11,7 @@ export function useDeleteSlide() {
 			if (!response.data?.success) {
 				throw new Error('Failed to delete slide');
 			}
-			return response.data.data;
+			return response.data;
 		},
 		onSuccess: () => {
 			// Invalidate slides query to refetch the list
