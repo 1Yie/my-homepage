@@ -1,11 +1,4 @@
-import {
-	Moon,
-	Sun,
-	TextAlignJustify,
-	User,
-	LogOut,
-	Github,
-} from 'lucide-react';
+import { Moon, Sun, TextAlignJustify, User, LogOut } from 'lucide-react';
 import { Fragment, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
@@ -173,11 +166,13 @@ export function Header() {
 							</DropdownMenu>
 						) : (
 							<Button
-								className="ml-4"
+								className="ml-4 flex items-center gap-2 px-2"
 								onClick={() => navigate('/auth/login')}
 								size="sm"
+								variant="secondary"
 							>
-								<Github className="text-accent" />
+								<User className="h-4 w-4" />
+								登录
 							</Button>
 						)}
 					</nav>
@@ -305,14 +300,16 @@ export function Header() {
 											</div>
 										) : (
 											<Button
-												className="w-10"
+												className="justify-start w-full"
 												onClick={() => {
 													navigate('/auth/login');
 													setMobileMenuOpen(false);
 												}}
-												size="icon"
+												size="sm"
+												variant="ghost"
 											>
-												<Github className="text-accent" />
+												<User className="mr-2 h-4 w-4" />
+												登录
 											</Button>
 										)}
 									</nav>

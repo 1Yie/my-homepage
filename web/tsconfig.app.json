@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		"allowImportingTsExtensions": true,
-		"baseUrl": ".",
+		// "baseUrl": ".",
 		"erasableSyntaxOnly": true,
 		"jsx": "react-jsx",
 
