@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - demo
   workflow_dispatch:
 
 jobs:
@@ -37,7 +38,6 @@ jobs:
         with:
           images: ${{ secrets.ACR_REGISTRY }}
           tags: |
-            type=raw,value=web
             type=ref,event=branch,prefix=web-
             type=ref,event=pr,prefix=web-pr-
             type=sha,prefix=web-
@@ -61,7 +61,6 @@ jobs:
         with:
           images: ${{ secrets.ACR_REGISTRY }}
           tags: |
-            type=raw,value=server
             type=ref,event=branch,prefix=server-
             type=ref,event=pr,prefix=server-pr-
             type=sha,prefix=server-
