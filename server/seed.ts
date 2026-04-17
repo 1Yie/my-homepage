@@ -1,7 +1,72 @@
+import { hashPassword } from 'better-auth/crypto';
+
 import { db } from './src/lib/db';
+
+const DEMO_USER_NAME = process.env.DEMO_USER_NAME || 'Ichiyo';
+const DEMO_USER_EMAIL = process.env.DEMO_USER_EMAIL || 'me@ichiyo.in';
+const DEMO_USER_PASSWORD = process.env.DEMO_USER_PASSWORD || 'demo123456';
+
+async function ensureDemoUser() {
+	const existingUser = await db.user.findUnique({
+		where: { email: DEMO_USER_EMAIL },
+	});
+
+	const user =
+		existingUser ||
+		(await db.user.create({
+			data: {
+				id: crypto.randomUUID(),
+				name: DEMO_USER_NAME,
+				email: DEMO_USER_EMAIL,
+				emailVerified: true,
+			},
+		}));
+
+	if (existingUser) {
+		await db.user.update({
+			where: { id: existingUser.id },
+			data: {
+				emailVerified: true,
+				name: DEMO_USER_NAME,
+			},
+		});
+	}
+
+	const password = await hashPassword(DEMO_USER_PASSWORD);
+	const credentialAccount = await db.account.findFirst({
+		where: {
+			providerId: 'credential',
+			userId: user.id,
+		},
+	});
+
+	if (credentialAccount) {
+		await db.account.update({
+			where: { id: credentialAccount.id },
+			data: {
+				accountId: user.id,
+				password,
+			},
+		});
+	} else {
+		await db.account.create({
+			data: {
+				id: crypto.randomUUID(),
+				accountId: user.id,
+				password,
+				providerId: 'credential',
+				userId: user.id,
+			},
+		});
+	}
+
+	console.log(`✓ 已准备演示账号: ${DEMO_USER_EMAIL}`);
+}
 
 async function seed() {
 	console.log('开始添加初始数据...');
+
+	await ensureDemoUser();
 
 	// 添加项目数据
 	const projects = [
@@ -103,8 +168,8 @@ async function seed() {
 					{
 						name: 'Twitter',
 						link: 'https://twitter.com/alice',
-						iconLight: 'https://cdn.simpleicons.org/twitter/1DA1F2',
-						iconDark: 'https://cdn.simpleicons.org/twitter/1DA1F2',
+						iconLight: 'https://cdn.simpleicons.org/x/000000',
+						iconDark: 'https://cdn.simpleicons.org/x/FFFFFF',
 					},
 				],
 			},
@@ -149,8 +214,8 @@ async function seed() {
 					{
 						name: 'Twitter',
 						link: 'https://twitter.com/charlie',
-						iconLight: 'https://cdn.simpleicons.org/twitter/1DA1F2',
-						iconDark: 'https://cdn.simpleicons.org/twitter/1DA1F2',
+						iconLight: 'https://cdn.simpleicons.org/x/000000',
+						iconDark: 'https://cdn.simpleicons.org/x/FFFFFF',
 					},
 				],
 			},
@@ -163,12 +228,6 @@ async function seed() {
 			order: 4,
 			socialLinks: {
 				create: [
-					{
-						name: 'LinkedIn',
-						link: 'https://linkedin.com/in/david',
-						iconLight: 'https://cdn.simpleicons.org/linkedin/0A66C2',
-						iconDark: 'https://cdn.simpleicons.org/linkedin/0A66C2',
-					},
 					{
 						name: 'GitHub',
 						link: 'https://github.com/david',
