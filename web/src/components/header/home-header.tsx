@@ -65,7 +65,7 @@ export function Header() {
 
 	return (
 		<header
-			className="bg-background sticky top-0 right-0 left-0 z-10 border-b h-14
+			className="bg-background sticky top-0 right-0 left-0 z-50 border-b h-14
 				pr-(--removed-body-scroll-bar-size,0px)"
 		>
 			<section className="section-base">
