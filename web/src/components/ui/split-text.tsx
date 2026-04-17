@@ -110,6 +110,15 @@ const SplitText: React.FC<SplitTextProps> = ({
 				reduceWhiteSpace: false,
 				onSplit: (self: GSAPSplitText) => {
 					assignTargets(self);
+					// Ensure targets can be transformed (spans are inline by default)
+					targets.forEach((t) => {
+						if (t instanceof HTMLElement) {
+							if (!t.style.display) t.style.display = 'inline-block';
+							else if (t.style.display === 'inline')
+								t.style.display = 'inline-block';
+							if (!t.style.position) t.style.position = 'relative';
+						}
+					});
 					return gsap.fromTo(
 						targets,
 						{ ...from },
