@@ -18,7 +18,7 @@ RUN bun install --frozen-lockfile
 COPY . .
 WORKDIR /app/web
 
-RUN bun run build
+RUN bun run build --mode production
 
 FROM nginx:alpine
 COPY --from=builder /app/web/dist /usr/share/nginx/html
