@@ -99,7 +99,10 @@ const SplitText: React.FC<SplitTextProps> = ({
 			};
 			const splitInstance = new GSAPSplitText(el, {
 				type: splitType,
-				smartWrap: true,
+				// disable smartWrap and use inline `span` wrappers for chars/words
+				// to avoid an extra outer span/div nesting that causes layout issues
+				smartWrap: false,
+				tag: 'span',
 				autoSplit: splitType === 'lines',
 				linesClass: 'split-line',
 				wordsClass: 'split-word',
