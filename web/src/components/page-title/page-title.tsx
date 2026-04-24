@@ -125,7 +125,7 @@ export default function PageTitle({
 							to={{ opacity: 1, y: 0 }}
 						/>
 						<div
-							className={`mt-2 flex items-center gap-4 ${
+							className={`mt-2 flex flex-wrap items-center gap-2 md:gap-4 ${
 								backgroundImage
 									? 'text-gray-100 text-base sm:text-xl'
 									: 'text-foreground text-base sm:text-xl'

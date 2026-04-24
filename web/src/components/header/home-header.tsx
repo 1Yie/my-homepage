@@ -12,6 +12,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { authClient } from '@/api/client';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { Drawer, DrawerPopup, DrawerTrigger } from '@/components/ui/drawer';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -19,7 +20,6 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/ui/menu';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import {
 	Tooltip,
 	TooltipContent,
@@ -186,18 +186,18 @@ export function Header() {
 					<div
 						className="flex justify-end sm:w-auto sm:justify-center md:hidden"
 					>
-						<Sheet onOpenChange={setMobileMenuOpen} open={mobileMenuOpen}>
-							<SheetTrigger
+						<Drawer onOpenChange={setMobileMenuOpen} open={mobileMenuOpen}>
+							<DrawerTrigger
 								render={
 									<Button size="icon" variant="ghost">
 										<TextAlignJustify className="h-5 w-5" />
 									</Button>
 								}
-							></SheetTrigger>
-							<SheetContent
+							/>
+							<DrawerPopup
 								className="w-full border-b"
+								position="top"
 								showCloseButton={false}
-								side="top"
 							>
 								<div className="flex flex-col gap-4 p-4">
 									{/* Mobile Logo */}
@@ -317,8 +317,8 @@ export function Header() {
 										)}
 									</nav>
 								</div>
-							</SheetContent>
-						</Sheet>
+							</DrawerPopup>
+						</Drawer>
 					</div>
 				</div>
 			</section>
