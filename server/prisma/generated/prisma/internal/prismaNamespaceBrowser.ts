@@ -64,6 +64,7 @@ export const ModelName = {
 	Slide: 'Slide',
 	Friend: 'Friend',
 	SocialLink: 'SocialLink',
+	AiConfig: 'AiConfig',
 } as const;
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
@@ -221,6 +222,18 @@ export const SocialLinkScalarFieldEnum = {
 
 export type SocialLinkScalarFieldEnum =
 	(typeof SocialLinkScalarFieldEnum)[keyof typeof SocialLinkScalarFieldEnum];
+
+export const AiConfigScalarFieldEnum = {
+	id: 'id',
+	apiKey: 'apiKey',
+	apiUrl: 'apiUrl',
+	fimEnabled: 'fimEnabled',
+	model: 'model',
+	updatedAt: 'updatedAt',
+} as const;
+
+export type AiConfigScalarFieldEnum =
+	(typeof AiConfigScalarFieldEnum)[keyof typeof AiConfigScalarFieldEnum];
 
 export const SortOrder = {
 	asc: 'asc',

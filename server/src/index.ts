@@ -3,6 +3,7 @@ import { swagger } from '@elysiajs/swagger';
 import { type Context, Elysia } from 'elysia';
 
 import { auth } from './lib/auth';
+import { aiRoutes } from './routes/ai';
 import { articlesRoutes } from './routes/articles';
 import { dashboardRoutes } from './routes/dashboard';
 import { friendsRoutes } from './routes/friends';
@@ -53,6 +54,7 @@ const app = new Elysia()
 				v1
 					.use(tagsRoutes)
 					.use(articlesRoutes)
+					.use(aiRoutes)
 					.use(projectsRoutes)
 					.use(slidesRoutes)
 					.use(friendsRoutes)

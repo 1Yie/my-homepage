@@ -422,6 +422,7 @@ export const ModelName = {
 	Slide: 'Slide',
 	Friend: 'Friend',
 	SocialLink: 'SocialLink',
+	AiConfig: 'AiConfig',
 } as const;
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName];
@@ -453,7 +454,8 @@ export type TypeMap<
 			| 'project'
 			| 'slide'
 			| 'friend'
-			| 'socialLink';
+			| 'socialLink'
+			| 'aiConfig';
 		txIsolationLevel: TransactionIsolationLevel;
 	};
 	model: {
@@ -1217,6 +1219,82 @@ export type TypeMap<
 				};
 			};
 		};
+		AiConfig: {
+			payload: Prisma.$AiConfigPayload<ExtArgs>;
+			fields: Prisma.AiConfigFieldRefs;
+			operations: {
+				findUnique: {
+					args: Prisma.AiConfigFindUniqueArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$AiConfigPayload> | null;
+				};
+				findUniqueOrThrow: {
+					args: Prisma.AiConfigFindUniqueOrThrowArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$AiConfigPayload>;
+				};
+				findFirst: {
+					args: Prisma.AiConfigFindFirstArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$AiConfigPayload> | null;
+				};
+				findFirstOrThrow: {
+					args: Prisma.AiConfigFindFirstOrThrowArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$AiConfigPayload>;
+				};
+				findMany: {
+					args: Prisma.AiConfigFindManyArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$AiConfigPayload>[];
+				};
+				create: {
+					args: Prisma.AiConfigCreateArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$AiConfigPayload>;
+				};
+				createMany: {
+					args: Prisma.AiConfigCreateManyArgs<ExtArgs>;
+					result: BatchPayload;
+				};
+				createManyAndReturn: {
+					args: Prisma.AiConfigCreateManyAndReturnArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$AiConfigPayload>[];
+				};
+				delete: {
+					args: Prisma.AiConfigDeleteArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$AiConfigPayload>;
+				};
+				update: {
+					args: Prisma.AiConfigUpdateArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$AiConfigPayload>;
+				};
+				deleteMany: {
+					args: Prisma.AiConfigDeleteManyArgs<ExtArgs>;
+					result: BatchPayload;
+				};
+				updateMany: {
+					args: Prisma.AiConfigUpdateManyArgs<ExtArgs>;
+					result: BatchPayload;
+				};
+				updateManyAndReturn: {
+					args: Prisma.AiConfigUpdateManyAndReturnArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$AiConfigPayload>[];
+				};
+				upsert: {
+					args: Prisma.AiConfigUpsertArgs<ExtArgs>;
+					result: runtime.Types.Utils.PayloadToResult<Prisma.$AiConfigPayload>;
+				};
+				aggregate: {
+					args: Prisma.AiConfigAggregateArgs<ExtArgs>;
+					result: runtime.Types.Utils.Optional<Prisma.AggregateAiConfig>;
+				};
+				groupBy: {
+					args: Prisma.AiConfigGroupByArgs<ExtArgs>;
+					result: runtime.Types.Utils.Optional<Prisma.AiConfigGroupByOutputType>[];
+				};
+				count: {
+					args: Prisma.AiConfigCountArgs<ExtArgs>;
+					result:
+						| runtime.Types.Utils.Optional<Prisma.AiConfigCountAggregateOutputType>
+						| number;
+				};
+			};
+		};
 	};
 } & {
 	other: {
@@ -1396,6 +1474,18 @@ export const SocialLinkScalarFieldEnum = {
 export type SocialLinkScalarFieldEnum =
 	(typeof SocialLinkScalarFieldEnum)[keyof typeof SocialLinkScalarFieldEnum];
 
+export const AiConfigScalarFieldEnum = {
+	id: 'id',
+	apiKey: 'apiKey',
+	apiUrl: 'apiUrl',
+	fimEnabled: 'fimEnabled',
+	model: 'model',
+	updatedAt: 'updatedAt',
+} as const;
+
+export type AiConfigScalarFieldEnum =
+	(typeof AiConfigScalarFieldEnum)[keyof typeof AiConfigScalarFieldEnum];
+
 export const SortOrder = {
 	asc: 'asc',
 	desc: 'desc',
@@ -1567,6 +1657,7 @@ export type GlobalOmitConfig = {
 	slide?: Prisma.SlideOmit;
 	friend?: Prisma.FriendOmit;
 	socialLink?: Prisma.SocialLinkOmit;
+	aiConfig?: Prisma.AiConfigOmit;
 };
 
 /* Types for Logging */

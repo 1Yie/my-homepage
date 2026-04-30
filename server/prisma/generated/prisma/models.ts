@@ -17,4 +17,5 @@ export type * from './models/Project.js';
 export type * from './models/Slide.js';
 export type * from './models/Friend.js';
 export type * from './models/SocialLink.js';
+export type * from './models/AiConfig.js';
 export type * from './commonInputTypes.js';

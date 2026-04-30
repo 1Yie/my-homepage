@@ -94,3 +94,8 @@ export type Friend = Prisma.FriendModel;
  *
  */
 export type SocialLink = Prisma.SocialLinkModel;
+/**
+ * Model AiConfig
+ *
+ */
+export type AiConfig = Prisma.AiConfigModel;

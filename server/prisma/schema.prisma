@@ -158,3 +158,14 @@ model SocialLink {
 
   @@map("social_link")
 }
+
+model AiConfig {
+  id        Int      @id @default(autoincrement())
+  apiKey    String
+  apiUrl    String   @default("https://api.deepseek.com/beta")
+  fimEnabled Boolean  @default(true)
+  model     String   @default("deepseek-v4-pro")
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("ai_config")
+}
