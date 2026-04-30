@@ -109,7 +109,7 @@ export function ArticleForm({
 		left: number;
 	} | null>(null);
 	const [pendingCompletionMode, setPendingCompletionMode] = useState<
-		'chat-prefix' | 'fim' | null
+		'auto' | 'chat-prefix' | 'fim' | null
 	>(null);
 	const [noContentHintPos, setNoContentHintPos] = useState<{
 		top: number;
@@ -409,7 +409,7 @@ export function ArticleForm({
 	]);
 
 	const requestCompletion = useCallback(
-		async (mode: 'chat-prefix' | 'fim', source: 'idle' | 'manual') => {
+		async (mode: 'auto' | 'chat-prefix' | 'fim', source: 'idle' | 'manual') => {
 			const { textarea } = getEditorElements();
 			if (!textarea) return;
 			textarea.focus();
@@ -472,19 +472,14 @@ export function ArticleForm({
 	const handleManualComplete = useCallback(() => {
 		setFimHintVisible(false);
 		setFimHintPos(null);
-		void requestCompletion('chat-prefix', 'manual');
+		void requestCompletion('auto', 'manual');
 	}, [requestCompletion]);
 
 	const triggerFimCompletion = useCallback(() => {
 		setFimHintVisible(false);
 		setFimHintPos(null);
-		const { textarea } = getEditorElements();
-		if (!textarea) return;
-		const cursorPos = textarea.selectionStart;
-		const suffix = formData.content.slice(cursorPos);
-		const actualMode = suffix.trim() ? 'fim' : 'chat-prefix';
-		void requestCompletion(actualMode, 'idle');
-	}, [formData.content, getEditorElements, requestCompletion]);
+		void requestCompletion('auto', 'idle');
+	}, [requestCompletion]);
 
 	const acceptSuggestion = useCallback(() => {
 		if (!suggestion?.text) return;
@@ -1162,7 +1157,7 @@ export function ArticleForm({
 											>
 												<Sparkles className="mt-0.5 h-3 w-3 text-primary" />
 												<span>
-													{suggestion.source === 'idle'
+													{suggestion.mode === 'fim'
 														? 'FIM 建议'
 														: 'AI 续写建议'}
 												</span>
@@ -1187,9 +1182,7 @@ export function ArticleForm({
 													size="sm"
 												>
 													<CornerDownLeft className="mr-1 h-3 w-3" />
-													{suggestion.source === 'idle'
-														? '接受 FIM'
-														: '接受续写'}
+													{suggestion.mode === 'fim' ? '接受 FIM' : '接受续写'}
 													<Kbd>
 														{suggestion.source === 'idle' ? 'Tab' : 'Enter'}
 													</Kbd>

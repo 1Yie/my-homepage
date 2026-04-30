@@ -26,7 +26,9 @@ export function AiSettingsPage() {
 
 	useEffect(() => {
 		if (config) {
-			setApiKey(config.apiKey);
+			if (!config.hasApiKey) {
+				setApiKey('');
+			}
 			setApiUrl(config.apiUrl);
 			setFimEnabled(config.fimEnabled);
 			setModel(config.model);
@@ -40,7 +42,7 @@ export function AiSettingsPage() {
 
 		try {
 			const response = await client.api.v1.ai.config.put({
-				apiKey,
+				...(apiKey ? { apiKey } : {}),
 				apiUrl,
 				fimEnabled,
 				model,
@@ -115,7 +117,11 @@ export function AiSettingsPage() {
 							<Input
 								id="apiKey"
 								onChange={(e) => setApiKey(e.target.value)}
-								placeholder="sk-xxxxxxxxxxxxxxxx"
+								placeholder={
+									config?.hasApiKey
+										? '已配置，留空则保持不变'
+										: 'sk-xxxxxxxxxxxxxxxx'
+								}
 								type="password"
 								value={apiKey}
 							/>

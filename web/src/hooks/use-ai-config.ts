@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { client } from '@/api/client';
 
 export interface AiConfig {
-	apiKey: string;
+	hasApiKey: boolean;
 	apiUrl: string;
 	fimEnabled: boolean;
 	model: string;
@@ -12,6 +12,7 @@ export interface AiConfig {
 export function useGetAiConfig() {
 	const query = useQuery<AiConfig | null>({
 		queryKey: ['ai-config'],
+		staleTime: Infinity,
 		queryFn: async () => {
 			const response = await client.api.v1.ai.config.get();
 			const apiResponse = response.data as {
