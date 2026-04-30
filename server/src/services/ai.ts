@@ -19,6 +19,20 @@ export interface AiConfigData {
 	model: string;
 }
 
+export interface AiConfigPublic {
+	hasApiKey: boolean;
+	apiUrl: string;
+	fimEnabled: boolean;
+	model: string;
+}
+
+export interface AiConfigUpdateData {
+	apiKey?: string;
+	apiUrl: string;
+	fimEnabled: boolean;
+	model: string;
+}
+
 interface DeepSeekTextCompletionResponse {
 	choices?: Array<{
 		text?: string;
@@ -45,16 +59,29 @@ export async function getAiConfig(): Promise<AiConfigData | null> {
 	};
 }
 
+export async function getAiConfigPublic(): Promise<AiConfigPublic | null> {
+	const config = await getAiConfig();
+	if (!config) return null;
+
+	return {
+		hasApiKey: Boolean(config.apiKey),
+		apiUrl: config.apiUrl,
+		fimEnabled: config.fimEnabled,
+		model: config.model,
+	};
+}
+
 export async function updateAiConfig(
-	data: AiConfigData
+	data: AiConfigUpdateData
 ): Promise<AiConfigData> {
 	const existing = await db.aiConfig.findFirst({ orderBy: { id: 'asc' } });
+	const apiKey = data.apiKey || existing?.apiKey || '';
 
 	if (existing) {
 		await db.aiConfig.update({
 			where: { id: existing.id },
 			data: {
-				apiKey: data.apiKey,
+				apiKey,
 				apiUrl: data.apiUrl,
 				fimEnabled: data.fimEnabled,
 				model: data.model,
@@ -63,7 +90,7 @@ export async function updateAiConfig(
 	} else {
 		await db.aiConfig.create({
 			data: {
-				apiKey: data.apiKey,
+				apiKey,
 				apiUrl: data.apiUrl,
 				fimEnabled: data.fimEnabled,
 				model: data.model,
@@ -71,7 +98,24 @@ export async function updateAiConfig(
 		});
 	}
 
-	return data;
+	return {
+		apiKey,
+		apiUrl: data.apiUrl,
+		fimEnabled: data.fimEnabled,
+		model: data.model,
+	};
+}
+
+export async function updateAiConfigPublic(
+	data: AiConfigUpdateData
+): Promise<AiConfigPublic> {
+	const result = await updateAiConfig(data);
+	return {
+		hasApiKey: Boolean(result.apiKey),
+		apiUrl: result.apiUrl,
+		fimEnabled: result.fimEnabled,
+		model: result.model,
+	};
 }
 
 function ensureAiConfig(config: AiConfigData | null): AiConfigData {

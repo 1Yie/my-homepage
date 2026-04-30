@@ -3,8 +3,8 @@ import { Elysia, t } from 'elysia';
 import { authMiddleware } from '../lib/auth-middleware';
 import {
 	generateCompletion,
-	getAiConfig,
-	updateAiConfig,
+	getAiConfigPublic,
+	updateAiConfigPublic,
 } from '../services/ai';
 
 export const aiRoutes = new Elysia({ prefix: '/ai' })
@@ -43,7 +43,7 @@ export const aiRoutes = new Elysia({ prefix: '/ai' })
 	.get(
 		'/config',
 		async () => {
-			const config = await getAiConfig();
+			const config = await getAiConfigPublic();
 			if (!config) {
 				return { success: true, data: null };
 			}
@@ -60,12 +60,14 @@ export const aiRoutes = new Elysia({ prefix: '/ai' })
 	.put(
 		'/config',
 		async ({ body }) => {
-			const config = await updateAiConfig(body);
+			const config = await updateAiConfigPublic(body);
 			return { success: true, data: config };
 		},
 		{
 			body: t.Object({
-				apiKey: t.String({ description: 'API Key' }),
+				apiKey: t.Optional(
+					t.String({ description: 'API Key，不传则保留已有' })
+				),
 				apiUrl: t.String({ description: 'API 地址' }),
 				fimEnabled: t.Boolean({ description: '是否启用 FIM 中间补全' }),
 				model: t.String({ description: '模型名称' }),
