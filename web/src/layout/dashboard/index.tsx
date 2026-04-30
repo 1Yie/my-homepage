@@ -5,6 +5,7 @@ import {
 	Home,
 	Images,
 	LayoutDashboard,
+	Sparkles,
 	Tag,
 	Users,
 	ExternalLink,
@@ -82,6 +83,11 @@ const managementItems = [
 		title: '友链管理',
 		url: '/dashboard/friends',
 		icon: Users,
+	},
+	{
+		title: 'AI 设置',
+		url: '/dashboard/ai-settings',
+		icon: Sparkles,
 	},
 ];
 

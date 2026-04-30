@@ -62,7 +62,12 @@ export function EditArticlePage() {
 		<div className="flex flex-1 flex-col gap-4 p-4">
 			<DashboardHeaderTitle subtitle="修改文章信息" title="编辑文章" />
 
-			<ArticleForm articleId={id} initialData={initialFormData} mode="edit" />
+			<ArticleForm
+				articleId={id}
+				initialData={initialFormData}
+				key={id}
+				mode="edit"
+			/>
 		</div>
 	);
 }

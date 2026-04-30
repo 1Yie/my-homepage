@@ -113,6 +113,14 @@ export const routeConfig: RouteConfig[] = [
 			})),
 		children: [
 			{
+				path: 'ai-settings',
+				label: 'AI 设置',
+				lazy: () =>
+					import('@/pages/dashboard/ai-settings').then((module) => ({
+						Component: module.AiSettingsPage,
+					})),
+			},
+			{
 				path: '*',
 				lazy: () =>
 					import('@/pages/dashboard/error/not-found').then((module) => ({

@@ -11,7 +11,7 @@ export function CreateArticlePage() {
 				title="创建文章"
 			/>
 
-			<ArticleForm mode="create" />
+			<ArticleForm key="article-create" mode="create" />
 		</div>
 	);
 }
