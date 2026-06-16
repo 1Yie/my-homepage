@@ -1,4 +1,4 @@
-import { LogOut } from 'lucide-react';
+import { LogOut, MessageSquareText } from 'lucide-react';
 import {
 	FileText,
 	FolderKanban,
@@ -58,6 +58,14 @@ const navigationItems = [
 	},
 ];
 
+const dataItems = [
+	{
+		title: '评论数据',
+		url: '/dashboard/comments',
+		icon: MessageSquareText,
+	},
+];
+
 const managementItems = [
 	{
 		title: '文章管理',
@@ -85,13 +93,13 @@ const managementItems = [
 		icon: Users,
 	},
 	{
-		title: 'AI 设置',
+		title: '模型管理',
 		url: '/dashboard/ai-settings',
 		icon: Sparkles,
 	},
 ];
 
-const sidebarNavItems = [...navigationItems, ...managementItems];
+const sidebarNavItems = [...navigationItems, ...dataItems, ...managementItems];
 
 export function DashboardLayout() {
 	const { data: session, isPending } = authClient.useSession();
@@ -213,6 +221,27 @@ export function DashboardLayout() {
 							</SidebarGroup>
 
 							<SidebarGroup>
+								<SidebarGroupLabel>数据</SidebarGroupLabel>
+								<SidebarGroupContent>
+									<SidebarMenu>
+										{dataItems.map((item) => (
+											<SidebarMenuItem key={item.title}>
+												<SidebarMenuButton
+													isActive={activeMenuItem === item.url}
+													render={
+														<Link to={item.url}>
+															<item.icon />
+															<span>{item.title}</span>
+														</Link>
+													}
+												></SidebarMenuButton>
+											</SidebarMenuItem>
+										))}
+									</SidebarMenu>
+								</SidebarGroupContent>
+							</SidebarGroup>
+
+							<SidebarGroup>
 								<SidebarGroupLabel>管理</SidebarGroupLabel>
 								<SidebarGroupContent>
 									<SidebarMenu>
@@ -234,57 +263,66 @@ export function DashboardLayout() {
 							</SidebarGroup>
 						</SidebarContent>
 
-						<div className="mt-auto p-2">
-							<DropdownMenu modal={false}>
-								<DropdownMenuTrigger
-									render={
-										<Button
-											className="w-full flex items-center gap-2 px-2 h-auto
-												py-6"
-											variant="ghost"
+						<SidebarGroup className="mt-auto">
+							<SidebarGroupLabel>账户</SidebarGroupLabel>
+							<SidebarGroupContent>
+								<div>
+									<DropdownMenu modal={false}>
+										<DropdownMenuTrigger
+											render={
+												<Button
+													className="w-full flex items-center gap-2 px-2 h-auto
+														py-6"
+													variant="ghost"
+												>
+													<Avatar className="h-8 w-8">
+														{session.user.image && (
+															<AvatarImage
+																alt={
+																	session.user.name ||
+																	session.user.email ||
+																	'User'
+																}
+																src={session.user.image}
+															/>
+														)}
+														<AvatarFallback className="text-xs">
+															{(session.user.name || session.user.email || 'U')
+																.charAt(0)
+																.toUpperCase()}
+														</AvatarFallback>
+													</Avatar>
+													<div className="flex-1 text-left">
+														<div className="text-sm font-medium truncate">
+															{session.user.name || session.user.email}
+														</div>
+														<div
+															className="text-xs text-muted-foreground truncate"
+														>
+															{session.user.email}
+														</div>
+													</div>
+												</Button>
+											}
+										></DropdownMenuTrigger>
+										<DropdownMenuContent
+											align="end"
+											className="w-20 rounded-lg"
+											side={isMobile ? 'bottom' : 'right'}
+											sideOffset={4}
 										>
-											<Avatar className="h-8 w-8">
-												{session.user.image && (
-													<AvatarImage
-														alt={
-															session.user.name || session.user.email || 'User'
-														}
-														src={session.user.image}
-													/>
-												)}
-												<AvatarFallback className="text-xs">
-													{(session.user.name || session.user.email || 'U')
-														.charAt(0)
-														.toUpperCase()}
-												</AvatarFallback>
-											</Avatar>
-											<div className="flex-1 text-left">
-												<div className="text-sm font-medium truncate">
-													{session.user.name || session.user.email}
-												</div>
-												<div className="text-xs text-muted-foreground truncate">
-													{session.user.email}
-												</div>
-											</div>
-										</Button>
-									}
-								></DropdownMenuTrigger>
-								<DropdownMenuContent
-									align="end"
-									className="w-20 rounded-lg"
-									side={isMobile ? 'bottom' : 'right'}
-									sideOffset={4}
-								>
-									<DropdownMenuItem
-										onClick={() => authClient.signOut()}
-										variant="destructive"
-									>
-										<LogOut className="mr-2 h-4 w-4" />
-										登出
-									</DropdownMenuItem>
-								</DropdownMenuContent>
-							</DropdownMenu>
-						</div>
+											<DropdownMenuItem
+												onClick={() => authClient.signOut()}
+												variant="destructive"
+											>
+												<LogOut className="mr-2 h-4 w-4" />
+												登出
+											</DropdownMenuItem>
+										</DropdownMenuContent>
+									</DropdownMenu>
+								</div>
+							</SidebarGroupContent>
+						</SidebarGroup>
 					</Sidebar>
 
 					<SidebarInset className="min-w-0 flex-1 flex flex-col">

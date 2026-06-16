@@ -1,4 +1,5 @@
 import { db } from '../lib/db';
+import { getArtalkStats } from './artalk';
 
 export interface DashboardStats {
 	// 总体统计
@@ -101,6 +102,27 @@ export interface DashboardStats {
 		projectsCreated: number;
 		slidesCreated: number;
 	}>;
+
+	// Artalk 评论统计数据
+	comments: {
+		totalComments: number;
+		latestComments: Array<{
+			id: number;
+			nick: string;
+			content: string;
+			date: string;
+			pageKey: string;
+			pageUrl: string;
+		}>;
+		topCommentedPages: Array<{
+			id: number;
+			title: string;
+			key: string;
+			url: string;
+			pv: number;
+			date: string;
+		}>;
+	};
 }
 
 export async function getDashboardStats(): Promise<DashboardStats> {
@@ -340,6 +362,9 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 		}))
 		.sort((a, b) => a.date.localeCompare(b.date));
 
+	// 获取 Artalk 评论统计数据
+	const artalkStats = await getArtalkStats();
+
 	// 返回完整的仪表盘统计数据
 	return {
 		overview: {
@@ -382,5 +407,6 @@ export async function getDashboardStats(): Promise<DashboardStats> {
 		topTags,
 		articleStatusDistribution,
 		recentActivityTrend,
+		comments: artalkStats,
 	};
 }

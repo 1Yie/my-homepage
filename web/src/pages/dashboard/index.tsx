@@ -4,6 +4,8 @@ import {
 	FolderKanban,
 	Images,
 	Link as LinkIcon,
+	MessageCircle,
+	MessageSquare,
 	PlusCircle,
 	TrendingUp,
 	Users,
@@ -39,6 +41,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
+import { Gravatar } from '@/components/ui/gravatar';
 import { Spinner } from '@/components/ui/spinner';
 import { useDashboardStats } from '@/hooks/use-dashboard-stats';
 import { useTitle } from '@/hooks/use-page-meta';
@@ -95,6 +98,15 @@ export function DashboardPage() {
 			color: 'text-pink-600',
 			bgColor: 'bg-pink-50',
 		},
+		{
+			title: '评论总数',
+			value: dashboardData?.comments.totalComments ?? 0,
+			subtitle: '来自 Artalk 评论系统',
+			icon: MessageCircle,
+			href: '/dashboard/comments',
+			color: 'text-teal-600',
+			bgColor: 'bg-teal-50',
+		},
 	];
 
 	const quickActions = [
@@ -133,6 +145,14 @@ export function DashboardPage() {
 			month: '2-digit',
 			day: '2-digit',
 		});
+	};
+
+	// 格式化评论日期（处理 Date 对象和字符串）
+	const formatCommentDate = (dateValue: string | Date) => {
+		const date = new Date(dateValue);
+		if (isNaN(date.getTime())) return String(dateValue);
+		const pad = (n: number) => String(n).padStart(2, '0');
+		return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
 	};
 
 	// 计算最近 7 天的总活动数
@@ -196,9 +216,9 @@ export function DashboardPage() {
 		<div className="flex flex-1 flex-col gap-4 p-4">
 			<div className="flex flex-1 flex-col gap-4">
 				{/* Stats Cards */}
-				<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+				<div className="grid gap-4 md:grid-cols-3 lg:grid-cols-6">
 					{statCards.map((stat, index) => (
-						<Link key={index} to={stat.href}>
+						<Link key={index} to={stat.href!}>
 							<Card
 								className="transition-all cursor-pointer border-l-4"
 								style={{
@@ -292,7 +312,7 @@ export function DashboardPage() {
 								))}
 							</div>
 
-							<div className="mt-4 grid gap-4 lg:grid-cols-2">
+							<div className="mt-4 grid gap-4 lg:grid-cols-3">
 								<div className="rounded-md border bg-card p-3">
 									<p className="text-xs text-muted-foreground mb-2">
 										近 7 日内容新增趋势
@@ -480,6 +500,91 @@ export function DashboardPage() {
 										</div>
 									)}
 								</div>
+
+								<div className="rounded-md border bg-card p-3">
+									<p className="text-xs text-muted-foreground mb-2">
+										评论热文 Top 5
+									</p>
+									{loading ? (
+										<div className="flex h-44 items-center justify-center">
+											<Spinner size={24} />
+										</div>
+									) : !dashboardData ||
+									  dashboardData.comments.topCommentedPages.length === 0 ? (
+										<div
+											className="flex h-44 items-center justify-center text-xs
+												text-muted-foreground"
+										>
+											暂无评论数据
+										</div>
+									) : (
+										<div className="h-44 w-full">
+											<ResponsiveContainer height="100%" width="100%">
+												<BarChart
+													data={(() => {
+														const pages =
+															dashboardData.comments.topCommentedPages.slice(
+																0,
+																5
+															);
+														return pages.map((p) => ({
+															name:
+																p.title.length > 12
+																	? p.title.slice(0, 12) + '..'
+																	: p.title,
+															commentCount: p.commentCount,
+														}));
+													})()}
+													layout="vertical"
+													margin={{ bottom: 0, left: -24, right: 8, top: 8 }}
+												>
+													<CartesianGrid
+														horizontal={false}
+														stroke="var(--border)"
+														strokeDasharray="3 3"
+														strokeOpacity={0.5}
+													/>
+													<XAxis
+														allowDecimals={false}
+														axisLine={false}
+														height={16}
+														tick={{
+															fill: 'var(--muted-foreground)',
+															fontSize: 12,
+														}}
+														tickLine={false}
+														type="number"
+													/>
+													<YAxis
+														axisLine={false}
+														dataKey="name"
+														tick={{
+															fill: 'var(--muted-foreground)',
+															fontSize: 11,
+														}}
+														tickLine={false}
+														type="category"
+														width={100}
+													/>
+													<RechartsTooltip
+														contentStyle={{
+															background: 'var(--popover)',
+															borderColor: 'var(--border)',
+															borderRadius: 'var(--radius)',
+															color: 'var(--popover-foreground)',
+														}}
+														formatter={(value) => [value, '评论数']}
+													/>
+													<Bar
+														dataKey="commentCount"
+														fill="var(--chart-4)"
+														radius={[0, 3, 3, 0]}
+													/>
+												</BarChart>
+											</ResponsiveContainer>
+										</div>
+									)}
+								</div>
 							</div>
 						</div>
 
@@ -500,7 +605,7 @@ export function DashboardPage() {
 				</Card>
 
 				{/* Four Column Layout */}
-				<div className="grid gap-4 lg:grid-cols-2">
+				<div className="grid gap-4 lg:grid-cols-3">
 					{/* Recent Articles Card */}
 					<Card className="flex flex-col h-full">
 						<CardHeader className="pb-3">
@@ -824,6 +929,134 @@ export function DashboardPage() {
 										size="sm"
 										variant="outline"
 									/>
+								</>
+							)}
+						</CardContent>
+					</Card>
+
+					{/* Latest Comments Card */}
+					<Card className="flex flex-col h-full">
+						<CardHeader className="pb-3">
+							<CardTitle className="flex items-center gap-1 text-lg">
+								<MessageSquare className="h-5 w-5" />
+								最新评论
+							</CardTitle>
+							<CardDescription className="text-xs">
+								来自 Artalk 的最新留言
+							</CardDescription>
+						</CardHeader>
+						<CardContent className="flex flex-col flex-1 pt-0">
+							{loading ? (
+								<div className="flex items-center justify-center py-8">
+									<Spinner className="mx-auto" size={32} />
+								</div>
+							) : !dashboardData ||
+							  dashboardData.comments.latestComments.length === 0 ? (
+								<div
+									className="flex flex-col items-center justify-center py-8
+										flex-1"
+								>
+									<p className="text-muted-foreground text-sm mb-4">暂无评论</p>
+								</div>
+							) : (
+								<>
+									<div className="flex-1 divide-y divide-border">
+										{dashboardData.comments.latestComments
+											.slice(0, 5)
+											.map((comment) => (
+												<div
+													className="flex items-start gap-3 py-2.5"
+													key={comment.id}
+												>
+													<Gravatar
+														hash={comment.emailEncrypted}
+														nick={comment.nick}
+														size={28}
+													/>
+													<div className="flex-1 min-w-0">
+														<a
+															className="text-sm font-medium truncate
+																hover:underline underline-offset-2"
+															href={`${comment.pageUrl}#atk-comment-${comment.id}`}
+															rel="noopener noreferrer"
+															target="_blank"
+														>
+															{comment.nick}
+														</a>
+														<p
+															className="text-xs text-muted-foreground mt-0.5
+																line-clamp-2"
+														>
+															{comment.content}
+														</p>
+														<p className="text-xs text-muted-foreground/60 mt-1">
+															{formatCommentDate(comment.date)}
+														</p>
+													</div>
+												</div>
+											))}
+									</div>
+									<Button
+										className="w-full mt-3"
+										render={<Link to="/dashboard/comments">查看全部</Link>}
+										size="sm"
+										variant="outline"
+									/>
+								</>
+							)}
+						</CardContent>
+					</Card>
+
+					{/* Top Commented Pages Card */}
+					<Card className="flex flex-col h-full">
+						<CardHeader className="pb-3">
+							<CardTitle className="flex items-center gap-1 text-lg">
+								<MessageCircle className="h-5 w-5" />
+								评论热文
+							</CardTitle>
+							<CardDescription className="text-xs">
+								评论最多的文章页面
+							</CardDescription>
+						</CardHeader>
+						<CardContent className="flex flex-col flex-1 pt-0">
+							{loading ? (
+								<div className="flex items-center justify-center py-8">
+									<Spinner className="mx-auto" size={32} />
+								</div>
+							) : !dashboardData ||
+							  dashboardData.comments.topCommentedPages.length === 0 ? (
+								<div
+									className="flex flex-col items-center justify-center py-8
+										flex-1"
+								>
+									<p className="text-muted-foreground text-sm mb-4">暂无数据</p>
+								</div>
+							) : (
+								<>
+									<div className="flex-1 divide-y divide-border">
+										{dashboardData.comments.topCommentedPages.map((page) => (
+											<div
+												className="flex items-center gap-3 py-2.5"
+												key={page.id}
+											>
+												<div className="flex-1 min-w-0">
+													<a
+														className="text-sm font-medium truncate
+															hover:underline underline-offset-2"
+														href={page.url}
+														rel="noopener noreferrer"
+														target="_blank"
+													>
+														{page.title}
+													</a>
+													<p className="text-xs text-muted-foreground mt-0.5">
+														{page.commentCount} 条评论 ·{' '}
+														{formatCommentDate(page.date)}
+													</p>
+												</div>
+											</div>
+										))}
+									</div>
 								</>
 							)}
 						</CardContent>

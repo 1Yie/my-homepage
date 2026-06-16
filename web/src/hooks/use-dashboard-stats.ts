@@ -80,6 +80,32 @@ export interface DashboardData {
 		published: number;
 		draft: number;
 	};
+
+	/** Artalk 评论统计数据 */
+	comments: {
+		totalComments: number;
+		latestComments: Array<{
+			id: number;
+			nick: string;
+			content: string;
+			/** 邮箱 SHA256 哈希，可用于生成 Gravatar 头像 */
+			emailEncrypted: string;
+			date: string;
+			pageKey: string;
+			pageUrl: string;
+		}>;
+		topCommentedPages: Array<{
+			id: number;
+			title: string;
+			key: string;
+			url: string;
+			pv: number;
+			/** 真实评论数 */
+			commentCount: number;
+			date: string;
+		}>;
+	};
+
 	recentActivityTrend: Array<{
 		date: string;
 		articlesCreated: number;

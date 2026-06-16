@@ -114,7 +114,7 @@ export const routeConfig: RouteConfig[] = [
 		children: [
 			{
 				path: 'ai-settings',
-				label: 'AI 设置',
+				label: '模型设置',
 				lazy: () =>
 					import('@/pages/dashboard/ai-settings').then((module) => ({
 						Component: module.AiSettingsPage,
@@ -276,6 +276,19 @@ export const routeConfig: RouteConfig[] = [
 						lazy: () =>
 							import('@/pages/dashboard/friends/edit').then((module) => ({
 								Component: module.EditFriendPage,
+							})),
+					},
+				],
+			},
+			{
+				path: 'comments',
+				label: '评论数据',
+				children: [
+					{
+						index: true,
+						lazy: () =>
+							import('@/pages/dashboard/comments').then((module) => ({
+								Component: module.CommentsPage,
 							})),
 					},
 				],
