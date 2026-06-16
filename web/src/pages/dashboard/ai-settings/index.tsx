@@ -22,7 +22,7 @@ export function AiSettingsPage() {
 	const [saveError, setSaveError] = useState<string | null>(null);
 	const [saved, setSaved] = useState(false);
 
-	useTitle('AI 设置');
+	useTitle('模型设置');
 
 	useEffect(() => {
 		if (config) {
@@ -75,7 +75,7 @@ export function AiSettingsPage() {
 			<div className="flex flex-1 flex-col gap-4">
 				<DashboardHeaderTitle
 					subtitle="配置 AI 续写功能所需的 API 参数"
-					title="AI 设置"
+					title="模型设置"
 				/>
 
 				<Card>
